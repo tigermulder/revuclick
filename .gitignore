@@ -22,3 +22,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# 퍼블리셔 폴더는 Git에 포함
+!publisher/
