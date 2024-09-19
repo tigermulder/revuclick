@@ -10,11 +10,16 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@tanstack/react-query": "^5.56.2",
+    "axios": "^1.7.7",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react-dom": "^18.3.1",
+    "recoil": "^0.7.7",
+    "style-components": "^0.1.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.9.0",
+    "@tanstack/eslint-plugin-query": "^5.56.1",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
     "@typescript-eslint/eslint-plugin": "^8.6.0",
