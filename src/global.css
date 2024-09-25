@@ -1,5 +1,4 @@
-/* meyer reset css */
-
+/** meyer reset css */
 html,
 body,
 div,
@@ -122,7 +121,7 @@ blockquote:before,
 blockquote:after,
 q:before,
 q:after {
-  content: '';
+  content: "";
   content: none;
 }
 
@@ -130,5 +129,51 @@ table {
   border-collapse: collapse;
   border-spacing: 0;
 }
+/** meyer reset css */
 
-/* meyer reset css */
+/** 전역변수 */
+:root {
+  --font-family-suit: "SUIT", sans-serif;
+  --font-weight-light: 300;
+  --font-weight-medium: 500;
+  --font-weight-bold: 700;
+  --font-weight-extrabold: 800;
+}
+
+/** 전역폰트설정 */
+@font-face {
+  font-family: "SUIT";
+  src: url("https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_suit@1.0/SUIT-Light.woff2")
+    format("woff2");
+  font-weight: 300; /* Light */
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "SUIT";
+  src: url("https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_suit@1.0/SUIT-Medium.woff2")
+    format("woff2");
+  font-weight: 500; /* Medium */
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "SUIT";
+  src: url("https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_suit@1.0/SUIT-Bold.woff2")
+    format("woff2");
+  font-weight: 700; /* Bold */
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "SUIT";
+  src: url("https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_suit@1.0/SUIT-ExtraBold.woff2")
+    format("woff2");
+  font-weight: 800; /* ExtraBold */
+  font-style: normal;
+}
+
+body {
+  font-family: var(--font-family-suit);
+  font-weight: var(--font-weight-light);
+}

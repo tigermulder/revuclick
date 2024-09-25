@@ -1,17 +1,14 @@
-import { useState } from 'react'
+import { Routes } from "./pages/Route";
+import AppBar from "components/AppBar";
+import "./global.css";
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-      <h1>RevuClick</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>count is {count}</button>
-      </div>
-      <p className="read-the-docs">Click on the Vite and React logos to learn more</p>
-    </>
-  )
+    <div className="App">
+      <AppBar /> {/* 앱bar */}
+      <Routes /> {/* 라우팅컴포넌트 */}
+    </div>
+  );
 }
 
-export default App
+export default App;
