@@ -41,7 +41,7 @@ export default {
             endOfLine: "auto", // 운영체제에 맞게 줄바꿈 처리 자동 결정
             useTabs: false, // 탭 대신 스페이스 사용
             singleQuote: false, // 큰 따옴표 사용
-            printWidth: 80, // 코드가 80자를 넘으면 줄바꿈 적용
+            printWidth: 100, // 코드가 80자를 넘으면 줄바꿈 적용
             jsxSingleQuote: false, // JSX 속성에서 큰 따옴표 사용
             bracketSameLine: false, // JSX 닫는 괄호를 다음 줄로 내림
           },

@@ -1,9 +1,89 @@
+import styled from "styled-components"
+import { Link } from "react-router-dom"
+
 const AppBar = () => {
   return (
-    <div>
-      <p>앱바입니다</p>
-    </div>
-  );
-};
+    <Header>
+      {/* 로고 */}
+      <Logo>
+        <Link to="/main">RevuClick</Link>
+      </Logo>
 
-export default AppBar;
+      {/* 검색 바 */}
+      <SearchBar>
+        <input type="text" placeholder="검색어를 입력하세요" />
+        <SearchIcon>🔍</SearchIcon>
+      </SearchBar>
+
+      {/* 회원가입 링크 */}
+      <SignUpLink>
+        <Link to="/signup">회원가입</Link>
+      </SignUpLink>
+    </Header>
+  )
+}
+
+export default AppBar
+
+const Header = styled.header`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 60px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 0 20px;
+  z-index: 1000;
+`
+
+const Logo = styled.div`
+  font-size: 24px;
+  font-weight: bold;
+  color: red;
+
+  a {
+    text-decoration: none;
+    color: inherit;
+  }
+`
+
+const SearchBar = styled.div`
+  display: flex;
+  align-items: center;
+  background-color: #f5f5f5;
+  border-radius: 30px;
+  padding: 5px 15px;
+  width: 400px;
+
+  input {
+    border: none;
+    background: none;
+    outline: none;
+    flex: 1;
+    font-size: 16px;
+  }
+`
+
+const SearchIcon = styled.div`
+  font-size: 20px;
+  color: gray;
+`
+
+const SignUpLink = styled.div`
+  font-size: 16px;
+  color: gray;
+
+  a {
+    text-decoration: none;
+    color: inherit;
+    font-weight: bold;
+
+    &:hover {
+      color: black;
+    }
+  }
+`
