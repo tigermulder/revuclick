@@ -8,7 +8,7 @@ import {
   VerifyEmailCodeResponse,
   JoinRequest,
   JoinResponse,
-} from "types/signup-type"
+} from "types/api-types/signup-type"
 
 //** 이메일 체크 API */
 export const checkEmail = async (

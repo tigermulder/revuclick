@@ -6,7 +6,7 @@ import {
   FavoriteAddResponse,
   FavoriteRemoveRequest,
   FavoriteRemoveResponse,
-} from "types/favorite-type"
+} from "types/api-types/favorite-type"
 
 //** Favorite 리스트 요청 API */
 export const getFavoriteList = async (

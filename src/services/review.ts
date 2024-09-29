@@ -14,7 +14,7 @@ import {
   ReviewSaveResponse,
   ReviewConfirmRequest,
   ReviewConfirmResponse,
-} from "types/review-type"
+} from "types/api-types/review-type"
 
 //** 리뷰 참여 리스트 요청 API */
 export const getReviewList = async (

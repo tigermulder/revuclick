@@ -4,7 +4,7 @@ import {
   ModifyUserResponse,
   QuitUserRequest,
   QuitUserResponse,
-} from "types/modify-user-type"
+} from "types/api-types/modify-user-type"
 
 //** 내 정보 수정 API */
 export const modifyUser = async (

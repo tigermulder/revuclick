@@ -4,7 +4,7 @@ import {
   CampaignListResponse,
   CampaignItemRequest,
   CampaignItemResponse,
-} from "types/campaign-type"
+} from "types/api-types/campaign-type"
 
 //** 캠페인 리스트 요청 API */
 export const getCampaignList = async (

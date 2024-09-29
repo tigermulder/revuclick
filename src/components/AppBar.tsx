@@ -12,7 +12,6 @@ const AppBar = () => {
       {/* 검색 바 */}
       <SearchBar>
         <input type="text" placeholder="검색어를 입력하세요" />
-        <SearchIcon>🔍</SearchIcon>
       </SearchBar>
 
       {/* 회원가입 링크 */}
@@ -41,7 +40,7 @@ const Header = styled.header`
 `
 
 const Logo = styled.div`
-  font-size: 24px;
+  font-size: 20px;
   font-weight: bold;
   color: red;
 
@@ -57,7 +56,7 @@ const SearchBar = styled.div`
   background-color: #f5f5f5;
   border-radius: 30px;
   padding: 5px 15px;
-  width: 400px;
+  width: 50%;
 
   input {
     border: none;
@@ -68,11 +67,6 @@ const SearchBar = styled.div`
   }
 `
 
-const SearchIcon = styled.div`
-  font-size: 20px;
-  color: gray;
-`
-
 const SignUpLink = styled.div`
   font-size: 16px;
   color: gray;
@@ -80,7 +74,7 @@ const SignUpLink = styled.div`
   a {
     text-decoration: none;
     color: inherit;
-    font-weight: bold;
+    font-weight: var(--font-weight-light);
 
     &:hover {
       color: black;

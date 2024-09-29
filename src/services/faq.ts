@@ -4,7 +4,7 @@ import {
   FaqListResponse,
   FaqItemRequest,
   FaqItemResponse,
-} from "types/faq-type"
+} from "types/api-types/faq-type"
 
 //** FAQ 리스트 요청 API */
 export const getFaqList = async (

@@ -4,7 +4,7 @@ import {
   NoticeListResponse,
   NoticeItemRequest,
   NoticeItemResponse,
-} from "types/notice-list-type"
+} from "types/api-types/notice-list-type"
 
 //** NOTICE 리스트 요청 API */
 export const getNoticeList = async (

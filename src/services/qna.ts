@@ -6,7 +6,7 @@ import {
   QnaItemResponse,
   QnaAddRequest,
   QnaAddResponse,
-} from "types/qna-type"
+} from "types/api-types/qna-type"
 
 //** QnA 리스트 요청 API */
 export const getQnaList = async (

@@ -4,7 +4,7 @@ import {
   NotificationListResponse,
   NotificationItemRequest,
   NotificationItemResponse,
-} from "types/notification-type"
+} from "types/api-types/notification-type"
 
 //** Notification 리스트 요청 API */
 export const getNotificationList = async (
