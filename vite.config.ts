@@ -1,37 +1,40 @@
-import { defineConfig } from "vite"
+import { defineConfig, loadEnv } from "vite"
 import react from "@vitejs/plugin-react-swc"
 import tsconfigPaths from "vite-tsconfig-paths"
 import svgr from "vite-plugin-svgr"
 
 // https://vitejs.dev/config/
-export default defineConfig({
-  base: "./",
-  plugins: [react(), tsconfigPaths(), svgr()],
-  server: {
-    // Client port 설정
-    port: 3000,
-    proxy: {
-      // Cors
-      "/api": {
-        target: "https://api.example.com", // 프록시할 대상의 서버
-        changeOrigin: true, // 프록시 요청을 보낼 때 호스트 헤더를 대상 서버(target)의 도메인으로 변경합니다
-        rewrite: (path) => path.replace(/^\/api/, ""), // 경로를 제거하고, 나머지 부분만 실제 API 서버에 전달할 수 있도록 요청 URL을 재작성
-      },
-    },
-  },
-  build: {
-    rollupOptions: {
-      output: {
-        assetFileNames: (assetInfo) => {
-          let extType: any = assetInfo?.name?.split(".").at(1)
-          if (/png|jpe?g|svg|gif|tiff|bmp|ico/i.test(extType)) {
-            extType = "img"
-          }
-          return `assets/${extType}/[name]-[hash][extname]`
+export default defineConfig(({ mode }) => {
+  // 환경 변수를 로드
+  process.env = { ...process.env, ...loadEnv(mode, process.cwd()) }
+
+  return {
+    base: "./", // 기본 경로 설정
+    plugins: [react(), tsconfigPaths(), svgr()], // Vite 플러그인
+    server: {
+      proxy: {
+        "/api": {
+          target: process.env.VITE_SERVER_URL,
+          changeOrigin: true, // 서버의 Origin을 프록시 서버의 Origin으로 변경
+          secure: false, // HTTPS를 사용할 때 인증서 검증을 무시 (개발 환경에서 유용)
+          rewrite: (path) => path.replace(/^\/api/, ""),
         },
-        chunkFileNames: "assets/js/[name]-[hash].js",
-        entryFileNames: "assets/js/[name]-[hash].js",
       },
     },
-  },
+    build: {
+      rollupOptions: {
+        output: {
+          assetFileNames: (assetInfo) => {
+            let extType: string = assetInfo?.name?.split(".").at(1) || "misc"
+            if (/png|jpe?g|svg|gif|tiff|bmp|ico/i.test(extType)) {
+              extType = "img"
+            }
+            return `assets/${extType}/[name]-[hash][extname]`
+          },
+          chunkFileNames: "assets/js/[name]-[hash].js",
+          entryFileNames: "assets/js/[name]-[hash].js",
+        },
+      },
+    },
+  }
 })

@@ -1,11 +1,10 @@
-import { useNavigate } from "react-router-dom"
-import Button from "components/Button"
+import { getCampaignList } from "services/campaign"
 
 const MainPage = () => {
+  const handleCampignList = async () => {}
   return (
     <div>
-      <Button size="M" color="red" state="enabled" disableable={false} label="Disabled Button" />
-      <Button size="M" color="black" state="enabled" disableable={false} label="Disabled Button" />
+      <p>메인페이지입니다</p>
     </div>
   )
 }

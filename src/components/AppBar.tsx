@@ -16,7 +16,7 @@ const AppBar = () => {
 
       {/* 회원가입 링크 */}
       <SignUpLink>
-        <Link to="/signup">회원가입</Link>
+        <Link to="/login">회원가입</Link>
       </SignUpLink>
     </Header>
   )

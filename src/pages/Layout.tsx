@@ -1,27 +1,17 @@
-import { Outlet, useLocation } from "react-router-dom"
-import AppBar from "components/AppBar"
-import BottomTapBar from "components/BottomTapBar"
-import Footer from "components/Footer"
+import { Outlet } from "react-router-dom"
+import ErrorBoundary from "components/ErrorBoundary"
 import styled from "styled-components"
 
 const Layout = () => {
-  const location = useLocation() // 현재 경로확인
-
-  // ** 푸터를 표시할 경로 설정 (메인 페이지와 내 정보 페이지에서만 푸터 렌더링) */
-  const showFooter =
-    location.pathname === "/main" || location.pathname === "/profile"
   return (
     <>
-      {/* App Bar */}
-      <AppBar />
-      {/* 각 페이지별로 다른 콘텐츠를 보여주는 Outlet */}
-      <Content>
-        <Outlet />
-      </Content>
-      {/* 특정 경로에서만 푸터 렌더링 */}
-      {showFooter && <Footer />}
-      {/* Bottom Tap Bar */}
-      <BottomTapBar />
+      {/* 에러바운더리 */}
+      <ErrorBoundary>
+        <Content>
+          {/* 각 페이지별로 다른 콘텐츠를 보여주는 Outlet */}
+          <Outlet />
+        </Content>
+      </ErrorBoundary>
     </>
   )
 }
