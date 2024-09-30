@@ -2,6 +2,11 @@ import { Outlet } from "react-router-dom"
 import ErrorBoundary from "components/ErrorBoundary"
 import styled from "styled-components"
 
+const ProblematicComponent = () => {
+  // 여기에 의도적으로 에러를 발생시킴
+  throw new Error("This component has an error!")
+}
+
 const Layout = () => {
   return (
     <>
