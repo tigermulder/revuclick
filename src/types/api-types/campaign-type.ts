@@ -1,6 +1,6 @@
 //** 캠페인리스트 요청 type */
 export interface CampaignListRequest {
-  token: string
+  token?: string
   pageSize?: number // optional
   pageIndex?: number // optional
   order?: string // optional, e.g., recent, joinDesc
