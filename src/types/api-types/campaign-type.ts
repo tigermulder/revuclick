@@ -11,16 +11,35 @@ export interface CampaignListRequest {
 }
 export interface CampaignListResponse {
   statusCode: number
-  errorCode?: number
-  error?: string
-  list: Array<{
-    campaign_obj: any // 캠페인 객체 정의 필요
-    join: number // 1: 참여, 0: 미참여
-  }>
+  list: Campaign[]
   totalItems: number
   totalPages: number
   pageSize: number
   pageIndex: number
+}
+// 캠페인 개체의 타입
+export interface Campaign {
+  campaignId: number
+  advertiserId: number
+  title: string
+  categoryId: number
+  NSproductNo: string
+  price: number
+  reward: number
+  cost: number
+  snsUrl: string
+  costPartner: number
+  reviewKeyword: string | null
+  thumbnailUrl: string | null
+  startAt: string // ISO 형식의 날짜 문자열
+  endAt: string // ISO 형식의 날짜 문자열
+  status: string
+  quota: number
+  joins: number
+  uploads: number
+  favorites: number
+  createdAt: string // ISO 형식의 날짜 문자열
+  is_join: number // 1: 참여, 0: 미참여
 }
 
 //** 캠페인 상세 정보 요청 */

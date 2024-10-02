@@ -14,9 +14,9 @@ const AppBar = () => {
         <input type="text" placeholder="검색어를 입력하세요" />
       </SearchBar>
 
-      {/* 회원가입 링크 */}
+      {/* 로그인, 회원가입 링크 */}
       <SignUpLink>
-        <Link to="/login">회원가입</Link>
+        <Link to="/login">로그인</Link>
       </SignUpLink>
     </Header>
   )

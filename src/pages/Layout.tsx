@@ -28,6 +28,5 @@ const Content = styled.main`
   margin-top: 60px; /* AppBar 높이만큼 여백 */
   margin-bottom: 60px; /* TabBar 높이만큼 여백 */
   width: auto;
-  height: 100vh;
   padding: 20px;
 `
