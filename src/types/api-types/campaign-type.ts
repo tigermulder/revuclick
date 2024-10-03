@@ -30,7 +30,7 @@ export interface Campaign {
   snsUrl: string
   costPartner: number
   reviewKeyword: string | null
-  thumbnailUrl: string | null
+  thumbnailUrl: string
   startAt: string // ISO 형식의 날짜 문자열
   endAt: string // ISO 형식의 날짜 문자열
   status: string

@@ -48,3 +48,9 @@ export const filteredCampaignList = selector<Campaign[]>({
     }
   },
 })
+
+// ** 찜한 캠페인 ID 리스트 */
+export const campaignLikeState = atom<number[]>({
+  key: "campaignLikeState",
+  default: [], // 찜한 캠페인 ID 리스트
+});
