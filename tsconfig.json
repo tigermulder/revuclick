@@ -8,8 +8,9 @@
     "esModuleInterop": true, // ES 모듈 호환성 설정
     "skipLibCheck": true, // 라이브러리 타입 검사 생략 (속도 개선)
     "strict": true, // 엄격한 타입 검사
-    "baseUrl": "./src"
+    "baseUrl": "./src",
+    "types": ["vite-plugin-svgr/client"]
   },
-  "include": ["src/**/*"], // 'src' 디렉토리의 모든 파일 포함
+  "include": ["src/**/*", "svg.d.ts"], // 'src' 디렉토리의 모든 파일 포함
   "exclude": ["node_modules"] // 'node_modules' 디렉토리는 제외
 }

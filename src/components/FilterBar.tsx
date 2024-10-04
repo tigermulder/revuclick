@@ -47,6 +47,7 @@ export const Chip = ({
 const ButtonContainer = styled.div`
   display: flex;
   gap: 8px; // 버튼들 사이 간격
+  padding: 18px 0 6px;
 `
 
 const StyledButton = styled.button<{ $isActive: boolean }>`
@@ -54,13 +55,17 @@ const StyledButton = styled.button<{ $isActive: boolean }>`
   border-radius: 999px;
   border: 1px solid #eeeeee;
   background-color: ${(props) => (props.$isActive ? "#E50B14" : "white")};
-  color: ${(props) => (props.$isActive ? "white" : "black")};
-  font-weight: bold;
+  color: ${(props) => (props.$isActive ? "white" : "#747474")};
+  font-weight: var(--font-weight-medium);
   cursor: pointer;
 
   &:hover {
     background-color: ${(props) => (props.$isActive ? "#E50B14" : "#f5f5f5")};
     border-color: ${(props) => (props.$isActive ? "#E50B14" : "#eeeeee")};
+    font-weight: ${(props) =>
+      props.$isActive
+        ? "var(--font-weight-bold)"
+        : "var(--font-weight-medium)"};
   }
 
   /* 클릭 중(active)일 때 색상 지정 */

@@ -147,12 +147,3 @@ const Input = styled.input`
   border-radius: 5px;
   font-size: 14px;
 `
-
-const TextButton = styled.div`
-  color: #007bff;
-  cursor: pointer;
-
-  &:hover {
-    text-decoration: underline;
-  }
-`

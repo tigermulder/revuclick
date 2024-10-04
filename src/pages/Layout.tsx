@@ -25,8 +25,7 @@ export default Layout
 
 // 페이지 내용이 앱바와 탭바에 가려지지 않도록 적절한 margin 설정
 const Content = styled.main`
-  margin-top: 60px; /* AppBar 높이만큼 여백 */
-  margin-bottom: 60px; /* TabBar 높이만큼 여백 */
-  width: auto;
-  padding: 20px;
+  width: 100%;
+  margin: 60px auto 0; /* AppBar 높이만큼 여백 */
+  padding: 0 15px;
 `
