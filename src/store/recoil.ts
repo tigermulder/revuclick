@@ -13,53 +13,87 @@ export const campaignListState = atom<Campaign[]>({
   key: "campaignListState",
   default: [],
 })
-// 2. 캠페인 리스트필터 저장 아톰 /
+
+// 2. 선택된 카테고리 저장 아톰 (예: 패션, 뷰티 등 선택된 카테고리)
+export const selectedCategoryState = atom<number>({
+  key: "selectedCategoryState",
+  default: 1, // 기본값은 '전체' 카테고리 (전체는 특별 처리)
+});
+
+// 3. 캠페인 리스트필터 저장 아톰 /
 export const campaignFilterState = atom<string>({
   key: "campaignFilterState",
-  default: "최신순",
+  default: "최신순", // 기본값: 최신순
 })
-// 3. 필터링 및 정렬된 캠페인 리스트를 반환하는 Recoil 셀렉터
-export const filteredCampaignList = selector<Campaign[]>({
-  key: "filteredCampaignList",
+
+// 4. 카테고리 필터링된 캠페인 리스트 셀렉터
+export const filteredByCategoryCampaignList = selector<Campaign[]>({
+  key: "filteredByCategoryCampaignList",
   get: ({ get }) => {
-    const campaigns = get(campaignListState) // 현재 캠페인 리스트
-    const filter = get(campaignFilterState) // 필터링 기준
+    const campaigns = get(campaignListState);
+    const selectedCategory = get(selectedCategoryState);
 
-    // 현재 시간을 가져옴
-    const now = new Date().getTime()
+    if (selectedCategory === 1) {
+      return campaigns;
+    }
 
-    // 깊은 복사 후 필터링 및 정렬 로직 적용
-    const sortedCampaigns = [...campaigns] // 원본 배열을 복사
-
-    // 마감된 캠페인을 맨 아래로 보내는 조건 추가
-    const sortedWithEndCheck = sortedCampaigns.sort((a, b) => {
-      const isAEnded = new Date(a.endAt || 0).getTime() < now
-      const isBEnded = new Date(b.endAt || 0).getTime() < now
-
-      // 두 캠페인 중 하나라도 마감된 경우
-      if (isAEnded && !isBEnded) return 1 // a가 마감된 경우 뒤로
-      if (!isAEnded && isBEnded) return -1 // b가 마감된 경우 뒤로
-
-      // 둘 다 마감되었거나 둘 다 마감되지 않은 경우, 다른 기준으로 정렬
-      switch (filter) {
-        case "최신순":
-          const dateA = new Date(a.createdAt || 0).getTime()
-          const dateB = new Date(b.createdAt || 0).getTime()
-          return dateB - dateA // 최신순 정렬
-        case "마감순":
-          const endDateA = new Date(a.endAt || 0).getTime()
-          const endDateB = new Date(b.endAt || 0).getTime()
-          return endDateA - endDateB // 마감순 정렬
-        case "인기순":
-          return b.favorites - a.favorites || b.joins - a.joins // 인기순 정렬
-        default:
-          return 0 // 기본적으로 정렬 없이 반환
-      }
-    })
-
-    return sortedWithEndCheck
+    return campaigns.filter(
+      (campaign) => campaign.categoryId === selectedCategory
+    );
   },
-})
+});
+
+// 5. 필터링된 캠페인 리스트를 정렬 기준에 따라 정렬하는 셀렉터
+export const filteredAndSortedCampaignList = selector<Campaign[]>({
+  key: 'filteredAndSortedCampaignList',
+  get: ({ get }) => {
+    const campaigns = get(campaignListState);
+    const selectedCategory = get(selectedCategoryState);
+    const filter = get(campaignFilterState);
+    const now = Date.now();
+
+    // 카테고리 필터링
+    let filteredCampaigns = campaigns;
+    if (selectedCategory !== 1) {
+      filteredCampaigns = campaigns.filter(
+        (campaign) => campaign.categoryId === selectedCategory
+      );
+    }
+
+    // 정렬 로직
+    const sortedCampaigns = [...filteredCampaigns].sort((a, b) => {
+      const isAEnded = a.endAt ? new Date(a.endAt).getTime() < now : false;
+      const isBEnded = b.endAt ? new Date(b.endAt).getTime() < now : false;
+
+      // 마감 여부에 따라 정렬 (마감된 캠페인은 아래로 이동)
+      if (isAEnded && !isBEnded) return 1;
+      if (!isAEnded && isBEnded) return -1;
+
+      // 마감 여부가 동일하면 선택한 정렬 기준에 따라 정렬
+      switch (filter) {
+        case '최신순':
+          const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+          const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+          return dateB - dateA; // 최신순 정렬 (내림차순)
+        case '마감순':
+          const endDateA = a.endAt ? new Date(a.endAt).getTime() : Infinity;
+          const endDateB = b.endAt ? new Date(b.endAt).getTime() : Infinity;
+          return endDateA - endDateB; // 마감순 정렬 (오름차순)
+        case '인기순':
+          const favoritesA = a.favorites ?? 0;
+          const favoritesB = b.favorites ?? 0;
+          const joinsA = a.joins ?? 0;
+          const joinsB = b.joins ?? 0;
+          // 인기순: 좋아요 수 기준으로 내림차순, 같으면 참여자 수 기준으로 내림차순
+          return favoritesB - favoritesA || joinsB - joinsA;
+        default:
+          return 0;
+      }
+    });
+
+    return sortedCampaigns;
+  },
+});
 
 // ** 찜한 캠페인 ID 리스트 */
 export const campaignLikeState = atom<{ [categoryId: number]: number[] }>({

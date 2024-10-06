@@ -3,7 +3,7 @@ import { useInfiniteQuery } from "@tanstack/react-query"
 import { useSetRecoilState, useRecoilValue, useRecoilState } from "recoil"
 import {
   campaignListState,
-  filteredCampaignList,
+  filteredAndSortedCampaignList,
   campaignLikeState,
 } from "store/recoil"
 import { getCampaignList } from "services/campaign"
@@ -14,7 +14,7 @@ import styled from "styled-components"
 
 const MainPage = () => {
   const setCampaignList = useSetRecoilState(campaignListState)
-  const filteredCampaigns = useRecoilValue(filteredCampaignList)
+  const filteredCampaigns = useRecoilValue(filteredAndSortedCampaignList)
   const [likedCampaigns, setLikedCampaigns] = useRecoilState(campaignLikeState)
   const loadMoreRef = useRef(null)
 

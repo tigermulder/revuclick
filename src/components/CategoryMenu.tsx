@@ -1,32 +1,34 @@
-import React from 'react';
+import { useRecoilState } from 'recoil';
+import { selectedCategoryState } from 'store/recoil';
 import styled from 'styled-components';
 
+// 카테고리 데이터
 const categories = [
-  { name: '전체' },
-  { name: '패션' },
-  { name: '뷰티' },
-  { name: '가구' },
-  { name: '출산/육아' },
-  { name: '식품' },
-  { name: '생활용품' },
-  { name: '반려동물' },
-  { name: '디지털' },
-  { name: '스포츠' },
-  { name: '여행' },
-  { name: '문화' },
-  { name: '기타' },
+  { id: 1, name: '전체' }, // '전체'는 특별하게 처리
+  { id: 2, name: '패션' },
+  { id: 3, name: '뷰티' },
+  { id: 4, name: '가구' },
+  { id: 5, name: '출산/육아' },
+  { id: 6, name: '식품' },
+  { id: 7, name: '생활용품' },
+  { id: 8, name: '반려동물' },
+  { id: 9, name: '디지털' },
+  { id: 10, name: '스포츠' },
+  { id: 11, name: '여행' },
+  { id: 12, name: '문화' },
+  { id: 13, name: '기타' },
 ];
 
 const CategoryMenu = () => {
-  const [activeCategory, setActiveCategory] = React.useState('전체');
+  const [selectedCategory, setSelectedCategory] = useRecoilState(selectedCategoryState);
 
   return (
     <Container>
       {categories.map((category) => (
-        <CategoryItem key={category.name}>
+        <CategoryItem key={category.id}>
           <IconWrapper
-            $isActive={activeCategory === category.name}
-            onClick={() => setActiveCategory(category.name)}
+            $isActive={selectedCategory === category.id}
+            onClick={() => setSelectedCategory(category.id)}
           >
             {/* 아이콘 이미지 추가 가능 */}
           </IconWrapper>
@@ -58,7 +60,6 @@ const Container = styled.div`
 
 const CategoryItem = styled.div`
   width: 60px;
-  /* 높이를 자동으로 설정하여 세로 스크롤 방지 */
   height: auto;
   position: relative;
   flex-shrink: 0;
@@ -74,11 +75,11 @@ const IconWrapper = styled.div<{ $isActive?: boolean }>`
   display: flex;
   justify-content: center;
   align-items: center;
+  cursor: pointer; /* 클릭 가능한 커서 표시 */
 `;
 
 const CategoryText = styled.div`
-  /* 텍스트가 한 줄에 표시되도록 설정 */
-  white-space: nowrap;
+  white-space: nowrap; /* 텍스트가 한 줄에 표시되도록 설정 */
   text-align: center;
   color: #415058;
   font-size: 14px;
