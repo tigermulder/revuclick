@@ -7,6 +7,8 @@ import {
   campaignLikeState,
 } from "store/recoil"
 import { getCampaignList } from "services/campaign"
+import CategoryMenu from "components/CategoryMenu"
+import BannerSlider from "components/Banner"
 import { FilterBar } from "components/FilterBar"
 import styled from "styled-components"
 
@@ -106,6 +108,12 @@ const MainPage = () => {
 
   return (
     <>
+      {/* 카테고리메뉴 */}
+      <CategoryMenu/>
+
+      <BannerSlider/>
+
+      {/* 필터칩 */}
       <FilterBar />
       <CampaignList>
         {filteredCampaigns?.map((campaign) => {
