@@ -189,7 +189,7 @@ const CampaignList = styled.ul`
   flex-wrap: wrap;
   gap: 10px;
   list-style-type: none;
-  padding: 24px 0;
+  padding: 24px 0 64px;
   width: 100%;
 `
 
