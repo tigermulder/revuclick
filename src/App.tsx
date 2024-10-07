@@ -4,6 +4,7 @@ import AppBar from "components/AppBar"
 import BottomTapBar from "components/BottomTapBar"
 import Footer from "components/Footer"
 import "./global.css"
+import GlobalCategoryMenu from "components/GlobalCategoryMenu"
 
 function App() {
   const location = useLocation() // 현재 경로확인
@@ -19,6 +20,8 @@ function App() {
       <AppRoute />
       {/* 특정 경로에서만 푸터 렌더링 */}
       {showFooter && <Footer />}
+      {/* GlobalCategoryMenu는 항상 렌더링되어야 함 */}
+      <GlobalCategoryMenu />
       {/* Bottom Tap Bar */}
       <BottomTapBar />
     </div>

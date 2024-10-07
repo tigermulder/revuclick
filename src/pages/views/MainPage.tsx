@@ -5,11 +5,12 @@ import {
   campaignListState,
   filteredAndSortedCampaignList,
   campaignLikeState,
-} from "store/recoil"
+} from "store/mainpage-recoil"
 import { getCampaignList } from "services/campaign"
 import CategoryMenu from "components/CategoryMenu"
 import BannerSlider from "components/Banner"
 import { FilterBar } from "components/FilterBar"
+import IcoHeart from "assets/ico-appbar-heart.svg?react"
 import styled from "styled-components"
 
 const MainPage = () => {
@@ -109,9 +110,9 @@ const MainPage = () => {
   return (
     <>
       {/* 카테고리메뉴 */}
-      <CategoryMenu/>
+      <CategoryMenu />
 
-      <BannerSlider/>
+      <BannerSlider />
 
       {/* 필터칩 */}
       <FilterBar />
@@ -159,7 +160,7 @@ const MainPage = () => {
                       toggleLike(campaign.categoryId, campaign.campaignId)
                     }
                   >
-                    {isLiked ? "❤️" : "🤍"}
+                    <StyledHeartIcon $isLiked={isLiked} />
                   </LikeButton>
                 )}
               </CampaignImage>
@@ -185,9 +186,9 @@ const MainPage = () => {
 export default MainPage
 
 const CampaignList = styled.ul`
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.4rem;
   list-style-type: none;
   padding: 24px 0 64px;
   width: 100%;
@@ -195,8 +196,7 @@ const CampaignList = styled.ul`
 
 const CampaignCard = styled.li<{ $isEnded: boolean }>`
   position: relative; /* 딤드 및 오버레이 위치를 위해 relative 설정 */
-  width: 48.5%;
-  border-radius: 4px;
+  width: 100%;
   overflow: hidden;
   background-color: white;
   pointer-events: ${(props) =>
@@ -205,6 +205,9 @@ const CampaignCard = styled.li<{ $isEnded: boolean }>`
 
 const CampaignImage = styled.div`
   position: relative;
+  border-radius: 4px;
+  overflow: hidden;
+  background: var(--white);
   img {
     width: 100%;
     height: 178px;
@@ -220,7 +223,7 @@ const RemainingDays = styled.span<{ $isEnded: boolean }>`
   background-color: black;
   color: white;
   padding: 5px 6px;
-  border-radius: 1px;
+  border-radius: 0.2rem;
   font-size: 14px;
   font-weight: var(--font-weight-bold);
   z-index: 2;
@@ -236,6 +239,14 @@ const EndedOverlay = styled.div`
   z-index: 1;
 `
 
+const StyledHeartIcon = styled(IcoHeart)<{ $isLiked: boolean }>`
+  width: 24px;
+  height: auto;
+  color: ${({ $isLiked }) =>
+    $isLiked ? "var(--revu-color)" : "var(--n40-color)"};
+  transition: fill 0.1s ease;
+`
+
 const LikeButton = styled.button`
   position: absolute;
   bottom: 10px;
@@ -247,27 +258,34 @@ const LikeButton = styled.button`
 `
 
 const CampaignCardInfo = styled.div`
-  padding: 9px 2px;
+  padding: 1.2rem 0;
 `
 
 const Price = styled.p`
-  margin-bottom: 10px;
-  font-size: 18px;
-  font-weight: bold;
+  font-size: 1.6rem;
+  font-weight: 800;
+  line-height: var(--base-line-height);
 `
 
 const Title = styled.p`
-  font-size: 14px;
-  color: #333;
-  margin: 5px 0;
+  line-height: var(--font-h1-line-height);
+  font-size: 1.3rem;
+  font-weight: 500;
+  margin: 0.4rem 0 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
 `
 
 const Participants = styled.p`
-  margin-top: 10px;
-  font-size: 12px;
-  color: #888;
+  margin: 1rem 0 0.8rem;
+  font-size: 1.2rem;
+  color: var(--n200-color);
 
   em {
     color: var(--primary-color);
+    font-weight: 500;
   }
 `
