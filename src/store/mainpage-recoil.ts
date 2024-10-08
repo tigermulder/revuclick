@@ -1,5 +1,5 @@
 import { atom, selector } from "recoil"
-import { Campaign } from "types/api-types/campaign-type"
+import { Campaign, CampaignLikeState } from "types/api-types/campaign-type"
 
 //** 캠페인 리스트 */
 // 1. 캠페인 리스트를 저장 아톰 /
@@ -95,7 +95,7 @@ export const filteredAndSortedCampaignList = selector<Campaign[]>({
 })
 
 // ** 찜한 캠페인 ID 리스트 */
-export const campaignLikeState = atom<{ [categoryId: number]: number[] }>({
+export const campaignLikeState = atom<CampaignLikeState>({
   key: "campaignLikeState",
   default: {}, // 카테고리별로 찜한 캠페인 ID 리스트를 관리하는 객체
 })

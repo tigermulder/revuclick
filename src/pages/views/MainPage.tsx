@@ -1,6 +1,7 @@
+// src/pages/MainPage.tsx
 import { useEffect, useRef } from "react"
 import { useInfiniteQuery } from "@tanstack/react-query"
-import { useSetRecoilState, useRecoilValue, useRecoilState } from "recoil"
+import { useSetRecoilState, useRecoilValue } from "recoil"
 import {
   campaignListState,
   filteredAndSortedCampaignList,
@@ -10,14 +11,14 @@ import { getCampaignList } from "services/campaign"
 import CategoryMenu from "components/CategoryMenu"
 import BannerSlider from "components/Banner"
 import { FilterBar } from "components/FilterBar"
-import IcoHeart from "assets/ico-appbar-heart.svg?react"
 import styled from "styled-components"
+import LikeButton from "components/LikeButton" // 새로 생성한 LikeButton 컴포넌트 임포트
 
-const MainPage = () => {
+const MainPage = (): JSX.Element => {
   const setCampaignList = useSetRecoilState(campaignListState)
   const filteredCampaigns = useRecoilValue(filteredAndSortedCampaignList)
-  const [likedCampaigns, setLikedCampaigns] = useRecoilState(campaignLikeState)
-  const loadMoreRef = useRef(null)
+  const loadMoreRef = useRef<HTMLDivElement | null>(null)
+  const campaignLikes = useRecoilValue(campaignLikeState) // 추가
 
   //** Fetch campaign list */
   const fetchCampaigns = async ({ pageParam = 1 }) => {
@@ -28,6 +29,11 @@ const MainPage = () => {
     const response = await getCampaignList(requestData)
     return response
   }
+
+  // 찜장바구니 상태값 확인
+  useEffect(() => {
+    console.log("현재 장바구니상태:", campaignLikes)
+  }, [campaignLikes])
 
   //** 리액트쿼리 */
   const {
@@ -68,12 +74,10 @@ const MainPage = () => {
       },
       { threshold: 1.0 }
     )
-
     const currentElement = loadMoreRef.current
     if (currentElement) {
       observer.observe(currentElement)
     }
-
     return () => {
       if (currentElement) {
         observer.unobserve(currentElement)
@@ -81,39 +85,11 @@ const MainPage = () => {
     }
   }, [fetchNextPage, hasNextPage])
 
-  //** 찜(좋아요) 상태 변경 함수 */
-  const toggleLike = (categoryId: number, campaignId: number) => {
-    setLikedCampaigns((prevLikes) => {
-      // 현재 카테고리의 캠페인 ID 목록을 가져옴. 없으면 빈 배열로 초기화
-      const currentLikes = prevLikes[categoryId] || []
-
-      if (currentLikes.includes(campaignId)) {
-        // 이미 찜한 경우 해당 캠페인을 제거
-        return {
-          ...prevLikes,
-          [categoryId]: currentLikes.filter((id) => id !== campaignId),
-        }
-      } else {
-        // 찜하지 않은 경우 캠페인을 추가
-        return {
-          ...prevLikes,
-          [categoryId]: [...currentLikes, campaignId],
-        }
-      }
-    })
-  }
-
-  useEffect(() => {
-    console.log(likedCampaigns)
-  }, [likedCampaigns])
-
   return (
     <>
       {/* 카테고리메뉴 */}
       <CategoryMenu />
-
       <BannerSlider />
-
       {/* 필터칩 */}
       <FilterBar />
       <CampaignList>
@@ -123,7 +99,6 @@ const MainPage = () => {
           const now = Date.now()
           const diffInMs = endTime - now
           const diffInDays = diffInMs / (1000 * 60 * 60 * 24)
-
           let remainingTime
           if (diffInDays > 1) {
             remainingTime = `D-${Math.ceil(diffInDays)}일`
@@ -133,12 +108,6 @@ const MainPage = () => {
           } else {
             remainingTime = "캠페인 종료"
           }
-
-          // 해당 캠페인이 찜되어 있는지 확인
-          const isLiked =
-            likedCampaigns[campaign.categoryId]?.includes(
-              campaign.campaignId
-            ) ?? false
           const isEnded = remainingTime === "캠페인 종료"
 
           return (
@@ -152,16 +121,12 @@ const MainPage = () => {
                 <RemainingDays $isEnded={isEnded}>
                   {isEnded ? "캠페인 종료" : remainingTime}
                 </RemainingDays>
-
                 {isEnded && <EndedOverlay />}
                 {!isEnded && (
                   <LikeButton
-                    onClick={() =>
-                      toggleLike(campaign.categoryId, campaign.campaignId)
-                    }
-                  >
-                    <StyledHeartIcon $isLiked={isLiked} />
-                  </LikeButton>
+                    categoryId={campaign.categoryId}
+                    campaignId={campaign.campaignId}
+                  />
                 )}
               </CampaignImage>
               <CampaignCardInfo>
@@ -185,6 +150,7 @@ const MainPage = () => {
 
 export default MainPage
 
+// Styled Components
 const CampaignList = styled.ul`
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -239,24 +205,6 @@ const EndedOverlay = styled.div`
   z-index: 1;
 `
 
-const StyledHeartIcon = styled(IcoHeart)<{ $isLiked: boolean }>`
-  width: 24px;
-  height: auto;
-  color: ${({ $isLiked }) =>
-    $isLiked ? "var(--revu-color)" : "var(--n40-color)"};
-  transition: fill 0.1s ease;
-`
-
-const LikeButton = styled.button`
-  position: absolute;
-  bottom: 10px;
-  right: 10px;
-  background: transparent;
-  border: none;
-  font-size: 24px;
-  cursor: pointer;
-`
-
 const CampaignCardInfo = styled.div`
   padding: 1.2rem 0;
 `
@@ -283,7 +231,6 @@ const Participants = styled.p`
   margin: 1rem 0 0.8rem;
   font-size: 1.2rem;
   color: var(--n200-color);
-
   em {
     color: var(--primary-color);
     font-weight: 500;

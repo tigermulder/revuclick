@@ -22,6 +22,7 @@ export default defineConfig(({ mode }) => {
       },
     },
     build: {
+      outDir: "dist", // 빌드 출력 디렉토리 확인
       rollupOptions: {
         output: {
           assetFileNames: (assetInfo) => {

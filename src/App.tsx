@@ -3,8 +3,9 @@ import { useLocation } from "react-router-dom"
 import AppBar from "components/AppBar"
 import BottomTapBar from "components/BottomTapBar"
 import Footer from "components/Footer"
-import "./global.css"
+import ToastMassage from "components/ToastMassage"
 import GlobalCategoryMenu from "components/GlobalCategoryMenu"
+import "./global.css"
 
 function App() {
   const location = useLocation() // 현재 경로확인
@@ -24,6 +25,8 @@ function App() {
       <GlobalCategoryMenu />
       {/* Bottom Tap Bar */}
       <BottomTapBar />
+      {/* ToastMassage */}
+      <ToastMassage />
     </div>
   )
 }

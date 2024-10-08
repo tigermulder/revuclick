@@ -1,6 +1,6 @@
 import styled from "styled-components"
 import { Link } from "react-router-dom"
-import { useUserStatus } from "hooks/userstatus"
+import { useUserStatus } from "hooks/useUserStatus"
 import RevuClickLogo from "assets/revu_logo.svg?react"
 import IcoSearch from "assets/ico-search.svg?react"
 import IcoAppBarHeart from "assets/ico-appbar-heart.svg?react"

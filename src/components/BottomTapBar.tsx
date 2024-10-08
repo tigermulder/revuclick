@@ -77,7 +77,7 @@ const Nav = styled.nav`
   background: var(--white);
   display: flex;
   justify-content: center;
-  gap: 15px;
+  gap: 8px;
   align-items: center;
   border-top: 1px solid #ddd;
 `
