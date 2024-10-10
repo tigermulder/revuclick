@@ -3,8 +3,10 @@ import Layout from "./Layout"
 import LoginPage from "./views/LoginPage" // 로그인 페이지
 import SignUpPage from "./views/SignUpPage"
 import MainPage from "./views/MainPage"
+import { CampaignDetailPage } from "./views/CampaignDetailPage"
 import { RoutePath } from "types/route-path"
 import CameraTest from "./views/CameraTest"
+
 
 export const AppRoute = () => {
   return (
@@ -13,6 +15,8 @@ export const AppRoute = () => {
       <Route element={<Layout />}>
         {/* main 페이지 */}
         <Route path={RoutePath.Home} element={<MainPage />} />
+        {/* 캠페인상세 페이지 */}
+        <Route path={RoutePath.CampaignDetail} element={<CampaignDetailPage />} />
         {/* 로그인 페이지 */}
         <Route path={RoutePath.Login} element={<LoginPage />} />
         {/* 회원가입 페이지 */}
