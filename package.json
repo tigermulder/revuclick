@@ -7,7 +7,7 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview",
+    "preview": "tsc -b && vite preview",
     "reload:dev": "pm2 reload ecosystem.config.cjs --only dev-revu-front",
     "start:dev": "pm2 start ecosystem.config.cjs --only dev-revu-front",
     "reload:prod": "pm2 reload ecosystem.config.cjs --only live-revu-front",
