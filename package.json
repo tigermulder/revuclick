@@ -7,7 +7,11 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "reload:dev": "pm2 reload ecosystem.config.cjs --only dev-revu-front",
+    "start:dev": "pm2 start ecosystem.config.cjs --only dev-revu-front",
+    "reload:prod": "pm2 reload ecosystem.config.cjs --only live-revu-front",
+    "start:prod": "pm2 start ecosystem.config.cjs --only live-revu-front"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.56.2",
@@ -32,12 +36,10 @@
     "@typescript-eslint/eslint-plugin": "^8.7.0",
     "@typescript-eslint/parser": "^8.7.0",
     "@vitejs/plugin-react-swc": "^3.5.0",
-    "autoprefixer": "^10.4.20",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.2.1",
     "eslint-plugin-react": "^7.36.1",
     "eslint-plugin-react-hooks": "^5.1.0-rc.0",
-    "postcss": "^8.4.47",
     "prettier": "^3.3.3",
     "typescript": "^5.5.3",
     "vite": "^5.4.1",
