@@ -20,7 +20,7 @@ module.exports = {
       autorestart: true,
       watch: false,
       env: {
-        NODE_ENV: process.env.VITE_SERVER_URL,
+        NODE_ENV: "https://dev-api.revuclick.io",
         PORT: 5000,
       },
     },
@@ -34,7 +34,7 @@ module.exports = {
       autorestart: true,
       watch: false,
       env: {
-        NODE_ENV: process.env.VITE_SERVER_URL,
+        NODE_ENV: "https://dev-api.revuclick.io",
         PORT: 5000,
       },
     },
