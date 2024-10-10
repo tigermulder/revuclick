@@ -72,7 +72,7 @@ const Nav = styled.nav`
   left: 0;
   z-index: 20;
   width: 100%;
-  height: 6.6rem;
+  height: 5.9rem;
   padding: 1.2rem 16px;
   background: var(--white);
   display: flex;

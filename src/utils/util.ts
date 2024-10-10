@@ -16,11 +16,19 @@ export const categories = [
 
 //** 이메일 유효성 검사 함수 */
 export const checkEmail = (emailId: string): string | false => {
-  return emailId.length > 0 ? `${emailId}@naver.com` : false
+  const email = `${emailId}@naver.com`
+  const regex = /^[a-zA-Z0-9._%+-]+@naver\.com$/
+  if (regex.test(email)) {
+    return email
+  }
+  return false
 }
 
 //** 비밀번호 유효성 검사 함수 */
 export const checkPassword = (password: string): string | false => {
   const regex = /^[A-Za-z0-9!@#$%^&*(),.?":{}|<>]{8,16}$/
-  return regex.test(password) ? password : false
+  if (regex.test(password)) {
+    return password
+  }
+  return false
 }

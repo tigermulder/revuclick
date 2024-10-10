@@ -93,12 +93,12 @@ const MenuContainer = styled.div`
   display: flex;
   justify-content: center;
   width: 100%;
-  max-height: auto;
+  height: auto;
   background: white;
   border-top-left-radius: 16px;
   border-top-right-radius: 16px;
-  animation: ${slideUp} 0.2s ease-out;
-  padding: 4rem 3rem 3rem;
+  animation: ${slideUp} 0.15s ease-out;
+  padding: 4rem 2rem 3rem;
   position: relative;
 `
 
@@ -143,7 +143,7 @@ const CategoryText = styled.div`
   white-space: nowrap;
   text-align: center;
   color: #415058;
-  font-size: 14px;
+  font-size: 1.3rem;
   font-family: "SUIT", sans-serif;
   font-weight: 500;
   line-height: 1.3;

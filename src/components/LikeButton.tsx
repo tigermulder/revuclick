@@ -18,7 +18,7 @@ const LikeButton = ({
   const router = useRouter() // 네비게이션 커스텀훅
 
   const handleLike = (): void => {
-    const token = localStorage.getItem("token") // 로컬 스토리지에서 토큰 확인
+    const token = localStorage.getItem("authToken") // 로컬 스토리지에서 토큰 확인
 
     if (!token) {
       addToast("로그인이 필요합니다.", "warning", 2000, "login")
