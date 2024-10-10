@@ -54,3 +54,8 @@ export interface CampaignItemResponse {
     join: number // 1: 참여, 0: 미참여
   }
 }
+
+//** 카테고리별로 좋아요된 캠페인 ID 배열 */
+export interface CampaignLikeState {
+  [categoryId: number]: number[]
+}

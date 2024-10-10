@@ -21,7 +21,7 @@ const BannerWrapper = styled.div`
   height: 210px;
   overflow: hidden;
   margin: 16px 0;
-  border-radius: 20px;
+  border-radius: 10px;
 `;
 
 interface BannerContainerProps {
@@ -43,7 +43,7 @@ const BannerItem = styled.div<BannerItemProps>`
   min-width: 100%;
   height: 100%;
   background-color: ${({ color }) => color};
-  border-radius: 20px;
+  border-radius: 10px;
 `;
 
 const Indicator = styled.div`

@@ -1,4 +1,6 @@
 import { Link, useLocation } from "react-router-dom"
+import { useSetRecoilState } from "recoil"
+import { isGlobalCategoryMenuOpenState } from "store/mainpage-recoil"
 import styled from "styled-components"
 import IconCategory from "assets/ico_tab_01.svg?react"
 import IconCampaign from "assets/ico_tab_02.svg?react"
@@ -9,11 +11,18 @@ import IconProfile from "assets/ico_tab_05.svg?react"
 const BottomTabBar = () => {
   const location = useLocation()
   const currentPath = location.pathname
+  const setIsMenuOpen = useSetRecoilState(isGlobalCategoryMenuOpenState)
 
+  const handleCategoryClick = () => {
+    setIsMenuOpen(true)
+  }
   return (
     <Nav className="bottom-tab-bar">
-      <NavItem $active={currentPath === "/category"}>
-        <Link to="/category">
+      <NavItem
+        $active={currentPath === "/category"}
+        onClick={handleCategoryClick}
+      >
+        <Link to={location}>
           <StyledIcon as={IconCategory} $active={currentPath === "/category"} />
           <NavText $active={currentPath === "/category"}>카테고리</NavText>
         </Link>
@@ -68,7 +77,7 @@ const Nav = styled.nav`
   background: var(--white);
   display: flex;
   justify-content: center;
-  gap: 15px;
+  gap: 8px;
   align-items: center;
   border-top: 1px solid #ddd;
 `

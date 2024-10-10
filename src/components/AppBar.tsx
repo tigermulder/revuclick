@@ -1,9 +1,9 @@
 import styled from "styled-components"
 import { Link } from "react-router-dom"
-import { useUserStatus } from "hooks/userstatus"
+import { useUserStatus } from "hooks/useUserStatus"
 import RevuClickLogo from "assets/revu_logo.svg?react"
 import IcoSearch from "assets/ico-search.svg?react"
-import IcoAppBarHeart from "assets/ico-heart.svg?react"
+import IcoAppBarHeart from "assets/ico-appbar-heart.svg?react"
 
 const AppBar = () => {
   const { isLoggedIn } = useUserStatus()
@@ -34,7 +34,7 @@ const AppBar = () => {
         </HeartIcon>
       ) : (
         <SignUpLink>
-          <Link to="/login">회원가입</Link>
+          <Link to="/login">로그인</Link>
         </SignUpLink>
       )}
     </Header>
@@ -57,7 +57,7 @@ const Header = styled.header`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* 그림자 적용 */
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08); /* 그림자 적용 */
 `
 
 const Logo = styled.div`

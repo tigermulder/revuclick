@@ -3,6 +3,8 @@ import { useLocation } from "react-router-dom"
 import AppBar from "components/AppBar"
 import BottomTapBar from "components/BottomTapBar"
 import Footer from "components/Footer"
+import ToastMassage from "components/ToastMassage"
+import GlobalCategoryMenu from "components/GlobalCategoryMenu"
 import "./global.css"
 
 function App() {
@@ -19,8 +21,12 @@ function App() {
       <AppRoute />
       {/* 특정 경로에서만 푸터 렌더링 */}
       {showFooter && <Footer />}
+      {/* GlobalCategoryMenu는 항상 렌더링되어야 함 */}
+      <GlobalCategoryMenu />
       {/* Bottom Tap Bar */}
       <BottomTapBar />
+      {/* ToastMassage */}
+      <ToastMassage />
     </div>
   )
 }

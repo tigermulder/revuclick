@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { checkEmail, checkPassword } from "utils/util"
 import { login } from "services/login"
-import { useRouter } from "hooks/routing"
+import { useRouter } from "hooks/useRouting"
 import styled from "styled-components"
 import { useMutation } from "@tanstack/react-query"
 

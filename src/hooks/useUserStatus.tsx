@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query"
 import { useRecoilState } from "recoil"
 import { useEffect } from "react"
-import { authState } from "store/recoil"
+import { authState } from "store/appbar-recoil"
 import { keepSessionAlive } from "services/login"
 import { HangResponse } from "types/api-types/hang-type"
 

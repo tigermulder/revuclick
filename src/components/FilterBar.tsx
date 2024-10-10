@@ -1,6 +1,6 @@
 import styled from "styled-components"
 import { useRecoilState } from "recoil"
-import { campaignFilterState } from "store/recoil"
+import { campaignFilterState } from "store/mainpage-recoil"
 
 // ** FilterBar 컴포넌트입니다 */
 export const FilterBar = () => {
