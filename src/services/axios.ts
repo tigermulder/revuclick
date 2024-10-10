@@ -2,10 +2,11 @@ import axios, { AxiosInstance } from "axios"
 
 //** env 파일 */
 const baseURL = import.meta.env.VITE_BASE_URL
+const API = import.meta.env.VITE_SERVER_URL
 
 //** Axios 인스턴스생성 */
 const axiosInstance: AxiosInstance = axios.create({
-  baseURL: "",
+  baseURL: API,
   withCredentials: true,
   headers: {
     "Content-Type": "application/json",
