@@ -5,7 +5,7 @@ const baseURL = import.meta.env.VITE_BASE_URL
 
 //** Axios 인스턴스생성 */
 const axiosInstance: AxiosInstance = axios.create({
-  baseURL,
+  baseURL: "",
   withCredentials: true,
   headers: {
     "Content-Type": "application/json",

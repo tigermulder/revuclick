@@ -1,13 +1,3 @@
-const dotenv = require("dotenv")
-
-// 운영환경일때 .env.production 파일로드
-if (process.env.NODE_ENV === "production") {
-  dotenv.config({ path: "./.env.production" })
-} else {
-  // 개발 환경일때 .env.development 파일로드
-  dotenv.config({ path: "./.env.development" })
-}
-
 module.exports = {
   apps: [
     {
@@ -20,7 +10,7 @@ module.exports = {
       autorestart: true,
       watch: false,
       env: {
-        NODE_ENV: "https://dev-api.revuclick.io",
+        NODE_ENV: "production",
         PORT: 5000,
       },
     },
@@ -34,7 +24,7 @@ module.exports = {
       autorestart: true,
       watch: false,
       env: {
-        NODE_ENV: "https://dev-api.revuclick.io",
+        NODE_ENV: "development",
         PORT: 5000,
       },
     },
