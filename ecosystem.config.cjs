@@ -1,3 +1,13 @@
+const dotenv = require("dotenv")
+
+// 운영환경일때 .env.production 파일로드
+if (process.env.NODE_ENV === "production") {
+  dotenv.config({ path: "./.env.production" })
+} else {
+  // 개발 환경일때 .env.development 파일로드
+  dotenv.config({ path: "./.env.development" })
+}
+
 module.exports = {
   apps: [
     {
@@ -10,7 +20,7 @@ module.exports = {
       autorestart: true,
       watch: false,
       env: {
-        NODE_ENV: "production",
+        NODE_ENV: process.env.VITE_SERVER_URL,
         PORT: 5000,
       },
     },
@@ -24,7 +34,7 @@ module.exports = {
       autorestart: true,
       watch: false,
       env: {
-        NODE_ENV: "development",
+        NODE_ENV: process.env.VITE_SERVER_URL,
         PORT: 5000,
       },
     },
