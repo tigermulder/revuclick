@@ -8,10 +8,10 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "reload:dev": "pm2 reload ecosystem.config.js --only dev-revu-front",
-    "start:dev": "pm2 start ecosystem.config.js --only dev-revu-front",
-    "reload:prod": "pm2 reload ecosystem.config.js --only live-revu-front",
-    "start:prod": "pm2 start ecosystem.config.js --only live-revu-front"
+    "reload:dev": "pm2 reload ecosystem.config.cjs --only dev-revu-front",
+    "start:dev": "pm2 start ecosystem.config.cjs --only dev-revu-front",
+    "reload:prod": "pm2 reload ecosystem.config.cjs --only live-revu-front",
+    "start:prod": "pm2 start ecosystem.config.cjs --only live-revu-front"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.56.2",
