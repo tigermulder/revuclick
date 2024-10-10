@@ -4,6 +4,7 @@ import LoginPage from "./views/LoginPage" // 로그인 페이지
 import SignUpPage from "./views/SignUpPage"
 import MainPage from "./views/MainPage"
 import { RoutePath } from "types/route-path"
+import CameraTest from "./views/CameraTest"
 
 export const AppRoute = () => {
   return (
@@ -16,6 +17,8 @@ export const AppRoute = () => {
         <Route path={RoutePath.Login} element={<LoginPage />} />
         {/* 회원가입 페이지 */}
         <Route path={RoutePath.Join} element={<SignUpPage />} />
+        {/* 카메라 테스트 */}
+        <Route path={RoutePath.Camera} element={<CameraTest />} />
       </Route>
     </ReactRouterRoutes>
   )

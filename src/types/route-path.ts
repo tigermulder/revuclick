@@ -4,6 +4,7 @@ export const RoutePath = {
   Join: "/join",
   FindId: "/find_id",
   FindPassword: "/find_password",
+  Camera: "/camera",
   UserProfile: (id: string) => `/user/${id}`,
 } as const
 

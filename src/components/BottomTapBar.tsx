@@ -1,6 +1,7 @@
 import { Link, useLocation } from "react-router-dom"
 import { useSetRecoilState } from "recoil"
 import { isGlobalCategoryMenuOpenState } from "store/mainpage-recoil"
+import { RoutePath } from "@/types/route-path"
 import styled from "styled-components"
 import IconCategory from "assets/ico_tab_01.svg?react"
 import IconCampaign from "assets/ico_tab_02.svg?react"
@@ -29,7 +30,7 @@ const BottomTabBar = () => {
       </NavItem>
 
       <NavItem $active={currentPath.startsWith("/campaign")}>
-        <Link to="/campaign">
+        <Link to={RoutePath.Camera}>
           <StyledIcon
             as={IconCampaign}
             $active={currentPath.startsWith("/campaign")}
@@ -41,7 +42,7 @@ const BottomTabBar = () => {
       </NavItem>
 
       <NavItem $active={currentPath === "/main"}>
-        <Link to="/main">
+        <Link to={RoutePath.Home}>
           <StyledIcon as={IconHome} $active={currentPath === "/main"} />
           <NavText $active={currentPath === "/main"}>Home</NavText>
         </Link>
