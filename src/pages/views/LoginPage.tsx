@@ -7,68 +7,15 @@ import { RoutePath } from "@/types/route-path"
 import { useMutation } from "@tanstack/react-query"
 import { useSetRecoilState } from "recoil"
 import { toastListState } from "@/store/toast-recoil"
-import RevuClickLogo from "assets/revu_icon.svg?react"
-import RevuClickText from "assets/revu_logo.svg?react"
+import RevuLogoIcon from "assets/revu_icon.svg?react"
+import RevuTextIcon from "assets/revu_logo.svg?react"
+import TextField from "@/components/TextField"; 
+import Button from "@/components/Button"
 import styled from "styled-components"
-
-// TextField Component
-const TextField = ({
-  type,
-  name,
-  placeholder,
-  value,
-  onChange,
-  suffix,
-  $isError,
-}: {
-  type: string
-  name: string
-  placeholder: string
-  value: string
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
-  suffix?: string
-  $isError?: boolean
-}) => (
-  <TextFieldContainer>
-    <InputWrapper $isError={$isError}>
-      <StyledInput
-        type={type}
-        name={name}
-        placeholder={placeholder}
-        value={value}
-        onChange={onChange}
-      />
-      {suffix && <Suffix>{suffix}</Suffix>}
-    </InputWrapper>
-    {$isError && (
-      <Description>
-        아이디 또는 비밀번호가 잘못되었습니다. 아이디와 비밀번호를 정확히
-        입력해주세요
-      </Description>
-    )}
-  </TextFieldContainer>
-)
-
-// Button Component
-const Button = ({
-  children,
-  disabled,
-  $variant, // 'red' or 'outlined'
-  type = "button", // default to "button" to prevent unintended form submission
-}: {
-  children: React.ReactNode
-  disabled?: boolean
-  $variant: "red" | "outlined"
-  type?: "button" | "submit" | "reset"
-}) => (
-  <StyledButton disabled={disabled} $variant={$variant} type={type}>
-    {children}
-  </StyledButton>
-)
 
 // LoginPage Component
 const LoginPage = () => {
-  const navigate = useNavigate() // React Router's navigation hook
+  const navigate = useNavigate() 
   const [emailId, setEmailId] = useState<string>("")
   const [password, setPassword] = useState<string>("")
   const [isButtonEnabled, setIsButtonEnabled] = useState<boolean>(false)
@@ -77,6 +24,16 @@ const LoginPage = () => {
   const [loginMessage, setLoginMessage] = useState<string>("")
 
   const setToasts = useSetRecoilState(toastListState) // Recoil 상태 업데이트 함수
+
+  // 로그인된 사용자가 /login 페이지로 접근하면 메인 페이지로 리다이렉트
+  useEffect(() => {
+    const token = localStorage.getItem("authToken");
+    if (token) {
+      // 토큰이 있으면 메인 페이지로 리다이렉트
+      navigate(RoutePath.Home);
+      addToast("로그인된상태입니다.", "info")
+    }
+  }, [navigate]);
 
   // 토스트 메시지를 추가하는 함수
   const addToast = (
@@ -156,7 +113,6 @@ const LoginPage = () => {
     mutation.mutate(loginData)
   }
 
-  // Throw error to ErrorBoundary if mutation fails
   if (mutation.isError) {
     console.error("Throwing mutation error to ErrorBoundary:", mutation.error)
     throw mutation.error
@@ -165,12 +121,8 @@ const LoginPage = () => {
   return (
     <Container>
       <Title>
-        <LogoImage>
-          <RevuClickLogo aria-label="RevuClick Logo" />
-        </LogoImage>
-        <LogoText>
-          <RevuClickText aria-label="RevuClick Text" />
-        </LogoText>
+        <RevuClickLogo aria-label="RevuClick Logo" />
+        <RevuClickText aria-label="RevuClick Text" />
         <MainText>
           리뷰로
           <br />
@@ -221,7 +173,7 @@ const LoginPage = () => {
             <StyledLink to={RoutePath.FindPassword}>비밀번호 찾기</StyledLink>
           </LinkContainer>
           <Button
-            type="button" // Ensures this button doesn't submit the form
+            type="button" 
             $variant="outlined"
           >
             회원가입
@@ -236,7 +188,7 @@ export default LoginPage
 
 // Styled Components
 const Container = styled.div`
-  padding: 6.8rem 1.6rem 0;
+  padding: 6.8rem 0;
   text-align: center;
   display: flex;
   flex-direction: column;
@@ -250,13 +202,15 @@ const Title = styled.div`
   justify-content: center;
 `
 
-const LogoImage = styled.div`
+const RevuClickLogo = styled(RevuLogoIcon)`
   width: 3.5rem;
+  color: var(--revu-color);
 `
 
-const LogoText = styled.div`
+const RevuClickText = styled(RevuTextIcon)`
   width: 8.4rem;
   margin-top: 0.9rem;
+  color: var(--revu-color);
 `
 
 const MainText = styled.h2`
@@ -280,40 +234,6 @@ const Form = styled.form`
   display: flex;
   flex-direction: column;
   align-items: stretch;
-`
-
-const TextFieldContainer = styled.div`
-  margin-bottom: 0.8rem;
-`
-
-const InputWrapper = styled.div<{ $isError?: boolean }>`
-  display: flex;
-  align-items: center;
-  border: 1px solid ${({ $isError }) => ($isError ? "red" : "#ddd")};
-  border-radius: 5px;
-  padding: 0.5rem;
-  transition: border-color 0.3s ease;
-`
-
-const StyledInput = styled.input`
-  flex: 1;
-  padding: 10px;
-  border: none; /* Remove default border since InputWrapper handles it */
-  border-radius: 5px;
-  font-size: 14px;
-  outline: none; /* Remove outline on focus if desired */
-`
-
-const Suffix = styled.span`
-  margin-left: 0.5rem;
-  color: #555;
-`
-
-const Description = styled.p`
-  text-align: left;
-  color: red;
-  font-size: 12px;
-  margin-top: 0.5rem;
 `
 
 const LoginMessage = styled.p`

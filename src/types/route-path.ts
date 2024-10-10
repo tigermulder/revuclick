@@ -2,9 +2,13 @@ export const RoutePath = {
   Home: "/main",
   Login: "/login",
   Join: "/join",
-  FindId: "/find_id1",
-  FindPassword: "/find_password1",
+  FindId: "/find_id",
+  FindPassword: "/find_password",
   UserProfile: (id: string) => `/user/${id}`,
 } as const
 
 export type RoutePath = (typeof RoutePath)[keyof typeof RoutePath]
+
+export interface ContentProps {
+  $isLoginPage: boolean; // isLoginPage prop을 정의
+}

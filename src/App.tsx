@@ -5,18 +5,21 @@ import BottomTapBar from "components/BottomTapBar"
 import Footer from "components/Footer"
 import ToastMassage from "components/ToastMassage"
 import GlobalCategoryMenu from "components/GlobalCategoryMenu"
+import { RoutePath } from "./types/route-path"
 import "./global.css"
 
 function App() {
   const location = useLocation() // 현재 경로확인
 
-  // ** 푸터를 표시할 경로 설정 (메인 페이지와 내 정보 페이지에서만 푸터 렌더링) */
+  const hideBar =
+    location.pathname === RoutePath.Login || location.pathname === RoutePath.Login
   const showFooter =
-    location.pathname === "/main" || location.pathname === "/profile"
+    location.pathname === RoutePath.Home
+
   return (
     <div className="App">
       {/* App Bar */}
-      <AppBar />
+      {!hideBar && <AppBar />}
       {/* 라우팅컴포넌트 */}
       <AppRoute />
       {/* 특정 경로에서만 푸터 렌더링 */}
@@ -24,7 +27,7 @@ function App() {
       {/* GlobalCategoryMenu는 항상 렌더링되어야 함 */}
       <GlobalCategoryMenu />
       {/* Bottom Tap Bar */}
-      <BottomTapBar />
+      {!hideBar && <BottomTapBar />}
       {/* ToastMassage */}
       <ToastMassage />
     </div>
