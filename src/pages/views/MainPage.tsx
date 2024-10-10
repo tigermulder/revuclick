@@ -95,7 +95,9 @@ const MainPage = (): JSX.Element => {
       <CampaignList>
         {filteredCampaigns?.map((campaign) => {
           // 남은 시간 계산
-          const endTime = new Date(campaign.endAt).getTime()
+          const endTime = campaign.endAt
+            ? new Date(campaign.endAt).getTime()
+            : 0
           const now = Date.now()
           const diffInMs = endTime - now
           const diffInDays = diffInMs / (1000 * 60 * 60 * 24)
