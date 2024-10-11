@@ -1,20 +1,3 @@
-<svg width="70" height="70" viewBox="0 0 70 70" fill="none" xmlns="http://www.w3.org/2000/svg">
-<g opacity="0.76" filter="url(#filter0_bd_2076_11953)">
-<rect x="12" y="8" width="46" height="46" rx="23" fill="white"/>
-<path d="M38 22L29 30.4375L38 40" stroke="#415058" stroke-width="2" stroke-linecap="round"/>
-</g>
-<defs>
-<filter id="filter0_bd_2076_11953" x="0" y="0" width="70" height="70" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
-<feFlood flood-opacity="0" result="BackgroundImageFix"/>
-<feGaussianBlur in="BackgroundImageFix" stdDeviation="4"/>
-<feComposite in2="SourceAlpha" operator="in" result="effect1_backgroundBlur_2076_11953"/>
-<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
-<feOffset dy="4"/>
-<feGaussianBlur stdDeviation="6"/>
-<feComposite in2="hardAlpha" operator="out"/>
-<feColorMatrix type="matrix" values="0 0 0 0 0.12549 0 0 0 0 0.12549 0 0 0 0 0.12549 0 0 0 0.12 0"/>
-<feBlend mode="normal" in2="effect1_backgroundBlur_2076_11953" result="effect2_dropShadow_2076_11953"/>
-<feBlend mode="normal" in="SourceGraphic" in2="effect2_dropShadow_2076_11953" result="shape"/>
-</filter>
-</defs>
+<svg width="12" height="20" viewBox="0 0 14 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M11 1L2 9.4375L11 19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
 </svg>

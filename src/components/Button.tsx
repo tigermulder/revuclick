@@ -1,6 +1,6 @@
 // src/components/Button.tsx
-import React from "react";
-import styled from "styled-components";
+import React from "react"
+import styled from "styled-components"
 
 // Button Component
 const Button = ({
@@ -9,17 +9,17 @@ const Button = ({
   $variant, // 'red' or 'outlined'
   type = "button", // default to "button" to prevent unintended form submission
 }: {
-  children: React.ReactNode;
-  disabled?: boolean;
-  $variant: "red" | "outlined";
-  type?: "button" | "submit" | "reset";
+  children: React.ReactNode
+  disabled?: boolean
+  $variant: "red" | "outlined"
+  type?: "button" | "submit" | "reset"
 }) => (
   <StyledButton disabled={disabled} $variant={$variant} type={type}>
     {children}
   </StyledButton>
-);
+)
 
-export default Button;
+export default Button
 
 // Styled Button component
 const StyledButton = styled.button<{ $variant: "red" | "outlined" }>`
@@ -35,9 +35,8 @@ const StyledButton = styled.button<{ $variant: "red" | "outlined" }>`
     props.$variant === "red" ? "white" : "var(--primary-color)"};
   border: ${(props) =>
     props.$variant === "outlined" ? "1px solid var(--n80-color)" : "none"};
-  border-radius: 5px;
+  border-radius: 8px;
   cursor: ${(props) => (props.disabled ? "not-allowed" : "pointer")};
-  margin-bottom: ${(props) => (props.$variant === "red" ? "1.2rem" : "6rem")};
 
   /* Optional: Add hover effects */
   &:hover {
@@ -46,4 +45,4 @@ const StyledButton = styled.button<{ $variant: "red" | "outlined" }>`
     border-color: ${(props) =>
       !props.disabled && props.$variant === "outlined" ? "#0056b3" : ""};
   }
-`;
+`

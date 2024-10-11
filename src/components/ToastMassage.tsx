@@ -89,7 +89,7 @@ const ToastWrapper = styled.div`
   top: 20px;
   right: 15px;
   left: 15px;
-  z-index: 999;
+  z-index: 9999;
 `
 
 const ToastItem = styled.div<ToastItemProps>`

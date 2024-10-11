@@ -266,7 +266,7 @@ const StyledButton = styled.button<{ $variant: "red" | "outlined" }>`
 `
 
 const LinkContainer = styled.div`
-  margin: 2rem 0 4.7rem 0;
+  margin: 2.5rem 0 4rem 0;
   font-size: 1.2rem;
   font-weight: var(--font-weight-medium);
   color: var(--n300-color);

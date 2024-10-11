@@ -36,7 +36,7 @@ const BottomTabBar = () => {
             $active={currentPath.startsWith(RoutePath.Camera)}
           />
           <NavText $active={currentPath.startsWith(RoutePath.Camera)}>
-            캠페인
+            나의 캠페인
           </NavText>
         </Link>
       </NavItem>

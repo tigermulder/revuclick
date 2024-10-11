@@ -5,8 +5,11 @@ import { getCampaignItem } from "services/campaign"
 import { CampaignItemResponse } from "@/types/api-types/campaign-type"
 import { formatDate } from "@/utils/util"
 import IconNoticeArrow from "assets/ico-notice-arrow.svg?react"
+import IconCampaignHeart from "assets/ico-campaign-detail-heart.svg?react"
 import CampaignDetailBackButton from "@/components/CampaignDetailBackButton"
 import CampaignDetailShareButton from "@/components/CampaignDetailShareButton"
+import Button from "@/components/Button"
+import LikeButton from "@/components/LikeButton"
 
 // React Query 키
 const CAMPAIGN_ITEM_QUERY_KEY = (campaignId: string | number) => [
@@ -58,7 +61,7 @@ export const CampaignDetailPage = () => {
   const discountRate = (
     (campaignDetail.reward / campaignDetail.price) *
     100
-  ).toFixed(2)
+  ).toFixed(0)
 
   // D-Day 계산
   const today = new Date()
@@ -70,7 +73,7 @@ export const CampaignDetailPage = () => {
     <>
       <CampaignDetailBackButton />
       <CampaignDetailShareButton />
-      <Background imageUrl={campaignDetail.thumbnailUrl}>
+      <Background $imageUrl={campaignDetail.thumbnailUrl}>
         <PopUp>
           🎉 신청을 서두르세요! 신청인원 {campaignDetail.joins}/
           {campaignDetail.quota}
@@ -106,9 +109,7 @@ export const CampaignDetailPage = () => {
             </li>
           </CampaignDetails>
         </CampaignContainer>
-        <ButtonWrapper>
-          <Button>상품보러가기</Button>
-        </ButtonWrapper>
+        <ButtonWrapper>{/* <Button>상품보러가기</Button> */}</ButtonWrapper>
       </Content>
 
       <Line />
@@ -123,7 +124,8 @@ export const CampaignDetailPage = () => {
           <ImagePlaceholder />
         </div>
         <MainButtonWrap>
-          <OutlinedButton>이용가이드 상세보기</OutlinedButton>
+          {/* 이용가이드 상세보기 버튼 */}
+          <Button $variant="outlined">이용가이드 상세보기</Button>
         </MainButtonWrap>
       </Main>
 
@@ -157,8 +159,13 @@ export const CampaignDetailPage = () => {
       </NoticeContent>
 
       <FooterButtons>
-        <HeartButton />
-        <RedButton>캠페인 신청하기</RedButton>
+        {/* 찜하기 버튼 */}
+        <LikeButton
+          categoryId={campaignDetail.categoryId}
+          campaignId={campaignDetail.campaignId}
+        />
+        {/* 캠페인 신청하기 버튼 */}
+        <Button $variant="red">캠페인 신청하기</Button>
       </FooterButtons>
     </>
   )
@@ -166,9 +173,9 @@ export const CampaignDetailPage = () => {
 
 /** 스타일드 컴포넌트 정의 **/
 
-const Background = styled.div<{ imageUrl: string }>`
+const Background = styled.div<{ $imageUrl: string }>`
   position: relative;
-  background-image: url(${(props) => props.imageUrl});
+  background-image: url(${(props) => props.$imageUrl});
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
@@ -262,7 +269,7 @@ const CampaignDetails = styled.ul`
     display: flex;
     justify-content: space-between;
     font-size: 14px;
-    color: #7c8b96;
+    color: var(--n300-color);
     margin-bottom: 10px;
 
     span:nth-child(1) {
@@ -281,29 +288,6 @@ const DetailInfo = styled.span`
 const ButtonWrapper = styled.div`
   margin-top: 33px;
   padding: 0 33px;
-`
-
-const Button = styled.button`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 3px;
-  width: 100%;
-  height: 36px;
-  border-radius: 16px;
-  font-size: var(--font-bodyM-size);
-  font-weight: var(--font-bodyM-weight);
-  line-height: var(--font-bodyM-line-height);
-  letter-spacing: var(--font-bodyM-letter-spacing);
-  background-color: var(--primary-color);
-  color: #fff;
-
-  &::after {
-    content: "";
-    background: url(./assets/img/ico--arrow.svg) no-repeat center / 100%;
-    width: 17px;
-    height: 16px;
-  }
 `
 
 const Line = styled.div`
@@ -374,6 +358,24 @@ const NoticeBox = styled.ul`
   }
 `
 
+const CampaignHeart = styled.div`
+  height: 100%;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-end;
+  gap: 3px;
+  display: inline-flex;
+`
+
+const HeartText = styled.div`
+  text-align: center;
+  color: #e50b14;
+  font-size: 7px;
+  font-family: "SUIT", sans-serif;
+  font-weight: 600;
+  word-wrap: break-word;
+`
+
 const FooterButtons = styled.div`
   display: flex;
   align-items: center;
@@ -383,7 +385,6 @@ const FooterButtons = styled.div`
   bottom: 0;
   left: 0;
   width: 100%;
-  height: 100px;
   background: #fff;
   z-index: 100;
   padding: 15px 20px;
