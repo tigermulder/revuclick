@@ -28,7 +28,7 @@ export default defineConfig(({ mode }) => {
     server: {
       proxy: {
         "/api": {
-          target: process.env.VITE_SERVER_URL,
+          target: "https://dev-api.revuclick.io",
           changeOrigin: true, // 서버의 Origin을 프록시 서버의 Origin으로 변경
           secure: false, // HTTPS를 사용할 때 인증서 검증을 무시 (개발 환경)
           rewrite: (path) => path.replace(/^\/api/, ""),

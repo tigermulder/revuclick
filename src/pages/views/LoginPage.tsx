@@ -9,13 +9,13 @@ import { useSetRecoilState } from "recoil"
 import { toastListState } from "@/store/toast-recoil"
 import RevuLogoIcon from "assets/revu_icon.svg?react"
 import RevuTextIcon from "assets/revu_logo.svg?react"
-import TextField from "@/components/TextField"; 
+import TextField from "@/components/TextField"
 import Button from "@/components/Button"
 import styled from "styled-components"
 
 // LoginPage Component
 const LoginPage = () => {
-  const navigate = useNavigate() 
+  const navigate = useNavigate()
   const [emailId, setEmailId] = useState<string>("")
   const [password, setPassword] = useState<string>("")
   const [isButtonEnabled, setIsButtonEnabled] = useState<boolean>(false)
@@ -27,13 +27,13 @@ const LoginPage = () => {
 
   // 로그인된 사용자가 /login 페이지로 접근하면 메인 페이지로 리다이렉트
   useEffect(() => {
-    const token = localStorage.getItem("authToken");
+    const token = localStorage.getItem("authToken")
     if (token) {
       // 토큰이 있으면 메인 페이지로 리다이렉트
-      navigate(RoutePath.Home);
+      navigate(RoutePath.Home)
       addToast("로그인된상태입니다.", "info")
     }
-  }, [navigate]);
+  }, [navigate])
 
   // 토스트 메시지를 추가하는 함수
   const addToast = (
@@ -96,7 +96,7 @@ const LoginPage = () => {
     },
   })
 
-  // Handle form submission
+  // 로그인 함수
   const handleLogin = () => {
     const email = checkEmail(emailId)
     const validPassword = checkPassword(password)
@@ -172,10 +172,7 @@ const LoginPage = () => {
             <Divider />
             <StyledLink to={RoutePath.FindPassword}>비밀번호 찾기</StyledLink>
           </LinkContainer>
-          <Button
-            type="button" 
-            $variant="outlined"
-          >
+          <Button type="button" $variant="outlined">
             회원가입
           </Button>
         </Form>

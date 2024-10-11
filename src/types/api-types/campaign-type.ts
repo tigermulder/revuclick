@@ -1,3 +1,5 @@
+import { ReactNode } from "react"
+
 //** 캠페인리스트 요청 type */
 export interface CampaignListRequest {
   token?: string
@@ -48,11 +50,17 @@ export interface CampaignItemRequest {
   campaignId: number
 }
 export interface CampaignItemResponse {
+  thumbnailUrl: string
+  description: string
+  title: string
   statusCode: number
-  campaign: {
-    campaign_obj: any // 캠페인 객체 정의 필요
-    join: number // 1: 참여, 0: 미참여
-  }
+  campaign: Campaign
+  reviews: Review[]
+}
+
+export interface Review {
+  // 리뷰 객체가 어떻게 구성되어 있는지 모르기 때문에 임시로 빈 객체로 정의
+  [key: string]: any
 }
 
 //** 카테고리별로 좋아요된 캠페인 ID 배열 */

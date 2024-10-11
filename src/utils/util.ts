@@ -32,3 +32,13 @@ export const checkPassword = (password: string): string | false => {
   }
   return false
 }
+
+// ** 날짜 포맷팅 함수 */
+export const formatDate = (dateString: string) => {
+  const options: Intl.DateTimeFormatOptions = {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }
+  return new Date(dateString).toLocaleDateString("ko-KR", options)
+}

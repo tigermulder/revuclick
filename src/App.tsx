@@ -1,5 +1,5 @@
 import { AppRoute } from "pages/AppRoute"
-import { useLocation } from "react-router-dom"
+import { useLocation, useMatch } from "react-router-dom"
 import AppBar from "components/AppBar"
 import BottomTapBar from "components/BottomTapBar"
 import Footer from "components/Footer"
@@ -10,11 +10,13 @@ import "./global.css"
 
 function App() {
   const location = useLocation() // 현재 경로확인
+  const isCampaignDetail = useMatch("/campaign/:campaignId") // 동적 경로 매칭 확인
 
   const hideBar =
-    location.pathname === RoutePath.Login || location.pathname === RoutePath.Login
-  const showFooter =
-    location.pathname === RoutePath.Home
+    location.pathname === RoutePath.Login ||
+    location.pathname === RoutePath.Login ||
+    isCampaignDetail
+  const showFooter = location.pathname === RoutePath.Home && !isCampaignDetail
 
   return (
     <div className="App">

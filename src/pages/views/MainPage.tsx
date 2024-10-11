@@ -10,15 +10,18 @@ import {
 import { getCampaignList } from "services/campaign"
 import CategoryMenu from "components/CategoryMenu"
 import BannerSlider from "components/Banner"
+import LikeButton from "components/LikeButton"
 import { FilterBar } from "components/FilterBar"
+import { useRouter } from "@/hooks/useRouting"
 import styled from "styled-components"
-import LikeButton from "components/LikeButton" // 새로 생성한 LikeButton 컴포넌트 임포트
+import { RoutePath } from "@/types/route-path"
 
 const MainPage = (): JSX.Element => {
   const setCampaignList = useSetRecoilState(campaignListState)
   const filteredCampaigns = useRecoilValue(filteredAndSortedCampaignList)
   const loadMoreRef = useRef<HTMLDivElement | null>(null)
-  const campaignLikes = useRecoilValue(campaignLikeState) // 추가
+  const campaignLikes = useRecoilValue(campaignLikeState)
+  const router = useRouter() // 네비게이션 커스텀훅
 
   //** Fetch campaign list */
   const fetchCampaigns = async ({ pageParam = 1 }) => {
@@ -113,7 +116,15 @@ const MainPage = (): JSX.Element => {
           const isEnded = remainingTime === "캠페인 종료"
 
           return (
-            <CampaignCard key={campaign.campaignId} $isEnded={isEnded}>
+            <CampaignCard
+              key={campaign.campaignId}
+              $isEnded={isEnded}
+              onClick={() =>
+                router.push(
+                  RoutePath.CampaignDetail(String(campaign.campaignId))
+                )
+              }
+            >
               <CampaignImage>
                 <img
                   src={campaign.thumbnailUrl || "default-image.jpg"}
@@ -143,9 +154,7 @@ const MainPage = (): JSX.Element => {
         })}
       </CampaignList>
       {/* Infinite scroll */}
-      <div ref={loadMoreRef}>
-        {isFetchingNextPage ? <p>Loading more...</p> : null}
-      </div>
+      <div ref={loadMoreRef}>{isFetchingNextPage ? <p>더보기</p> : null}</div>
     </>
   )
 }

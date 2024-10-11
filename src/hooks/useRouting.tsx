@@ -13,7 +13,7 @@ export function useRouter() {
       push(path: RoutePathHook, search?: SearchParams) {
         navigate({
           pathname: path,
-          search: search ? stringify(search, { indices: false }) : undefined,
+          search: search ? stringify(search, { indices: false }) : "",
         })
       },
     }

@@ -29,13 +29,13 @@ const BottomTabBar = () => {
         </Link>
       </NavItem>
 
-      <NavItem $active={currentPath.startsWith("/campaign")}>
+      <NavItem $active={currentPath.startsWith(RoutePath.Camera)}>
         <Link to={RoutePath.Camera}>
           <StyledIcon
             as={IconCampaign}
-            $active={currentPath.startsWith("/campaign")}
+            $active={currentPath.startsWith(RoutePath.Camera)}
           />
-          <NavText $active={currentPath.startsWith("/campaign")}>
+          <NavText $active={currentPath.startsWith(RoutePath.Camera)}>
             캠페인
           </NavText>
         </Link>
