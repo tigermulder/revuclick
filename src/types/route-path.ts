@@ -12,5 +12,6 @@ export const RoutePath = {
 export type RoutePath = (typeof RoutePath)[keyof typeof RoutePath]
 
 export interface ContentProps {
-  $isSpecialPage: boolean // isLoginPage prop을 정의
+  $isSpecialPage: boolean
+  $isCampaignDetail: boolean
 }
