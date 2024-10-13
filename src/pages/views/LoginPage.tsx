@@ -173,7 +173,9 @@ const LoginPage = () => {
             <StyledLink to={RoutePath.FindPassword}>비밀번호 찾기</StyledLink>
           </LinkContainer>
           <Button type="button" $variant="outlined">
-            회원가입
+            <Link to={RoutePath.Join} style={{ textDecoration: 'none', color: 'inherit' }}>
+              회원가입
+            </Link>
           </Button>
         </Form>
       </FormWrap>

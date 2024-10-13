@@ -59,14 +59,13 @@ const InputWrapper = styled.div<{ $isError?: boolean }>`
   align-items: center;
   border: 1px solid ${({ $isError }) => ($isError ? "red" : "#ddd")};
   border-radius: 5px;
-  padding: 0.5rem;
   transition: border-color 0.3s ease;
 `;
 
 const StyledInput = styled.input`
   flex: 1;
   width: 70%;
-  padding: 10px;
+  padding: 1.5rem;
   border: none;
   border-radius: 5px;
   font-size: 14px;

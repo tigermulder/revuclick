@@ -1,5 +1,4 @@
-// src/components/Button.tsx
-import React from "react"
+
 import styled from "styled-components"
 
 // Button Component
@@ -8,13 +7,15 @@ const Button = ({
   disabled,
   $variant, // 'red' or 'outlined'
   type = "button", // default to "button" to prevent unintended form submission
+  onClick,
 }: {
   children: React.ReactNode
   disabled?: boolean
   $variant: "red" | "outlined"
   type?: "button" | "submit" | "reset"
+  onClick?: React.MouseEventHandler<HTMLButtonElement>
 }) => (
-  <StyledButton disabled={disabled} $variant={$variant} type={type}>
+  <StyledButton disabled={disabled} $variant={$variant} type={type} onClick={onClick}>
     {children}
   </StyledButton>
 )
@@ -24,7 +25,7 @@ export default Button
 // Styled Button component
 const StyledButton = styled.button<{ $variant: "red" | "outlined" }>`
   width: 100%;
-  padding: 10px;
+  padding: 1.5rem;
   background-color: ${(props) =>
     props.$variant === "red"
       ? props.disabled

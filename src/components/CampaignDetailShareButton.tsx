@@ -1,31 +1,26 @@
-import styled from "styled-components"
-import IconShare from "assets/ico-campaign-detail-share.svg?react" // SVG를 React 컴포넌트로 임포트
+// ShareButton.tsx
+import { useSetRecoilState } from 'recoil';
+import { isShareModalOpenState } from 'store/modal-recoil';
+import styled from 'styled-components';
+import IconShare from 'assets/ico-campaign-detail-share.svg?react'; // SVG를 React 컴포넌트로 임포트
 
-const CampaignDetailShareButton = () => {
-  const handleShareClick = async () => {
-    if (navigator.share) {
-      try {
-        await navigator.share({
-          title: document.title,
-          text: "Check out this campaign!",
-          url: window.location.href,
-        })
-      } catch (error) {
-        console.error("Error sharing:", error)
-      }
-    } else {
-      alert("Sharing is not supported in this browser.")
-    }
-  }
+const ShareButton = () => {
+  // Recoil을 사용하여 모달 열림/닫힘 상태를 변경
+  const setIsModalOpen = useSetRecoilState(isShareModalOpenState);
+
+  // 버튼 클릭 시 모달을 열기
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
 
   return (
-    <StyledShareButton onClick={handleShareClick}>
+    <StyledShareButton onClick={openModal}>
       <IconShare /> {/* SVG 아이콘 사용 */}
     </StyledShareButton>
-  )
-}
+  );
+};
 
-export default CampaignDetailShareButton
+export default ShareButton;
 
 // 스타일 정의
 const StyledShareButton = styled.button`
@@ -42,4 +37,9 @@ const StyledShareButton = styled.button`
   opacity: 0.7;
   box-shadow: 0 2px 2px rgba(0, 0, 0, 0.1);
   z-index: 999;
-`
+  cursor: pointer;
+
+  &:hover {
+    opacity: 1;
+  }
+`;

@@ -14,7 +14,7 @@ function App() {
 
   const hideBar =
     location.pathname === RoutePath.Login ||
-    location.pathname === RoutePath.Login ||
+    location.pathname === RoutePath.Join ||
     isCampaignDetail
   const showFooter = location.pathname === RoutePath.Home && !isCampaignDetail
 

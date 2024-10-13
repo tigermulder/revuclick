@@ -5,11 +5,11 @@ import { getCampaignItem } from "services/campaign"
 import { CampaignItemResponse } from "@/types/api-types/campaign-type"
 import { formatDate } from "@/utils/util"
 import IconNoticeArrow from "assets/ico-notice-arrow.svg?react"
-import IconCampaignHeart from "assets/ico-campaign-detail-heart.svg?react"
 import CampaignDetailBackButton from "@/components/CampaignDetailBackButton"
 import CampaignDetailShareButton from "@/components/CampaignDetailShareButton"
 import Button from "@/components/Button"
 import LikeButton from "@/components/LikeButton"
+import ShareModal from "@/components/ShareModal"
 
 // React Query 키
 const CAMPAIGN_ITEM_QUERY_KEY = (campaignId: string | number) => [
@@ -73,6 +73,7 @@ export const CampaignDetailPage = () => {
     <>
       <CampaignDetailBackButton />
       <CampaignDetailShareButton />
+      <ShareModal /> {/* 공유 모달 추가 */}
       <Background $imageUrl={campaignDetail.thumbnailUrl}>
         <PopUp>
           🎉 신청을 서두르세요! 신청인원 {campaignDetail.joins}/
