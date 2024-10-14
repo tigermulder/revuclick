@@ -12,7 +12,7 @@ export const useUserStatus = () => {
   const { data, error, isLoading, isError } = useQuery<HangResponse>({
     queryKey: ["userStatus"],
     queryFn: () => {
-      const token = localStorage.getItem("authToken") // JWT 토큰을 localStorage에서 가져옴
+      const token = sessionStorage.getItem("authToken") // JWT 토큰을 sessionStorage에서 가져옴
 
       if (!token) {
         // 토큰이 없을 경우 에러 처리

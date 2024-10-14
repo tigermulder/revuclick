@@ -73,7 +73,7 @@ const LoginPage = () => {
     onSuccess: (data) => {
       const token = data.token
       if (token) {
-        localStorage.setItem("authToken", token)
+        sessionStorage.setItem("authToken", token)
         addToast("로그인이 완료되었습니다.", "check")
         navigate(RoutePath.Home)
       } else {
