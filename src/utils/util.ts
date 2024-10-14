@@ -42,3 +42,25 @@ export const formatDate = (dateString: string) => {
   }
   return new Date(dateString).toLocaleDateString("ko-KR", options)
 }
+
+// ** 회원가입 유효성 검사 함수 */
+export const validateEmail = (id: string) => {
+  const email = `${id}@naver.com`
+  const regex = /^[a-zA-Z0-9._%+-]+@naver\.com$/
+  return regex.test(email)
+}
+
+export const validateName = (name: string) => {
+  const regex = /^[가-힣]{2,}$/
+  return regex.test(name)
+}
+
+export const validatePassword = (password: string) => {
+  const regex = /^[A-Za-z0-9!@#$%^&*(),.?":{}|<>]{8,16}$/
+  return regex.test(password)
+}
+
+export const validatePhone = (phone: string) => {
+  const regex = /^010\d{8}$/
+  return regex.test(phone)
+}

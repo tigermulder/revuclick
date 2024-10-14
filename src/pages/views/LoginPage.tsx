@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import { useState, useEffect } from "react"
 import { checkEmail, checkPassword } from "utils/util"
 import { login } from "services/login"
 import { Link, useNavigate } from "react-router-dom"

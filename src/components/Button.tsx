@@ -35,7 +35,7 @@ const StyledButton = styled.button<{
   $marginTop?: string // Added to props
 }>`
   width: 100%;
-  padding: 1.5rem;
+  padding: 1.2rem;
   background-color: ${(props) =>
     props.$variant === "red"
       ? props.disabled

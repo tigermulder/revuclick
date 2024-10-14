@@ -25,6 +25,12 @@ import Button from "@/components/Button"
 import Checkbox from "@/components/CheckBox"
 import BackIcon from "assets/ico_back.svg?react"
 import useToast from "@/hooks/useToast"
+import {
+  validateEmail,
+  validateName,
+  validatePassword,
+  validatePhone,
+} from "@/utils/util"
 
 const JoinPage = () => {
   const navigate = useNavigate()
@@ -146,7 +152,7 @@ const JoinPage = () => {
 
   // 이메일 인증 타이머 시작
   const startEmailTimer = () => {
-    setEmailTimer(100) // 5분
+    setEmailTimer(300) // 5분
     if (emailTimerRef.current) clearInterval(emailTimerRef.current)
     emailTimerRef.current = setInterval(() => {
       setEmailTimer((prev) => {
@@ -243,28 +249,6 @@ const JoinPage = () => {
       partner_uid: referrerCode,
     }
     joinUserMutation.mutate(joinData)
-  }
-
-  // 유효성 검사 함수들
-  const validateEmail = (id: string) => {
-    const email = `${id}@naver.com`
-    const regex = /^[a-zA-Z0-9._%+-]+@naver\.com$/
-    return regex.test(email)
-  }
-
-  const validateName = (name: string) => {
-    const regex = /^[가-힣]{2,}$/
-    return regex.test(name)
-  }
-
-  const validatePassword = (password: string) => {
-    const regex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>]).{8,16}$/
-    return regex.test(password)
-  }
-
-  const validatePhone = (phone: string) => {
-    const regex = /^010\d{8}$/
-    return regex.test(phone)
   }
 
   // 약관 동의 전체 체크박스 변경 함수

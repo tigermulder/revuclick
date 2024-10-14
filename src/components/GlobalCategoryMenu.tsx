@@ -1,39 +1,40 @@
-import { useRecoilState } from "recoil";
+import { useRecoilState } from "recoil"
 import {
   selectedCategoryState,
   isGlobalCategoryMenuOpenState,
-} from "store/mainpage-recoil";
-import { useEffect } from "react";
-import { categories } from "utils/util";
-import styled, { keyframes } from "styled-components";
+} from "store/mainpage-recoil"
+import { useEffect } from "react"
+import { categories } from "utils/util"
+import IconClose from "assets/ico_close.svg?react"
+import styled, { keyframes } from "styled-components"
 
 const GlobalCategoryMenu = () => {
   const [selectedCategory, setSelectedCategory] = useRecoilState(
     selectedCategoryState
-  );
+  )
   const [isMenuOpen, setIsMenuOpen] = useRecoilState(
     isGlobalCategoryMenuOpenState
-  );
+  )
   const handleClose = () => {
-    setIsMenuOpen(false);
-  };
+    setIsMenuOpen(false)
+  }
 
   useEffect(() => {
     // 페이지 경로가 변경될 때 메뉴 닫기
-    handleClose();
-  }, [location.pathname]);
+    handleClose()
+  }, [location.pathname])
 
   useEffect(() => {
     if (isMenuOpen) {
-      document.body.style.overflow = "hidden";
+      document.body.style.overflow = "hidden"
     } else {
-      document.body.style.overflow = "auto";
+      document.body.style.overflow = "auto"
     }
 
     return () => {
-      document.body.style.overflow = "auto";
-    };
-  }, [isMenuOpen]);
+      document.body.style.overflow = "auto"
+    }
+  }, [isMenuOpen])
 
   return (
     <>
@@ -42,7 +43,9 @@ const GlobalCategoryMenu = () => {
           <MenuContainer onClick={(e) => e.stopPropagation()}>
             <Header>
               <HeaderTitle>카테고리</HeaderTitle>
-              <CloseButton onClick={handleClose}>×</CloseButton>
+              <CloseButton onClick={handleClose}>
+                <IconClose />
+              </CloseButton>
             </Header>
             <CategoryList>
               {categories.map((category) => (
@@ -50,8 +53,8 @@ const GlobalCategoryMenu = () => {
                   <IconWrapper
                     $isActive={selectedCategory === category.id}
                     onClick={() => {
-                      setSelectedCategory(category.id);
-                      setIsMenuOpen(false); // 카테고리 선택 시 메뉴 닫기
+                      setSelectedCategory(category.id)
+                      setIsMenuOpen(false) // 카테고리 선택 시 메뉴 닫기
                     }}
                   >
                     {/* 아이콘 이미지 추가 가능 */}
@@ -64,10 +67,10 @@ const GlobalCategoryMenu = () => {
         </Overlay>
       )}
     </>
-  );
-};
+  )
+}
 
-export default GlobalCategoryMenu;
+export default GlobalCategoryMenu
 
 const slideUp = keyframes`
   from {
@@ -76,7 +79,7 @@ const slideUp = keyframes`
   to {
     transform: translateY(0);
   }
-`;
+`
 
 const Overlay = styled.div`
   width: 100%;
@@ -86,7 +89,7 @@ const Overlay = styled.div`
   bottom: 0;
   z-index: 30;
   background: rgba(0, 0, 0, 0.5);
-`;
+`
 
 const MenuContainer = styled.div`
   width: 100%;
@@ -101,7 +104,7 @@ const MenuContainer = styled.div`
   display: flex;
   flex-direction: column;
   animation: ${slideUp} 0.15s ease-out;
-`;
+`
 
 const Header = styled.div`
   width: 100%;
@@ -111,18 +114,18 @@ const Header = styled.div`
   border-top-right-radius: 18px;
   border-bottom: 1px solid #f4f5f5;
   position: relative;
-`;
+`
 
 const HeaderTitle = styled.div`
   text-align: center;
   color: #202020;
   font-size: 18px;
   font-weight: 700;
-`;
+`
 
 const CloseButton = styled.button`
   position: absolute;
-  top: 8px;
+  top: 12px;
   right: 15px;
   width: 18px;
   height: 18px;
@@ -130,24 +133,24 @@ const CloseButton = styled.button`
   border: none;
   font-size: 18px;
   cursor: pointer;
-`;
+`
 
 const CategoryList = styled.div`
   width: 100%;
-  padding: 20px 29px 86px;
+  padding: 2rem 1.5rem 8.4rem;
   background: white;
   display: flex;
   flex-wrap: wrap;
   gap: 26px 8px;
   justify-content: center;
-`;
+`
 
 const CategoryItem = styled.div`
   width: 60px;
   display: flex;
   flex-direction: column;
   align-items: center;
-`;
+`
 
 const IconWrapper = styled.div<{ $isActive?: boolean }>`
   width: 60px;
@@ -157,7 +160,7 @@ const IconWrapper = styled.div<{ $isActive?: boolean }>`
   border: ${({ $isActive }) => ($isActive ? "none" : "1px solid #F4F5F5")};
   margin-bottom: 10px;
   cursor: pointer;
-`;
+`
 
 const CategoryText = styled.div`
   text-align: center;
@@ -166,4 +169,4 @@ const CategoryText = styled.div`
   font-weight: 500;
   line-height: 1.3;
   word-wrap: break-word;
-`;
+`

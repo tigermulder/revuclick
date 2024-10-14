@@ -56,7 +56,7 @@ const InputWrapper = styled.div<{ $isError?: boolean }>`
 const StyledInput = styled.input<{ $isError?: boolean }>`
   width: 65.5%;
   flex: 1;
-  padding: 1.5rem;
+  padding: 1.2rem;
   border: none;
   font-size: 14px;
   outline: none;

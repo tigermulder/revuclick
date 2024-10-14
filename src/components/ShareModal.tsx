@@ -2,6 +2,7 @@ import { useEffect } from "react"
 import { useRecoilState } from "recoil"
 import { isShareModalOpenState } from "@/store/modal-recoil"
 import useToast from "@/hooks/useToast"
+import IconClose from "assets/ico_close.svg?react"
 import styled, { keyframes } from "styled-components"
 
 const ShareModal = () => {
@@ -82,7 +83,9 @@ const ShareModal = () => {
       {isModalOpen && (
         <Overlay onClick={handleClose}>
           <ModalContainer onClick={(e) => e.stopPropagation()}>
-            <CloseButton onClick={handleClose}>×</CloseButton>
+            <CloseButton onClick={handleClose}>
+              <IconClose />
+            </CloseButton>
             <Title>공유하기</Title>
             <IconsWrapper>
               <IconItem onClick={handleCopyLink}>
