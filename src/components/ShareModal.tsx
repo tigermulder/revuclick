@@ -1,68 +1,57 @@
-import { useEffect } from "react";
-import { useRecoilState } from "recoil";
-import { isShareModalOpenState } from "@/store/modal-recoil";
-import useToast from "@/hooks/useToast";
-import styled, { keyframes } from "styled-components";
-
-declare global {
-  interface Window {
-    Kakao: any;
-  }
-}
+import { useEffect } from "react"
+import { useRecoilState } from "recoil"
+import { isShareModalOpenState } from "@/store/modal-recoil"
+import useToast from "@/hooks/useToast"
+import styled, { keyframes } from "styled-components"
 
 const ShareModal = () => {
-  const [isModalOpen, setIsModalOpen] = useRecoilState(isShareModalOpenState);
-  const { addToast } = useToast();
-
-  // Kakao SDK 초기화 (카카오 공유를 위해)
-  // useEffect(() => {
-  //   if (!window.Kakao.isInitialized()) {
-  //     window.Kakao.init("YOUR_KAKAO_API_KEY"); // 여기에 본인의 카카오 API 키를 입력하세요.
-  //   }
-  // }, []);
-
+  const [isModalOpen, setIsModalOpen] = useRecoilState(isShareModalOpenState)
+  const { addToast } = useToast()
+  const JAVASCRIPT_KEY = import.meta.env.VITE_APP_JAVASCRIPT_KEY
   // 모달 닫기 핸들러
-  const handleClose = () => setIsModalOpen(false);
+  const handleClose = () => setIsModalOpen(false)
 
   // 링크 복사 핸들러
   const handleCopyLink = async () => {
     try {
-      await navigator.clipboard.writeText(window.location.href);
-      addToast("링크가 복사되었습니다.", "info", 1000, "link");
+      await navigator.clipboard.writeText(window.location.href)
+      addToast("링크가 복사되었습니다.", "info", 1000, "link")
     } catch (error) {
-      console.error("링크 복사 실패:", error);
-      addToast("링크 복사 실패.", "warning", 1000, "link");
+      console.error("링크 복사 실패:", error)
+      addToast("링크 복사 실패.", "warning", 1000, "link")
     }
-  };
+  }
 
-  // 카카오톡 공유 핸들러
+  // 재랜더링시에 실행되게 해준다.
+  useEffect(() => {
+    if (!window.Kakao.isInitialized() && window.Kakao) {
+      window.Kakao.cleanup()
+      window.Kakao.init(JAVASCRIPT_KEY)
+    }
+  }, [])
+
   const handleKakaoShare = () => {
-    if (window.Kakao) {
-      window.Kakao.Link.sendDefault({
-        objectType: "feed",
-        content: {
-          title: document.title,
-          description: "캠페인을 확인해보세요!",
-          imageUrl: window.location.origin + "/thumbnail.png", // 썸네일 이미지 URL
+    window.Kakao.Share.sendDefault({
+      objectType: "feed",
+      content: {
+        title: "RevuClick",
+        description: "리뷰로 결제 금액을 돌려받는 특별한 혜택!",
+        imageUrl:
+          "http://k.kakaocdn.net/dn/Q2iNx/btqgeRgV54P/VLdBs9cvyn8BJXB3o7N8UK/kakaolink40_original.png",
+        link: {
+          mobileWebUrl: window.location.href,
+        },
+      },
+      buttons: [
+        {
+          title: "나도 테스트 하러가기",
           link: {
             mobileWebUrl: window.location.href,
-            webUrl: window.location.href,
           },
         },
-        buttons: [
-          {
-            title: "자세히 보기",
-            link: {
-              mobileWebUrl: window.location.href,
-              webUrl: window.location.href,
-            },
-          },
-        ],
-      });
-    } else {
-      alert("카카오톡 공유를 사용할 수 없습니다.");
-    }
-  };
+      ],
+    })
+  }
 
   return (
     <>
@@ -89,10 +78,10 @@ const ShareModal = () => {
         </Overlay>
       )}
     </>
-  );
-};
+  )
+}
 
-export default ShareModal;
+export default ShareModal
 
 const slideUp = keyframes`
   from {
@@ -101,7 +90,7 @@ const slideUp = keyframes`
   to {
     transform: translateY(0);
   }
-`;
+`
 
 const Overlay = styled.div`
   position: fixed;
@@ -114,7 +103,7 @@ const Overlay = styled.div`
   justify-content: center;
   align-items: flex-end;
   z-index: 1000;
-`;
+`
 
 const ModalContainer = styled.div`
   background: #fff;
@@ -125,7 +114,7 @@ const ModalContainer = styled.div`
   padding: 20px 15px 30px;
   position: relative;
   text-align: center;
-`;
+`
 
 const CloseButton = styled.button`
   position: absolute;
@@ -135,34 +124,34 @@ const CloseButton = styled.button`
   border: none;
   font-size: 24px;
   cursor: pointer;
-`;
+`
 
 const Title = styled.h2`
   font-size: 1.6rem;
   margin-bottom: 60px;
-`;
+`
 
 const IconsWrapper = styled.div`
   display: flex;
   justify-content: space-around;
   padding: 20px 0;
-`;
+`
 
 const IconItem = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 8px;
-`;
+`
 
 const Placeholder = styled.div`
   width: 48px;
   height: 48px;
   background-color: #e0e0e0; /* 회색 배경으로 공간 표시 */
   border-radius: 50%; /* 동그랗게 만들기 */
-`;
+`
 
 const IconText = styled.p`
   font-size: 1.2rem;
   color: #333;
-`;
+`
