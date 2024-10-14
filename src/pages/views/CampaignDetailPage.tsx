@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom"
-import { useQuery } from "@tanstack/react-query"
+import { keepPreviousData, useQuery } from "@tanstack/react-query"
 import styled from "styled-components"
 import { getCampaignItem } from "services/campaign"
 import { CampaignItemResponse } from "@/types/api-types/campaign-type"
@@ -38,6 +38,10 @@ export const CampaignDetailPage = () => {
         token: "",
       }),
     enabled: !!campaignId,
+    staleTime: 10 * 60 * 1000, // 10분 동안 데이터가 신선함
+    gcTime: 30 * 60 * 1000, // 30분 동안 캐시 유지
+    refetchOnWindowFocus: false, // 창에 포커스를 맞출 때 재패칭하지 않음
+    placeholderData: keepPreviousData, // 이전 데이터를 유지
   })
 
   // 로딩 중일 때
@@ -304,6 +308,8 @@ const ContentTab = styled.ul`
   li {
     &.selected {
       /* 선택된 탭 스타일 */
+      font-weight: bold;
+      border-bottom: 2px solid var(--revu-color);
     }
   }
 `
@@ -328,6 +334,17 @@ const MainButtonWrap = styled.div`
 
 const OutlinedButton = styled.button`
   /* outlined 버튼 스타일 */
+  border: 1px solid var(--n80-color);
+  background: transparent;
+  color: var(--primary-color);
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+
+  &:hover {
+    border-color: var(--revu-color);
+    color: var(--revu-color);
+  }
 `
 
 const Notice = styled.div`
@@ -403,4 +420,11 @@ const RedButton = styled.button`
   color: #fff;
   padding: 10px 20px;
   border-radius: 16px;
+  border: none;
+  cursor: pointer;
+
+  &:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
 `

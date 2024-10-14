@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react"
-import { useInfiniteQuery } from "@tanstack/react-query"
+import { useInfiniteQuery, keepPreviousData } from "@tanstack/react-query"
 import { useSetRecoilState, useRecoilValue } from "recoil"
 import {
   campaignListState,
@@ -55,6 +55,10 @@ const MainPage = (): JSX.Element => {
       return undefined
     },
     initialPageParam: 1,
+    staleTime: 10 * 60 * 1000, // 10분 동안 데이터가 신선함
+    gcTime: 30 * 60 * 1000, // 30분 동안 캐시 유지
+    refetchOnWindowFocus: false, // 창에 포커스를 맞출 때 재패칭하지 않음
+    placeholderData: keepPreviousData, // 이전 데이터를 유지
   })
 
   //** 캠페인 데이터를 Recoil 상태로 업데이트 */

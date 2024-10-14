@@ -93,6 +93,18 @@ const ShareModal = () => {
     }
   }
 
+  useEffect(() => {
+    if (isModalOpen) {
+      document.body.style.overflow = "hidden"
+    } else {
+      document.body.style.overflow = "auto"
+    }
+
+    return () => {
+      document.body.style.overflow = "auto"
+    }
+  }, [isModalOpen])
+
   return (
     <>
       {isModalOpen && (
@@ -101,10 +113,12 @@ const ShareModal = () => {
             $isClosing={$isClosing}
             onClick={(e) => e.stopPropagation()}
           >
-            <CloseButton onClick={handleClose} aria-label="모달 닫기">
-              <IconClose />
-            </CloseButton>
-            <Title>공유하기</Title>
+            <ShareHeader>
+              <Title>공유하기</Title>
+              <CloseButton onClick={handleClose} aria-label="모달 닫기">
+                <IconClose />
+              </CloseButton>
+            </ShareHeader>
             <IconsWrapper>
               <IconItem onClick={handleCopyLink} aria-label="링크 복사">
                 <IconClipStyled />
@@ -163,8 +177,7 @@ const Overlay = styled.div`
 const ModalContainer = styled.div<{ $isClosing: boolean }>`
   background: #fff;
   width: 100%;
-  max-width: 400px;
-  border-radius: 16px 16px 0 0;
+  border-radius: 12px 12px 0 0;
   animation: ${({ $isClosing }) =>
     $isClosing
       ? css`
@@ -173,14 +186,23 @@ const ModalContainer = styled.div<{ $isClosing: boolean }>`
       : css`
           ${slideUp} 0.15s ease-out forwards
         `};
-  padding: 20px 15px 30px;
   position: relative;
   text-align: center;
 `
 
+const ShareHeader = styled.div`
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-bottom: 0.1rem solid var(--n20-color);
+  padding: 1.3rem 0;
+`
+
 const CloseButton = styled.button`
   position: absolute;
-  top: 16px;
+  top: 50%;
+  transform: translateY(-50%);
   right: 16px;
   background: none;
   border: none;
@@ -190,13 +212,14 @@ const CloseButton = styled.button`
 
 const Title = styled.h2`
   font-size: 1.6rem;
-  margin-bottom: 60px;
+  font-weight: var(--font-h3-weight);
+  letter-spacing: var(--font-h3-letter-spacing);
 `
 
 const IconsWrapper = styled.div`
   display: flex;
-  justify-content: space-around;
-  padding: 20px 0;
+  justify-content: space-evenly;
+  padding: 2.6rem 1.5rem 4rem;
 `
 
 const IconItem = styled.div`
@@ -204,33 +227,24 @@ const IconItem = styled.div`
   flex-direction: column;
   align-items: center;
   gap: 8px;
-  cursor: pointer;
-
-  &:hover {
-    opacity: 0.8;
-  }
-
-  /* 클릭 영역 확대를 원할 경우 추가 */
-  min-width: 60px;
-  min-height: 60px;
 `
 
 const IconClipStyled = styled(IconClip)`
-  width: 48px;
-  height: 48px;
+  width: 58px;
+  height: 58px;
   object-fit: contain;
 `
 
 const IconMoreStyled = styled(IconMore)`
-  width: 48px;
-  height: 48px;
+  width: 58px;
+  height: 58px;
   object-fit: contain;
 `
 
 // 카카오톡 아이콘 배경 설정
 const IconKaKaoBackground = styled.div`
-  width: 48px;
-  height: 48px;
+  width: 58px;
+  height: 58px;
   background: url(${IconKaKaoURL}) #ffe617 no-repeat center / 50%;
   border-radius: 50%;
   display: flex;

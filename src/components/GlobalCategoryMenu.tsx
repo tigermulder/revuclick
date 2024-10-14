@@ -98,8 +98,8 @@ const MenuContainer = styled.div`
   left: 0;
   bottom: 0;
   background: white;
-  border-top-left-radius: 18px;
-  border-top-right-radius: 18px;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
   box-shadow: 0px -4px 12px rgba(0, 0, 0, 0.12);
   display: flex;
   flex-direction: column;
@@ -125,7 +125,8 @@ const HeaderTitle = styled.div`
 
 const CloseButton = styled.button`
   position: absolute;
-  top: 12px;
+  top: 50%;
+  transform: translateY(-50%);
   right: 15px;
   width: 18px;
   height: 18px;
@@ -141,7 +142,7 @@ const CategoryList = styled.div`
   background: white;
   display: flex;
   flex-wrap: wrap;
-  gap: 26px 8px;
+  gap: 10px;
   justify-content: center;
 `
 
