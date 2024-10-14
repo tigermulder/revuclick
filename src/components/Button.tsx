@@ -51,12 +51,4 @@ const StyledButton = styled.button<{
 
   /* Conditionally apply margin-top */
   ${({ $marginTop }) => $marginTop && `margin-top: ${$marginTop};`}
-
-  /* Optional: Add hover effects */
-  &:hover {
-    background-color: ${(props) =>
-      !props.disabled && props.$variant === "red" ? "#cc0000" : ""};
-    border-color: ${(props) =>
-      !props.disabled && props.$variant === "outlined" ? "#0056b3" : ""};
-  }
 `
