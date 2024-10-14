@@ -1,4 +1,3 @@
-// src/pages/LoginPage.tsx
 import React, { useState, useEffect } from "react"
 import { checkEmail, checkPassword } from "utils/util"
 import { login } from "services/login"
@@ -13,25 +12,21 @@ import TextField from "@/components/TextField"
 import Button from "@/components/Button"
 import styled from "styled-components"
 
-// LoginPage Component
 const LoginPage = () => {
   const navigate = useNavigate()
   const [emailId, setEmailId] = useState<string>("")
   const [password, setPassword] = useState<string>("")
   const [isButtonEnabled, setIsButtonEnabled] = useState<boolean>(false)
-  const [emailError, setEmailError] = useState<boolean>(false)
-  const [passwordError, setPasswordError] = useState<boolean>(false)
-  const [loginMessage, setLoginMessage] = useState<string>("")
-
-  const setToasts = useSetRecoilState(toastListState) // Recoil 상태 업데이트 함수
+  const [emailError, setEmailError] = useState<string>("") // 수정된 부분
+  const [passwordError, setPasswordError] = useState<string>("") // 수정된 부분
+  const setToasts = useSetRecoilState(toastListState)
 
   // 로그인된 사용자가 /login 페이지로 접근하면 메인 페이지로 리다이렉트
   useEffect(() => {
     const token = localStorage.getItem("authToken")
     if (token) {
-      // 토큰이 있으면 메인 페이지로 리다이렉트
       navigate(RoutePath.Home)
-      addToast("로그인된상태입니다.", "info")
+      addToast("로그인된 상태입니다.", "info")
     }
   }, [navigate])
 
@@ -47,15 +42,29 @@ const LoginPage = () => {
     ])
   }
 
-  // Enable login button when both email and password are valid
+  // 유효성 검사 및 에러 메시지 설정
   useEffect(() => {
     const emailValidationResult = checkEmail(emailId)
     const passwordValidationResult = checkPassword(password)
     const isEmailValid = emailValidationResult !== false
     const isPasswordValid = passwordValidationResult !== false
     setIsButtonEnabled(isEmailValid && isPasswordValid)
-    setEmailError(emailId !== "" && !isEmailValid)
-    setPasswordError(password !== "" && !isPasswordValid)
+
+    // 이메일 에러 메시지 설정
+    if (emailId !== "" && !isEmailValid) {
+      setEmailError("아이디가 잘못되었습니다. 아이디를 정확히 입력해주세요.")
+    } else {
+      setEmailError("")
+    }
+
+    // 비밀번호 에러 메시지 설정
+    if (password !== "" && !isPasswordValid) {
+      setPasswordError(
+        "비밀번호가 잘못되었습니다. 비밀번호를 정확히 입력해주세요."
+      )
+    } else {
+      setPasswordError("")
+    }
   }, [emailId, password])
 
   // React Query mutation for login
@@ -65,8 +74,8 @@ const LoginPage = () => {
       const token = data.token
       if (token) {
         localStorage.setItem("authToken", token)
-        addToast("로그인이 완료되었습니다.", "check") // 성공 시 토스트 메시지
-        navigate(RoutePath.Home) // Navigate to Home using useNavigate
+        addToast("로그인이 완료되었습니다.", "check")
+        navigate(RoutePath.Home)
       } else {
         console.error("Token not found in response:", data)
         addToast("로그인에 실패했습니다. 다시 시도해주세요.", "warning")
@@ -100,16 +109,14 @@ const LoginPage = () => {
   const handleLogin = () => {
     const email = checkEmail(emailId)
     const validPassword = checkPassword(password)
-    console.log("Email:", email, "Password:", validPassword)
     if (!email || !validPassword) {
-      alert("이메일과 비밀번호를 확인해 주세요")
+      addToast("이메일과 비밀번호를 확인해 주세요.", "warning")
       return
     }
     const loginData = {
       email,
       password: validPassword,
     }
-    console.log("Attempting to login with:", loginData)
     mutation.mutate(loginData)
   }
 
@@ -149,7 +156,8 @@ const LoginPage = () => {
             value={emailId}
             onChange={(e) => setEmailId(e.target.value)}
             suffix="@naver.com"
-            $isError={emailError}
+            $isError={emailError !== ""}
+            errorMessage={emailError}
           />
           <TextField
             type="password"
@@ -157,14 +165,10 @@ const LoginPage = () => {
             placeholder="영문 대/소문자, 숫자, 특수문자 조합하여 8~16자"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            $isError={passwordError}
+            $isError={passwordError !== ""}
+            errorMessage={passwordError}
           />
-          {loginMessage && <LoginMessage>{loginMessage}</LoginMessage>}
-          <Button
-            type="submit" // Changed to "submit" to trigger form's onSubmit
-            disabled={!isButtonEnabled}
-            $variant="red"
-          >
+          <Button type="submit" disabled={!isButtonEnabled} $variant="red">
             로그인
           </Button>
           <LinkContainer>
@@ -173,7 +177,10 @@ const LoginPage = () => {
             <StyledLink to={RoutePath.FindPassword}>비밀번호 찾기</StyledLink>
           </LinkContainer>
           <Button type="button" $variant="outlined">
-            <Link to={RoutePath.Join} style={{ textDecoration: 'none', color: 'inherit' }}>
+            <Link
+              to={RoutePath.Join}
+              style={{ textDecoration: "none", color: "inherit" }}
+            >
               회원가입
             </Link>
           </Button>

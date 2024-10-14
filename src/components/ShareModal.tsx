@@ -8,10 +8,10 @@ const ShareModal = () => {
   const [isModalOpen, setIsModalOpen] = useRecoilState(isShareModalOpenState)
   const { addToast } = useToast()
   const JAVASCRIPT_KEY = import.meta.env.VITE_APP_JAVASCRIPT_KEY
-  // 모달 닫기 핸들러
+  //** 모달 닫기 핸들러 */
   const handleClose = () => setIsModalOpen(false)
 
-  // 링크 복사 핸들러
+  //** 링크 복사 핸들러 */
   const handleCopyLink = async () => {
     try {
       await navigator.clipboard.writeText(window.location.href)
@@ -22,7 +22,6 @@ const ShareModal = () => {
     }
   }
 
-  // 재랜더링시에 실행되게 해준다.
   useEffect(() => {
     if (!window.Kakao.isInitialized() && window.Kakao) {
       window.Kakao.cleanup()
@@ -30,6 +29,7 @@ const ShareModal = () => {
     }
   }, [])
 
+  //** 카카오톡 공유 핸들러 */
   const handleKakaoShare = () => {
     window.Kakao.Share.sendDefault({
       objectType: "feed",
@@ -44,13 +44,37 @@ const ShareModal = () => {
       },
       buttons: [
         {
-          title: "나도 테스트 하러가기",
+          title: "RevuClick",
           link: {
             mobileWebUrl: window.location.href,
           },
         },
       ],
     })
+  }
+
+  //** 웹 공유 API 핸들러 */
+  const handleWebShare = async () => {
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: "RevuClick",
+          text: "리뷰로 결제 금액을 돌려받는 특별한 혜택!",
+          url: window.location.href,
+        })
+        addToast("공유 성공.", "info", 1000, "link")
+      } catch (error) {
+        addToast("공유 실패.", "warning", 1000, "link")
+      }
+    } else {
+      addToast(
+        "Web Share를 지원하지 않는 브라우저입니다.",
+        "warning",
+        1000,
+        "link"
+      )
+      // 필요하다면 대체 기능을 구현하세요.
+    }
   }
 
   return (
@@ -69,7 +93,7 @@ const ShareModal = () => {
                 <Placeholder />
                 <IconText>카카오톡</IconText>
               </IconItem>
-              <IconItem>
+              <IconItem onClick={handleWebShare}>
                 <Placeholder />
                 <IconText>더보기</IconText>
               </IconItem>

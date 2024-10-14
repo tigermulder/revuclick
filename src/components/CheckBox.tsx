@@ -1,45 +1,56 @@
-import styled from "styled-components";
+import IcoChkOff from "assets/ico_chk_off.svg"
+import IcoChkOn from "assets/ico_chk_on.svg"
+import { CheckboxProps } from "@/types/component-types/check-box-type"
+import styled from "styled-components"
 
-interface CheckboxProps {
-  label: string;
-  checked: boolean;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-}
-
-const Checkbox = ({ label, checked, onChange }: CheckboxProps) => {
+const Checkbox = ({
+  label,
+  checked,
+  onChange,
+  isTitle = false,
+}: CheckboxProps) => {
   return (
     <CheckboxLabel>
       <CheckboxInput type="checkbox" checked={checked} onChange={onChange} />
       <CheckboxCustom />
-      <CheckboxText>{label}</CheckboxText>
+      <CheckboxText isTitle={isTitle}>{label}</CheckboxText>
     </CheckboxLabel>
-  );
-};
+  )
+}
 
-export default Checkbox;
+export default Checkbox
 
 const CheckboxLabel = styled.label`
   display: flex;
   align-items: center;
   cursor: pointer;
-`;
+`
 
 const CheckboxInput = styled.input`
   display: none;
-`;
+`
 
 const CheckboxCustom = styled.span`
   width: 1.6rem;
   height: 1.6rem;
-  background: url(/assets/img/ico_chk_off.svg) no-repeat center / 100%;
+  background: url(${IcoChkOff}) no-repeat center / 100%;
   margin-right: 0.8rem;
+  transition: background 0.3s;
 
   ${CheckboxInput}:checked + & {
-    background: url(/assets/img/ico_chk_on.svg) no-repeat center / 100%;
+    background: url(${IcoChkOn}) no-repeat center / 100%;
   }
-`;
+`
 
-const CheckboxText = styled.span`
-  font-size: var(--font-body-size);
-  color: var(--n600-color);
-`;
+const CheckboxText = styled.span<{ isTitle: boolean }>`
+  font-size: ${({ isTitle }) =>
+    isTitle ? "var(--font-title-size)" : "var(--font-caption-size)"};
+  font-weight: ${({ isTitle }) =>
+    isTitle ? "var(--font-title-weight)" : "normal"};
+  line-height: ${({ isTitle }) =>
+    isTitle ? "var(--font-title-line-height)" : "normal"};
+  letter-spacing: ${({ isTitle }) =>
+    isTitle ? "var(--font-title-letter-spacing)" : "normal"};
+  color: ${({ isTitle }) =>
+    isTitle ? "var(--n600-color)" : "var(--n400-color)"};
+`
