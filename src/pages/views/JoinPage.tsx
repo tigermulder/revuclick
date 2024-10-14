@@ -486,7 +486,7 @@ const JoinPage = () => {
               label="전체동의"
               checked={agreements.all}
               onChange={(e) => handleAgreementAllChange(e.target.checked)}
-              isTitle={true}
+              $isTitle={true}
             />
           </CheckboxWrapper>
         </AgreementAll>
