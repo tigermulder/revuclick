@@ -1,4 +1,3 @@
-// src/pages/MainPage.tsx
 import { useEffect, useRef } from "react"
 import { useInfiniteQuery } from "@tanstack/react-query"
 import { useSetRecoilState, useRecoilValue } from "recoil"
