@@ -46,31 +46,33 @@ export const Chip = ({
 
 const ButtonContainer = styled.div`
   display: flex;
-  gap: 8px; // 버튼들 사이 간격
+  gap: 8px;
   padding: 18px 0 6px;
 `
 
-const StyledButton = styled.button<{ $isActive: boolean }>`
+const StyledButton = styled.button.attrs<{ $isActive: boolean }>(
+  ({ $isActive }) => ({
+    style: {
+      backgroundColor: $isActive ? "#E50B14" : "white",
+      color: $isActive ? "white" : "#747474",
+    },
+  })
+)<{ $isActive: boolean }>`
   padding: 6px 12px;
   border-radius: 999px;
   border: 1px solid #eeeeee;
-  background-color: ${(props) => (props.$isActive ? "#E50B14" : "white")};
-  color: ${(props) => (props.$isActive ? "white" : "#747474")};
   font-weight: var(--font-weight-medium);
   cursor: pointer;
 
   &:hover {
-    background-color: ${(props) => (props.$isActive ? "#E50B14" : "#f5f5f5")};
-    border-color: ${(props) => (props.$isActive ? "#E50B14" : "#eeeeee")};
-    font-weight: ${(props) =>
-      props.$isActive
-        ? "var(--font-weight-bold)"
-        : "var(--font-weight-medium)"};
+    background-color: ${({ $isActive }) => ($isActive ? "#E50B14" : "#f5f5f5")};
+    border-color: ${({ $isActive }) => ($isActive ? "#E50B14" : "#eeeeee")};
+    font-weight: ${({ $isActive }) =>
+      $isActive ? "var(--font-weight-bold)" : "var(--font-weight-medium)"};
   }
 
-  /* 클릭 중(active)일 때 색상 지정 */
   &:active {
-    background-color: ${(props) => (props.$isActive ? "#C20810" : "#ebebeb")};
-    border-color: ${(props) => (props.$isActive ? "#C20810" : "#eeeeee")};
+    background-color: ${({ $isActive }) => ($isActive ? "#C20810" : "#ebebeb")};
+    border-color: ${({ $isActive }) => ($isActive ? "#C20810" : "#eeeeee")};
   }
 `

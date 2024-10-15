@@ -32,6 +32,5 @@ export const keepSessionAlive = async (
   const response = await axiosInstance.post<HangResponse>("/hang", {
     token: data.token, // data 객체에서 전달된 토큰을 그대로 사용
   })
-
   return response.data
 }

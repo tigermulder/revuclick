@@ -91,7 +91,11 @@ const Overlay = styled.div`
   background: rgba(0, 0, 0, 0.5);
 `
 
-const MenuContainer = styled.div`
+const MenuContainer = styled.div.attrs(() => ({
+  style: {
+    animation: `${slideUp} 0.15s ease-out`,
+  },
+}))`
   width: 100%;
   height: auto;
   position: absolute;
@@ -103,7 +107,6 @@ const MenuContainer = styled.div`
   box-shadow: 0px -4px 12px rgba(0, 0, 0, 0.12);
   display: flex;
   flex-direction: column;
-  animation: ${slideUp} 0.15s ease-out;
 `
 
 const Header = styled.div`
@@ -153,12 +156,17 @@ const CategoryItem = styled.div`
   align-items: center;
 `
 
-const IconWrapper = styled.div<{ $isActive?: boolean }>`
+const IconWrapper = styled.div.attrs<{ $isActive?: boolean }>(
+  ({ $isActive }) => ({
+    style: {
+      background: $isActive ? "#E9EBEC" : "transparent",
+      border: $isActive ? "none" : "1px solid #F4F5F5",
+    },
+  })
+)<{ $isActive?: boolean }>`
   width: 60px;
   height: 60px;
-  background: ${({ $isActive }) => ($isActive ? "#E9EBEC" : "transparent")};
   border-radius: 18px;
-  border: ${({ $isActive }) => ($isActive ? "none" : "1px solid #F4F5F5")};
   margin-bottom: 10px;
   cursor: pointer;
 `

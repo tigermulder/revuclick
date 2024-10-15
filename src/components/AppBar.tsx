@@ -1,19 +1,19 @@
-import styled from "styled-components"
 import { Link } from "react-router-dom"
-import { useUserStatus } from "hooks/useUserStatus"
 import { RoutePath } from "@/types/route-path"
+import { useAuth } from "@/contexts/AuthContext"
 import RevuClickLogo from "assets/revu_logo.svg?react"
 import IcoSearch from "assets/ico-search.svg?react"
 import IcoAppBarHeart from "assets/ico-appbar-heart.svg?react"
+import styled from "styled-components"
 
 const AppBar = () => {
-  const { isLoggedIn } = useUserStatus()
+  const { isLoggedIn } = useAuth()
 
   return (
     <Header className="app-bar">
       {/* 로고 */}
       <Logo>
-        <Link to="/main">
+        <Link to={RoutePath.Home}>
           <RevuClickLogo aria-label="RevuClick Logo" />
         </Link>
       </Logo>
@@ -21,8 +21,12 @@ const AppBar = () => {
       {/* 검색 바 */}
       <SearchForm $isLoggedIn={isLoggedIn}>
         <SearchInputWrapper>
-          <SearchInput type="text" />
-          <SearchIcon className="ico-search">
+          <SearchInput
+            type="text"
+            aria-label="검색"
+            placeholder="검색어를 입력하세요."
+          />
+          <SearchIcon className="ico-search" aria-hidden="true">
             <IcoSearch aria-label="Search Bar" />
           </SearchIcon>
         </SearchInputWrapper>
@@ -35,7 +39,9 @@ const AppBar = () => {
         </HeartIcon>
       ) : (
         <SignUpLink>
-          <Link to={RoutePath.Login}>로그인</Link>
+          <Link to={RoutePath.Login} aria-label="로그인 페이지로 이동">
+            로그인
+          </Link>
         </SignUpLink>
       )}
     </Header>
@@ -108,7 +114,6 @@ const SearchInput = styled.input`
   }
 `
 
-// 검색 아이콘 스타일링
 const SearchIcon = styled.div`
   position: absolute;
   width: 2.1rem;
@@ -124,7 +129,6 @@ const SearchIcon = styled.div`
   }
 `
 
-// 찜하기 아이콘 스타일링
 const HeartIcon = styled.div`
   width: 2.2rem;
   margin-left: 1.6rem;

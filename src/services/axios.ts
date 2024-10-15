@@ -1,3 +1,4 @@
+import { RoutePath } from "@/types/route-path"
 import axios, { AxiosInstance } from "axios"
 
 //** 개발환경용 */
@@ -25,6 +26,19 @@ axiosInstance.interceptors.request.use(
     return config
   },
   (error) => {
+    return Promise.reject(error)
+  }
+)
+
+//** 응답 인터셉터 */
+axiosInstance.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response && error.response.status === 401) {
+      // 예: 로그아웃 처리 및 로그인 페이지로 리디렉션
+      sessionStorage.removeItem("authToken")
+      window.location.href = RoutePath.Login
+    }
     return Promise.reject(error)
   }
 )

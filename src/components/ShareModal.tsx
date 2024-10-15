@@ -1,4 +1,3 @@
-// src/components/ShareModal.tsx
 import { useEffect, useState } from "react"
 import { useRecoilState } from "recoil"
 import { isShareModalOpenState } from "@/store/modal-recoil"
@@ -7,7 +6,6 @@ import IconClose from "assets/ico_close.svg?react"
 import IconClip from "assets/ico-link.svg?react"
 import IconMore from "assets/ico-more.svg?react"
 import IconKaKaoURL from "assets/ico-kakao.svg?url"
-
 import styled, { keyframes, css } from "styled-components"
 
 const ShareModal = () => {
@@ -89,7 +87,6 @@ const ShareModal = () => {
         1000,
         "link"
       )
-      // 필요하다면 대체 기능을 구현하세요.
     }
   }
 
@@ -142,7 +139,6 @@ const ShareModal = () => {
 
 export default ShareModal
 
-// Styled Components
 const slideUp = keyframes`
   from {
     transform: translateY(100%);

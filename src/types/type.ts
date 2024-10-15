@@ -11,3 +11,11 @@ export interface Props {
 export interface State {
   hasError: boolean
 }
+
+// ** 인증타입 */
+export interface AuthContextType {
+  isLoggedIn: boolean
+  isLoading: boolean
+  isError: boolean
+  error: any
+}

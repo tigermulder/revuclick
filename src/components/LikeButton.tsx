@@ -1,12 +1,12 @@
-import useLikeCampaign from "hooks/useLikeCampaign";
-import useToast from "@/hooks/useToast";
-import { LikeButtonProps } from "types/component-types/likebutton-type";
-import IcoHeart from "assets/ico-appbar-heart.svg?react";
-import IcoCampaignHeart from "assets/ico-campaign-detail-heart.svg?react";
-import { useRouter } from "hooks/useRouting";
-import { RoutePath } from "types/route-path";
-import { useMatch } from "react-router-dom";
-import styled from "styled-components";
+import useLikeCampaign from "hooks/useLikeCampaign"
+import useToast from "@/hooks/useToast"
+import { LikeButtonProps } from "types/component-types/likebutton-type"
+import IcoHeart from "assets/ico-appbar-heart.svg?react"
+import IcoCampaignHeart from "assets/ico-campaign-detail-heart.svg?react"
+import { useRouter } from "hooks/useRouting"
+import { RoutePath } from "types/route-path"
+import { useMatch } from "react-router-dom"
+import styled from "styled-components"
 
 const LikeButton = ({
   categoryId,
@@ -15,28 +15,28 @@ const LikeButton = ({
   const { isLiked, likeCampaign, unlikeCampaign } = useLikeCampaign(
     campaignId,
     categoryId
-  );
-  const { addToast } = useToast();
-  const router = useRouter();
+  )
+  const { addToast } = useToast()
+  const router = useRouter()
 
   const handleLike = (event: React.MouseEvent): void => {
-    event.stopPropagation();
-    const token = localStorage.getItem("authToken");
+    event.stopPropagation()
+    const token = localStorage.getItem("authToken")
     if (!token) {
-      addToast("로그인이 필요합니다.", "warning", 1000, "login");
-      router.push(RoutePath.Login);
-      return;
+      addToast("로그인이 필요합니다.", "warning", 1000, "login")
+      router.push(RoutePath.Login)
+      return
     }
     if (isLiked()) {
-      unlikeCampaign();
-      addToast("찜목록에서 제거되었습니다.", "uncheck", 1000, "like");
+      unlikeCampaign()
+      addToast("찜한 목록에서 해제했어요.", "uncheck", 1000, "like")
     } else {
-      likeCampaign();
-      addToast("찜목록에 추가되었습니다.", "check", 1000, "like");
+      likeCampaign()
+      addToast("💝찜한 목록에 추가했어요.", "check", 1000, "like")
     }
-  };
+  }
 
-  const isCampaignPage = useMatch("/campaign/:campaignId");
+  const isCampaignPage = useMatch("/campaign/:campaignId")
 
   if (isCampaignPage) {
     return (
@@ -48,7 +48,7 @@ const LikeButton = ({
         <StyledIcoCampaignHeart $isLiked={isLiked()} /> {/* 수정된 부분 */}
         <HeartText>찜하기</HeartText>
       </CampaignHeart>
-    );
+    )
   } else {
     return (
       <Button
@@ -58,13 +58,11 @@ const LikeButton = ({
       >
         <StyledHeartIcon $isLiked={isLiked()} /> {/* 수정된 부분 */}
       </Button>
-    );
+    )
   }
-};
+}
 
-export default LikeButton;
-
-// Styled Components
+export default LikeButton
 
 const Button = styled.button`
   position: absolute;
@@ -74,23 +72,23 @@ const Button = styled.button`
   border: none;
   cursor: pointer;
   padding: 0;
-`;
+`
 
-const StyledHeartIcon = styled(IcoHeart)<{ $isLiked: boolean }>` /* 수정된 부분 */
+const StyledHeartIcon = styled(IcoHeart)<{ $isLiked: boolean }>`
   width: 24px;
   height: auto;
   color: ${({ $isLiked }) =>
     $isLiked ? "var(--revu-color)" : "var(--n40-color)"};
   transition: transform 0.1s ease;
-`;
+`
 
-const StyledIcoCampaignHeart = styled(IcoCampaignHeart)<{ $isLiked: boolean }>` /* 수정된 부분 */
+const StyledIcoCampaignHeart = styled(IcoCampaignHeart)<{ $isLiked: boolean }>`
   width: 24px;
   height: auto;
   color: ${({ $isLiked }) => ($isLiked ? "var(--revu-color)" : "#fff")};
-`;
+`
 
-const CampaignHeart = styled.div<{ $isLiked: boolean }>` /* 수정된 부분 */
+const CampaignHeart = styled.div<{ $isLiked: boolean }>`
   height: 100%;
   flex-direction: column;
   justify-content: center;
@@ -98,7 +96,7 @@ const CampaignHeart = styled.div<{ $isLiked: boolean }>` /* 수정된 부분 */
   gap: 3px;
   display: inline-flex;
   cursor: pointer;
-`;
+`
 
 const HeartText = styled.div`
   text-align: center;
@@ -107,4 +105,4 @@ const HeartText = styled.div`
   font-family: "SUIT", sans-serif;
   font-weight: 600;
   word-wrap: break-word;
-`;
+`

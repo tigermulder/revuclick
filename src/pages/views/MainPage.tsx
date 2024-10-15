@@ -164,7 +164,6 @@ const MainPage = (): JSX.Element => {
 
 export default MainPage
 
-// Styled Components
 const CampaignList = styled.ul`
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -173,14 +172,18 @@ const CampaignList = styled.ul`
   padding: 24px 0 64px;
   width: 100%;
 `
-
-const CampaignCard = styled.li<{ $isEnded: boolean }>`
-  position: relative; /* 딤드 및 오버레이 위치를 위해 relative 설정 */
+interface CampaignCardProps {
+  $isEnded: boolean
+}
+const CampaignCard = styled.li.attrs<CampaignCardProps>((props) => ({
+  "aria-disabled": props.$isEnded,
+  "data-is-ended": props.$isEnded,
+}))<CampaignCardProps>`
+  position: relative;
   width: 100%;
   overflow: hidden;
   background-color: white;
-  pointer-events: ${(props) =>
-    props.$isEnded ? "none" : "auto"}; /* 클릭 불가 처리 */
+  pointer-events: ${({ $isEnded }) => ($isEnded ? "none" : "auto")};
 `
 
 const CampaignImage = styled.div`
@@ -194,12 +197,17 @@ const CampaignImage = styled.div`
     object-fit: cover;
   }
 `
-
-const RemainingDays = styled.span<{ $isEnded: boolean }>`
+interface RemainingDaysProps {
+  $isEnded: boolean
+}
+const RemainingDays = styled.span.attrs<RemainingDaysProps>((props) => ({
+  "aria-label": props.$isEnded ? "캠페인이 종료되었습니다" : "캠페인 남은 일수",
+  "data-is-ended": props.$isEnded,
+}))<RemainingDaysProps>`
   position: absolute;
-  top: ${(props) => (props.$isEnded ? "50%" : "10px")};
-  left: ${(props) => (props.$isEnded ? "50%" : "10px")};
-  transform: ${(props) => (props.$isEnded ? "translate(-50%, -50%)" : "none")};
+  top: ${({ $isEnded }) => ($isEnded ? "50%" : "10px")};
+  left: ${({ $isEnded }) => ($isEnded ? "50%" : "10px")};
+  transform: ${({ $isEnded }) => ($isEnded ? "translate(-50%, -50%)" : "none")};
   background-color: black;
   color: white;
   padding: 5px 6px;
@@ -215,7 +223,7 @@ const EndedOverlay = styled.div`
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.6); /* 딤드 배경 */
+  background: rgba(0, 0, 0, 0.5);
   z-index: 1;
 `
 

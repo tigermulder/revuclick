@@ -1,15 +1,21 @@
-import { useParams } from "react-router-dom"
+import { useState, useEffect } from "react"
+import { useParams, useNavigate } from "react-router-dom"
 import { keepPreviousData, useQuery } from "@tanstack/react-query"
-import styled from "styled-components"
+import { useAuth } from "@/contexts/AuthContext"
 import { getCampaignItem } from "services/campaign"
 import { CampaignItemResponse } from "@/types/api-types/campaign-type"
 import { formatDate } from "@/utils/util"
 import IconNoticeArrow from "assets/ico-notice-arrow.svg?react"
+import IconStar from "assets/ico-star.svg?url"
 import CampaignDetailBackButton from "@/components/CampaignDetailBackButton"
 import CampaignDetailShareButton from "@/components/CampaignDetailShareButton"
 import Button from "@/components/Button"
 import LikeButton from "@/components/LikeButton"
 import ShareModal from "@/components/ShareModal"
+import useToast from "@/hooks/useToast"
+import styled from "styled-components"
+import { RoutePath } from "@/types/route-path"
+import ContentTab from "@/components/Tab"
 
 // React Query 키
 const CAMPAIGN_ITEM_QUERY_KEY = (campaignId: string | number) => [
@@ -17,14 +23,52 @@ const CAMPAIGN_ITEM_QUERY_KEY = (campaignId: string | number) => [
   campaignId,
 ]
 
-export const CampaignDetailPage = () => {
+const CampaignDetailPage = () => {
+  const [isOpen, setIsOpen] = useState(true)
+  const [selectedTab, setSelectedTab] = useState("info") // 기본선택
+  const [isGuideOpen, setIsGuideOpen] = useState(false) // 가이드 표시 여부 상태 추가
   const { campaignId } = useParams()
+  const { isLoggedIn } = useAuth()
+  const { addToast } = useToast()
+  const navigate = useNavigate()
+
+  // 토글 핸들러
+  const toggleNotice = () => {
+    setIsOpen(!isOpen)
+  }
+
+  // 가이드 토글 핸들러
+  const toggleGuide = () => {
+    setIsGuideOpen((prev) => !prev)
+  }
+
+  // 탭이 하나만 들어가는 경우
+  const singleTab = [{ label: "캠페인 정보", value: "info" }]
+  const handleTabSelect = (tabValue: string) => {
+    setSelectedTab(tabValue)
+  }
+
+  // 패럴랙스 효과를 위한 상태
+  const [offsetY, setOffsetY] = useState(0)
+  const handleScroll = () => {
+    setOffsetY(window.pageYOffset)
+  }
+
+  useEffect(() => {
+    const handleScrollThrottled = () => {
+      requestAnimationFrame(handleScroll)
+    }
+    window.addEventListener("scroll", handleScrollThrottled)
+    return () => window.removeEventListener("scroll", handleScrollThrottled)
+  }, [])
 
   if (!campaignId) {
     return <div>유효하지 않은 캠페인 ID입니다.</div>
   }
 
   // React Query로 캠페인 상세 데이터 불러오기
+  const token = sessionStorage.getItem("authToken") || ""
+
   const {
     data: campaignData,
     isLoading,
@@ -35,7 +79,7 @@ export const CampaignDetailPage = () => {
     queryFn: () =>
       getCampaignItem({
         campaignId: Number(campaignId),
-        token: "",
+        token: token,
       }),
     enabled: !!campaignId,
     staleTime: 10 * 60 * 1000, // 10분 동안 데이터가 신선함
@@ -73,19 +117,32 @@ export const CampaignDetailPage = () => {
   const diffTime = endDate.getTime() - today.getTime()
   const dDay = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
 
+  // 캠페인 신청하기 버튼 클릭 핸들러
+  const handleApply = () => {
+    if (!isLoggedIn) {
+      // 토스트 메시지 추가
+      addToast("로그인이 필요합니다.", "warning", 1000, "login")
+      navigate(RoutePath.Login, { replace: true }) // replace 옵션 추가
+    } else {
+      // 로그인된 상태에서 캠페인 신청 로직 수행
+      navigate(`/campaign/${campaignId}/apply`)
+    }
+  }
+
   return (
     <>
       <CampaignDetailBackButton />
       <CampaignDetailShareButton />
       <ShareModal /> {/* 공유 모달 추가 */}
-      <Background $imageUrl={campaignDetail.thumbnailUrl}>
-        <PopUp>
-          🎉 신청을 서두르세요! 신청인원 {campaignDetail.joins}/
-          {campaignDetail.quota}
-        </PopUp>
-      </Background>
-
-      <Content>
+      <DetailHeader>
+        <Background $imageUrl={campaignDetail.thumbnailUrl}>
+          <PopUp $offsetY={offsetY}>
+            🎉 신청을 서두르세요! 신청인원 {campaignDetail.joins}/
+            {campaignDetail.quota}
+          </PopUp>
+        </Background>
+      </DetailHeader>
+      <DetailBody>
         <Dday>{`D-${dDay}`}</Dday>
         <Title>{campaignDetail.title}</Title>
         <Divider />
@@ -114,81 +171,160 @@ export const CampaignDetailPage = () => {
             </li>
           </CampaignDetails>
         </CampaignContainer>
-        <ButtonWrapper>{/* <Button>상품보러가기</Button> */}</ButtonWrapper>
-      </Content>
-
-      <Line />
-
-      <ContentTab>
-        <li className="selected">캠페인 정보</li>
-      </ContentTab>
-
-      <Main>
-        <div>
-          {/* 이미지 공간 */}
-          <ImagePlaceholder />
-        </div>
-        <MainButtonWrap>
-          {/* 이용가이드 상세보기 버튼 */}
-          <Button $variant="outlined">이용가이드 상세보기</Button>
-        </MainButtonWrap>
-      </Main>
-
-      <Notice>
-        <NoticeTitle>※ 유의사항 안내</NoticeTitle>
-        {/* 아이콘 공간 */}
-        <IconPlaceholder>
-          <IconNoticeArrow />
-        </IconPlaceholder>
-      </Notice>
-      <NoticeContent>
-        <NoticeBox>
-          <li>
-            배송 관련 문의는 제품 상세페이지 내 표시된 담당자 연락처로 연락하여
-            조율하시기 바랍니다.
-          </li>
-          <li>
-            배송 지연, 상품 파손 등과 같은 사유로 인하여 진행이 어려운 경우
-            고객센터로 문의바랍니다.
-          </li>
-          <li>
-            정당한 사유 없이 리뷰 작성 기간 내 리뷰를 작성하지 않거나, 부정
-            행위가 적발될 경우 미션 실패로 간주되며, 포인트는 지급되지 않습니다.
-          </li>
-          <li>
-            동일한 내용의 도배성 리뷰를 작성하거나 반복적으로 리뷰를 삭제 후
-            재작성하는 등으로 리뷰의 본래 목적에 어긋나는 경우 부정행위로
-            간주하며, 포인트는 지급되지 않습니다.
-          </li>
-        </NoticeBox>
-      </NoticeContent>
-
-      <FooterButtons>
-        {/* 찜하기 버튼 */}
-        <LikeButton
-          categoryId={campaignDetail.categoryId}
-          campaignId={campaignDetail.campaignId}
+        <Button $variant="outlined">상품구경하기</Button>
+        <Line />
+        <ContentTab
+          tabs={singleTab}
+          selectedTab={selectedTab}
+          onTabSelect={handleTabSelect}
         />
-        {/* 캠페인 신청하기 버튼 */}
-        <Button $variant="red">캠페인 신청하기</Button>
-      </FooterButtons>
+        <Main>
+          <div>
+            {/* 이미지 공간 */}
+            <ImagePlaceholder />
+            {/* GuideCont를 조건부로 렌더링 */}
+            {isGuideOpen && (
+              <GuideCont>
+                <p className="tit">캠페인 미션 프로세스</p>
+                <ul className="proc-list">
+                  <li className="proc-item">
+                    <div></div>
+                    <span>캠페인신청</span>
+                  </li>
+                  <li className="proc-item">
+                    <div></div>
+                    <span>상품구매</span>
+                  </li>
+                  <li className="proc-item">
+                    <div></div>
+                    <span>구매 영수증 인증</span>
+                  </li>
+                  <li className="proc-item">
+                    <div></div>
+                    <span>배송완료</span>
+                  </li>
+                  <li className="proc-item">
+                    <div></div>
+                    <span>미션완료</span>
+                  </li>
+                  <li className="proc-item">
+                    <div></div>
+                    <span>포인트지급요청</span>
+                  </li>
+                  <li className="proc-item">
+                    <div></div>
+                    <span>리뷰등록</span>
+                  </li>
+                  <li className="proc-item">
+                    <div></div>
+                    <span>리뷰검수</span>
+                  </li>
+                </ul>
+              </GuideCont>
+            )}
+          </div>
+          {/* 이용가이드 상세보기 버튼 */}
+          <ButtonContainer $isGuideOpen={isGuideOpen}>
+            <Button $variant="outlined" onClick={toggleGuide}>
+              {isGuideOpen ? "이용가이드 닫기" : "이용가이드 상세보기"}
+            </Button>
+          </ButtonContainer>
+        </Main>
+        <Notice onClick={toggleNotice}>
+          <NoticeTitle>※ 유의사항 안내</NoticeTitle>
+          <IconPlaceholder>
+            <IconNoticeArrow
+              style={{ transform: isOpen ? "rotate(180deg)" : "rotate(0deg)" }}
+            />
+          </IconPlaceholder>
+        </Notice>
+        {isOpen && (
+          <NoticeBox>
+            <li>
+              캠페인 상세 페이지 내 URL을 통하여 구매한 건에 대해서만
+              인정됩니다.
+            </li>
+            <li>
+              기간 내 영수증 인증 &gt; 리뷰 등록 및 인증이 완료된 후 포인트가
+              적립됩니다.
+            </li>
+            <li>
+              영수증 인증 완료 후 7일 이내 남은 미션을 완료해주시기
+              바랍니다.(캠페인 미션 기간 준수)
+            </li>
+            <li>
+              정당한 사유 없이 캠페인 미션 기간 내 리뷰를 등록하지 않거나, 부정
+              행위가 적발 될 경우 미션 실패로 간주되며, 포인트는 지급되지
+              않습니다.
+            </li>
+            <li>
+              배송 관련 문의는 제품 상세 페이지 내 표시된 담당자 연락처로
+              연락하여 조율하시기 바랍니다.
+            </li>
+            <li>
+              배송 지연, 상품 파손 등과 같은 사유로 인하여 진행이 어려운 경우
+              고객센터로 문의바랍니다.
+            </li>
+            <li>
+              제공받은 제품 재판매 적발 시 회수는 물론, 법적 조치로 인한
+              불이익을 받을 수 있습니다.
+            </li>
+            <li>작성된 콘텐츠는 최소 6개월 유지해주셔야 합니다.</li>
+            <li>
+              공정거래위원회 지침에 따른 대가성 문구를 포함해주시기 바랍니다.
+            </li>
+          </NoticeBox>
+        )}
+        <FooterButtons>
+          {/* 찜하기 버튼 */}
+          <LikeButton
+            categoryId={campaignDetail.categoryId}
+            campaignId={campaignDetail.campaignId}
+          />
+          {/* 캠페인 신청하기 버튼 */}
+          <Button onClick={handleApply} $variant="red">
+            캠페인 신청하기
+          </Button>
+        </FooterButtons>
+      </DetailBody>
     </>
   )
 }
 
-/** 스타일드 컴포넌트 정의 **/
+export default CampaignDetailPage
+
+// Styled Components
+
+const Line = styled.div`
+  background-color: var(--n20-color);
+  height: 4px;
+  width: 100%;
+  margin-top: 1.6rem;
+`
+
+const DetailHeader = styled.div`
+  position: relative;
+  height: 420px;
+`
 
 const Background = styled.div<{ $imageUrl: string }>`
-  position: relative;
+  position: fixed;
+  top: 0;
+  left: 0;
   background-image: url(${(props) => props.$imageUrl});
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
   width: 100%;
-  height: 379px;
+  height: 420px;
+  z-index: -10;
 `
 
-const PopUp = styled.div`
+const PopUp = styled.div.attrs<{ $offsetY: number }>(({ $offsetY }) => ({
+  style: {
+    transform: `translate(-50%, ${$offsetY * 0.5}px)`,
+  },
+}))<{ $offsetY: number }>`
   width: calc(100% - 30px);
   position: absolute;
   bottom: 107px;
@@ -197,24 +333,24 @@ const PopUp = styled.div`
   display: flex;
   align-items: center;
   justify-content: start;
-  transform: translateX(-50%);
   background: rgba(255, 255, 255, 0.8);
   border-radius: 20px;
-  padding: 20px;
+  padding: 0 20px;
   color: #570be5;
   font-size: var(--font-bodyL-size);
   font-weight: var(--font-bodyL-weight);
   line-height: var(--font-bodyL-line-height);
   letter-spacing: var(--font-bodyL-letter-spacing);
+  will-change: transform;
+  transition: transform 0.1s ease-out;
 `
 
-const Content = styled.div`
-  padding: 1.9rem 1.5rem;
+const DetailBody = styled.div`
   position: relative;
-  margin-top: -99px;
+  top: -96px;
+  padding: 1.9rem 1.5rem 9.6rem;
   border-radius: 3rem 3rem 0 0;
   background: #fff;
-  z-index: 100;
 `
 
 const Dday = styled.span`
@@ -230,7 +366,7 @@ const Dday = styled.span`
 `
 
 const Title = styled.p`
-  margin-top: 1.1rem;
+  margin: 1.1rem 0;
   font-size: var(--font-h3-size);
   font-weight: var(--font-h3-weight);
   line-height: var(--font-h3-line-height);
@@ -238,120 +374,160 @@ const Title = styled.p`
 `
 
 const Divider = styled.hr`
-  margin-top: 8px;
   background: var(--n40-color);
   height: 1px;
   border: 0;
 `
 
 const CampaignContainer = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: start;
-  width: 300px;
+  width: 100%;
   background-color: #fff;
   border-radius: 10px;
   height: 80px;
-  margin: 14px auto;
-`
-
-const IconPlaceholder = styled.div`
-  /* 아이콘 공간 */
-  width: 24px;
-  height: 24px;
+  margin: 30px 0 28px 5px;
+  padding: 0 0 0 20px;
 `
 
 const CampaignDetails = styled.ul`
+  position: relative;
   list-style: none;
   height: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   align-items: flex-start;
-  margin-left: 7px;
-
+  &:before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: -17px;
+    transform: translateY(-50%);
+    height: 90%;
+    width: 1px;
+    margin-top: 5px;
+    border-left: 0.2rem dashed var(--n40-color);
+  }
   li {
+    position: relative;
     display: flex;
     justify-content: space-between;
-    font-size: 14px;
-    color: var(--n300-color);
-    margin-bottom: 10px;
-
+    font-size: var(--font-bodyL-size);
+    font-weight: var(--font-bodyL-weight);
+    line-height: var(--font-bodyL-line-height);
+    letter-spacing: var(--font-bodyL-letter-spacing);
+    margin-top: 0.4rem;
+    span {
+      color: var(--n300-color);
+    }
+    &::before {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: -19px;
+      transform: translateY(-50%);
+      width: 5px;
+      height: 5px;
+      background: var(--n80-color);
+      border-radius: 50%;
+    }
+    &:nth-child(1)::before {
+      background: url(${IconStar}) no-repeat center / 100%;
+      width: 13px;
+      height: 16px;
+    }
+    &:nth-child(1) {
+      color: var(--primary-color);
+      margin-top: 0;
+    }
     span:nth-child(1) {
       display: block;
       width: 100px;
       flex-shrink: 0;
+    }
+    &:last-child span:nth-child(1),
+    &:last-child span:nth-child(2) {
+      font-weight: var(--font-weight-bold);
     }
   }
 `
 
 const DetailInfo = styled.span`
   color: #000;
-  font-weight: bold;
-`
-
-const ButtonWrapper = styled.div`
-  margin-top: 33px;
-  padding: 0 33px;
-`
-
-const Line = styled.div`
-  background-color: var(--n20-color);
-  height: 6px;
-  width: 100%;
-`
-
-const ContentTab = styled.ul`
-  padding-left: 23px;
-  margin-top: 12px;
-
-  li {
-    &.selected {
-      /* 선택된 탭 스타일 */
-      font-weight: bold;
-      border-bottom: 2px solid var(--revu-color);
-    }
-  }
 `
 
 const Main = styled.div`
-  padding: 23px;
+  padding: 23px 0;
 `
 
 const ImagePlaceholder = styled.div`
-  /* 이미지 공간 */
   height: 200px;
   background-color: #eee;
 `
 
-const MainButtonWrap = styled.div`
-  padding-top: 51px;
-  margin-top: -30px;
-  z-index: 10;
-  position: relative;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, #fff 32.19%);
+const GuideCont = styled.div`
+  margin-top: 2.2rem;
+  border-top: 0.1rem solid var(--n80-color);
+  padding: 3rem 0 1.8rem;
+
+  .tit {
+    font-size: var(--font-title-size);
+    font-weight: var(--font-title-weight);
+    line-height: var(--font-title-line-height);
+    letter-spacing: var(--font-title-letter-spacing);
+  }
+
+  .proc-list {
+    margin-top: 1.3rem;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    column-gap: 1.6rem;
+    row-gap: 1.8rem;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .proc-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .proc-item > div {
+    border-radius: 50%;
+    width: 6rem;
+    height: 6rem;
+    background: #d9d9d9;
+  }
+
+  .proc-item > span {
+    color: #000;
+    display: block;
+    margin-top: 0.5rem;
+    font-size: var(--font-caption-small-size);
+    font-weight: var(--font-caption-small-weight);
+    line-height: var(--font-caption-small-line-height);
+    letter-spacing: var(--font-caption-small-letter-spacing);
+  }
 `
 
-const OutlinedButton = styled.button`
-  /* outlined 버튼 스타일 */
-  border: 1px solid var(--n80-color);
-  background: transparent;
-  color: var(--primary-color);
-  padding: 10px 20px;
-  border-radius: 8px;
-  cursor: pointer;
-
-  &:hover {
-    border-color: var(--revu-color);
-    color: var(--revu-color);
-  }
+const ButtonContainer = styled.div<{ $isGuideOpen: boolean }>`
+  padding-top: 5rem;
+  position: relative;
+  top: -30px;
+  z-index: 10;
+  background: ${(props) =>
+    !props.$isGuideOpen
+      ? "linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, #fff 32.19%)"
+      : "none"};
 `
 
 const Notice = styled.div`
   display: flex;
-  align-items: end;
+  align-items: center;
   justify-content: space-between;
-  padding: 22px 16px 15px 16px;
+  padding: 22px 0 15px 0;
+  cursor: pointer;
 `
 
 const NoticeTitle = styled.p`
@@ -359,8 +535,10 @@ const NoticeTitle = styled.p`
   font-size: 1.4rem;
 `
 
-const NoticeContent = styled.div`
-  padding: 0 16px 100px 16px;
+const IconPlaceholder = styled.div`
+  width: 24px;
+  height: 24px;
+  transition: transform 0.1s ease;
 `
 
 const NoticeBox = styled.ul`
@@ -370,28 +548,9 @@ const NoticeBox = styled.ul`
   font-size: 1.4rem;
   line-height: 1.4;
   list-style-type: disc;
-
   li {
     margin-bottom: 10px;
   }
-`
-
-const CampaignHeart = styled.div`
-  height: 100%;
-  flex-direction: column;
-  justify-content: center;
-  align-items: flex-end;
-  gap: 3px;
-  display: inline-flex;
-`
-
-const HeartText = styled.div`
-  text-align: center;
-  color: #e50b14;
-  font-size: 7px;
-  font-family: "SUIT", sans-serif;
-  font-weight: 600;
-  word-wrap: break-word;
 `
 
 const FooterButtons = styled.div`
@@ -406,25 +565,4 @@ const FooterButtons = styled.div`
   background: #fff;
   z-index: 100;
   padding: 15px 20px;
-`
-
-const HeartButton = styled.button`
-  background: url(./assets/img/ico--heart.png) no-repeat center / 100%;
-  width: 30px;
-  height: 40px;
-`
-
-const RedButton = styled.button`
-  /* 버튼 스타일 */
-  background-color: var(--revu-color);
-  color: #fff;
-  padding: 10px 20px;
-  border-radius: 16px;
-  border: none;
-  cursor: pointer;
-
-  &:disabled {
-    background-color: #ccc;
-    cursor: not-allowed;
-  }
 `

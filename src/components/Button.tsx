@@ -29,26 +29,25 @@ const Button = ({
 
 export default Button
 
-// Styled Button component
-const StyledButton = styled.button<{
+interface StyledButtonProps {
   $variant: "red" | "outlined"
-  $marginTop?: string // Added to props
-}>`
+  $marginTop?: string
+  disabled?: boolean
+}
+const StyledButton = styled.button.attrs<StyledButtonProps>((props) => ({
+  "data-variant": props.$variant,
+  disabled: props.disabled,
+}))<StyledButtonProps>`
   width: 100%;
   padding: 1.2rem;
-  background-color: ${(props) =>
-    props.$variant === "red"
-      ? props.disabled
-        ? "#ccc"
-        : "#ff0000"
-      : "transparent"};
-  color: ${(props) =>
-    props.$variant === "red" ? "white" : "var(--primary-color)"};
-  border: ${(props) =>
-    props.$variant === "outlined" ? "1px solid var(--n80-color)" : "none"};
+  background-color: ${({ $variant, disabled }) =>
+    $variant === "red" ? (disabled ? "#ccc" : "#ff0000") : "transparent"};
+  color: ${({ $variant }) =>
+    $variant === "red" ? "white" : "var(--primary-color)"};
+  border: ${({ $variant }) =>
+    $variant === "outlined" ? "1px solid var(--n80-color)" : "none"};
   border-radius: 8px;
-  cursor: ${(props) => (props.disabled ? "not-allowed" : "pointer")};
-
+  cursor: ${({ disabled }) => (disabled ? "not-allowed" : "pointer")};
   /* Conditionally apply margin-top */
   ${({ $marginTop }) => $marginTop && `margin-top: ${$marginTop};`}
 `

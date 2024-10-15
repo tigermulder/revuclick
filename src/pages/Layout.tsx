@@ -28,7 +28,6 @@ const Layout = () => {
 
 export default Layout
 
-// 페이지 내용이 앱바와 탭바에 가려지지 않도록 적절한 margin 설정
 const Content = styled.main<ContentProps>`
   width: 100%;
   ${({ $isSpecialPage, $isCampaignDetail }) =>

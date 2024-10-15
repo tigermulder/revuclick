@@ -1,10 +1,10 @@
 import { Route, Routes as ReactRouterRoutes } from "react-router-dom"
+import { RoutePath } from "types/route-path"
 import Layout from "./Layout"
 import LoginPage from "./views/LoginPage" // 로그인 페이지
 import JoinPage from "./views/JoinPage"
 import MainPage from "./views/MainPage"
-import { CampaignDetailPage } from "./views/CampaignDetailPage"
-import { RoutePath } from "types/route-path"
+import CampaignDetailPage from "./views/CampaignDetailPage"
 import CameraTest from "./views/CameraTest"
 
 export const AppRoute = () => {
@@ -20,8 +20,8 @@ export const AppRoute = () => {
         <Route path={RoutePath.Login} element={<LoginPage />} />
         {/* 회원가입 페이지 */}
         <Route path={RoutePath.Join} element={<JoinPage />} />
-        {/* 카메라 테스트 */}
-        <Route path={RoutePath.Camera} element={<CameraTest />} />
+        {/* 장바구니 페이지 */}
+        <Route path={RoutePath.MyCart} element={<CameraTest />} />
       </Route>
     </ReactRouterRoutes>
   )

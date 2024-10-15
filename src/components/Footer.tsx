@@ -79,11 +79,11 @@ const FooterLogoContainer = styled.div`
   height: 20.8px;
   left: 16px;
   top: 37px;
-  color: var(--n200-color); /* 로고 색상을 var(--n200-color)로 변경 */
+  color: var(--n200-color);
 
   svg {
     width: 100%;
     height: auto;
-    fill: currentColor; /* currentColor를 사용해 부모의 색상을 따름 */
+    fill: currentColor;
   }
 `

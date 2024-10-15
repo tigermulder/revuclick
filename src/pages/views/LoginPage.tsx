@@ -23,7 +23,7 @@ const LoginPage = () => {
 
   // 로그인된 사용자가 /login 페이지로 접근하면 메인 페이지로 리다이렉트
   useEffect(() => {
-    const token = localStorage.getItem("authToken")
+    const token = sessionStorage.getItem("authToken")
     if (token) {
       navigate(RoutePath.Home)
       addToast("로그인된 상태입니다.", "info")
@@ -192,7 +192,6 @@ const LoginPage = () => {
 
 export default LoginPage
 
-// Styled Components
 const Container = styled.div`
   padding: 6.8rem 0;
   text-align: center;
@@ -240,38 +239,6 @@ const Form = styled.form`
   display: flex;
   flex-direction: column;
   align-items: stretch;
-`
-
-const LoginMessage = styled.p`
-  color: red;
-  font-size: 14px;
-  margin: 1rem 0;
-`
-
-const StyledButton = styled.button<{ $variant: "red" | "outlined" }>`
-  width: 100%;
-  padding: 10px;
-  background-color: ${(props) =>
-    props.$variant === "red"
-      ? props.disabled
-        ? "#ccc"
-        : "#ff0000"
-      : "transparent"};
-  color: ${(props) =>
-    props.$variant === "red" ? "white" : "var(--primary-color)"};
-  border: ${(props) =>
-    props.$variant === "outlined" ? "1px solid var(--n80-color)" : "none"};
-  border-radius: 5px;
-  cursor: ${(props) => (props.disabled ? "not-allowed" : "pointer")};
-  margin-bottom: ${(props) => (props.$variant === "red" ? "1.2rem" : "6rem")};
-
-  /* Optional: Add hover effects */
-  &:hover {
-    background-color: ${(props) =>
-      !props.disabled && props.$variant === "red" ? "#cc0000" : ""};
-    border-color: ${(props) =>
-      !props.disabled && props.$variant === "outlined" ? "#0056b3" : ""};
-  }
 `
 
 const LinkContainer = styled.div`

@@ -34,7 +34,17 @@ const CheckboxInput = styled.input`
   display: none;
 `
 
-const CheckboxCustom = styled.span<{ checked: boolean }>`
+interface CheckboxCustomProps {
+  checked: boolean
+}
+const CheckboxCustom = styled.span.attrs<CheckboxCustomProps>(
+  ({ checked }) => ({
+    style: {
+      "--svg-display": checked ? "block" : "none",
+      "--svg-first-display": checked ? "none" : "block",
+    } as React.CSSProperties,
+  })
+)<CheckboxCustomProps>`
   width: 1.6rem;
   height: 1.6rem;
   margin-right: 0.8rem;
@@ -46,15 +56,23 @@ const CheckboxCustom = styled.span<{ checked: boolean }>`
     left: 0;
     width: 100%;
     height: 100%;
-    display: ${(props) => (props.checked ? "block" : "none")};
+    display: var(--svg-display);
   }
 
   & > svg:first-child {
-    display: ${(props) => (props.checked ? "none" : "block")};
+    display: var(--svg-first-display);
   }
 `
 
-const CheckboxText = styled.span<{ $isTitle: boolean }>`
+interface CheckboxTextProps {
+  $isTitle: boolean
+}
+const CheckboxText = styled.span.attrs<Partial<CheckboxTextProps>>(
+  ({ $isTitle = false }) => ({
+    $isTitle,
+    "data-is-title": $isTitle,
+  })
+)<CheckboxTextProps>`
   font-size: ${({ $isTitle }) =>
     $isTitle ? "var(--font-title-size)" : "var(--font-caption-size)"};
   font-weight: ${({ $isTitle }) =>
