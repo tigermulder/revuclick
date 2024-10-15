@@ -16,6 +16,7 @@ import useToast from "@/hooks/useToast"
 import styled from "styled-components"
 import { RoutePath } from "@/types/route-path"
 import ContentTab from "@/components/Tab"
+import dummyImage from "assets/dummy-image.png"
 
 // React Query 키
 const CAMPAIGN_ITEM_QUERY_KEY = (campaignId: string | number) => [
@@ -122,20 +123,21 @@ const CampaignDetailPage = () => {
     if (!isLoggedIn) {
       // 토스트 메시지 추가
       addToast("로그인이 필요합니다.", "warning", 1000, "login")
-      navigate(RoutePath.Login, { replace: true }) // replace 옵션 추가
+      navigate(RoutePath.Login, { replace: true })
     } else {
       // 로그인된 상태에서 캠페인 신청 로직 수행
       navigate(`/campaign/${campaignId}/apply`)
     }
   }
 
+  const thumbnailUrl = campaignDetail.thumbnailUrl || dummyImage
   return (
     <>
       <CampaignDetailBackButton />
       <CampaignDetailShareButton />
       <ShareModal /> {/* 공유 모달 추가 */}
       <DetailHeader>
-        <Background $imageUrl={campaignDetail.thumbnailUrl}>
+        <Background $imageUrl={thumbnailUrl}>
           <PopUp $offsetY={offsetY}>
             🎉 신청을 서두르세요! 신청인원 {campaignDetail.joins}/
             {campaignDetail.quota}

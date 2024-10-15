@@ -12,8 +12,9 @@ import BannerSlider from "components/Banner"
 import LikeButton from "components/LikeButton"
 import { FilterBar } from "components/FilterBar"
 import { useRouter } from "@/hooks/useRouting"
-import styled from "styled-components"
+import dummyImage from "assets/dummy-image.png"
 import { RoutePath } from "@/types/route-path"
+import styled from "styled-components"
 
 const MainPage = (): JSX.Element => {
   const setCampaignList = useSetRecoilState(campaignListState)
@@ -91,6 +92,8 @@ const MainPage = (): JSX.Element => {
     }
   }, [fetchNextPage, hasNextPage])
 
+  // const filtered = filteredCampaigns.filter(item => item.status === "edit")
+
   return (
     <>
       {/* 카테고리메뉴 */}
@@ -117,7 +120,7 @@ const MainPage = (): JSX.Element => {
             remainingTime = "캠페인 종료"
           }
           const isEnded = remainingTime === "캠페인 종료"
-
+          const thumbnailUrl = campaign.thumbnailUrl || dummyImage
           return (
             <CampaignCard
               key={campaign.campaignId}
@@ -130,7 +133,7 @@ const MainPage = (): JSX.Element => {
             >
               <CampaignImage>
                 <img
-                  src={campaign.thumbnailUrl || "default-image.jpg"}
+                  src={thumbnailUrl}
                   alt={campaign.title}
                 />
                 {/* 캠페인 종료 여부에 따라 RemainingDays 위치 변경 */}
