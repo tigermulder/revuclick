@@ -293,8 +293,6 @@ const CampaignDetailPage = () => {
 
 export default CampaignDetailPage
 
-// Styled Components
-
 const Line = styled.div`
   background-color: var(--n20-color);
   height: 4px;
@@ -455,7 +453,7 @@ const DetailInfo = styled.span`
 `
 
 const Main = styled.div`
-  padding: 23px 0;
+  padding-top: 23px;
 `
 
 const ImagePlaceholder = styled.div`
