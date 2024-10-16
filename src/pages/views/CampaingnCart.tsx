@@ -1,14 +1,13 @@
-import { useState, useEffect } from "react"
 import { useRecoilValue, useSetRecoilState } from "recoil"
 import { campaignListState, campaignLikeState } from "@/store/mainpage-recoil"
 import LikeButton from "components/LikeButton"
 import FilterDropDown from "@/components/FilterDropDown"
 import dummyImage from "assets/dummy-image.png"
 import BackIcon from "assets/ico_back.svg?react"
-import styled from "styled-components"
 import { useNavigate } from "react-router-dom"
 import useToast from "@/hooks/useToast"
 import { filteredCampaignsSelector } from "@/store/dropdown-recoil"
+import styled from "styled-components"
 
 const CampaignCart = () => {
   const likedCampaigns = useRecoilValue(campaignLikeState)
