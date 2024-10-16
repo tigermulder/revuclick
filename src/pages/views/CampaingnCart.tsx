@@ -8,25 +8,15 @@ import BackIcon from "assets/ico_back.svg?react"
 import styled from "styled-components"
 import { useNavigate } from "react-router-dom"
 import useToast from "@/hooks/useToast"
+import { filteredCampaignsSelector } from "@/store/dropdown-recoil"
 
 const CampaignCart = () => {
   const likedCampaigns = useRecoilValue(campaignLikeState)
   const campaigns = useRecoilValue(campaignListState) // 캠페인 리스트 상태
   const setLikedCampaigns = useSetRecoilState(campaignLikeState)
-  const [filteredCampaigns, setFilteredCampaigns] = useState<any[]>([])
   const navigate = useNavigate()
   const { addToast } = useToast()
-
-  useEffect(() => {
-    // likedCampaigns에서 캠페인 ID들을 배열로 변환
-    const campaignIds = Object.values(likedCampaigns).flat()
-
-    // 캠페인 리스트에서 찜한 캠페인 필터링
-    const filtered = campaigns.filter((campaign: any) =>
-      campaignIds.includes(campaign.campaignId)
-    )
-    setFilteredCampaigns(filtered)
-  }, [likedCampaigns, campaigns])
+  const filteredCampaigns = useRecoilValue(filteredCampaignsSelector);
 
   // 찜 해제 시 로컬 스토리지와 상태 업데이트
   const handleUnlike = (campaignId: number, categoryId: number) => {

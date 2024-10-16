@@ -1,26 +1,28 @@
 import { useState } from "react"
-import { dropDownOptions } from "@/types/component-types/filter-dropdown-type"
+import { dropDownOptions, FilterOption } from "@/types/component-types/filter-dropdown-type"
+import { selectedFilterState } from "@/store/dropdown-recoil"
 import IconDropDown from "assets/ico-dropdown-arrow.svg?react"
+import { useRecoilState } from "recoil"
 import styled from "styled-components"
 
 const FilterDropDown = () => {
   const [isOpen, setIsOpen] = useState(false)
-  const [selectedOption, setSelectedOption] = useState(dropDownOptions[1]) // 기본값
+  const [selectedFilter, setSelectedFilter] = useRecoilState(selectedFilterState);
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen)
   }
 
   const handleOptionClick = (option: (typeof dropDownOptions)[0]) => {
-    setSelectedOption(option) // 선택된 옵션을 상태로 설정
-    setIsOpen(false) // 드롭다운 닫기
+    setSelectedFilter(option); // 선택된 필터 업데이트
+    setIsOpen(false); // 드롭다운 닫기
   }
 
   return (
     <>
       {/* 드롭다운을 열기 위한 버튼 - 선택된 옵션에 따라 텍스트가 변경됨 */}
       <DropdownButton onClick={toggleDropdown}>
-        <span>{selectedOption.label}</span>
+        <span>{selectedFilter.label}</span>
         <IconDropDown />
       </DropdownButton>
 
@@ -30,7 +32,7 @@ const FilterDropDown = () => {
           {dropDownOptions.map((option) => (
             <DropDownItem
               key={option.id}
-              $highlighted={option.id === selectedOption.id}
+              $highlighted={option.id === selectedFilter.id}
               onClick={() => handleOptionClick(option)} // 옵션 클릭 처리
             >
               {option.label}
