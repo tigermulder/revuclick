@@ -74,11 +74,11 @@ const LoginPage = () => {
       const token = data.token
       if (token) {
         sessionStorage.setItem("authToken", token)
-        addToast("로그인이 완료되었습니다.", "check")
+        addToast("로그인이 완료되었습니다.", "check", 1000)
         navigate(RoutePath.Home)
       } else {
         console.error("Token not found in response:", data)
-        addToast("로그인에 실패했습니다. 다시 시도해주세요.", "warning")
+        addToast("로그인에 실패했습니다. 다시 시도해주세요.", "warning", 1000)
       }
     },
     onError: (error: any) => {
@@ -87,20 +87,20 @@ const LoginPage = () => {
         switch (error.response.data.errorCode) {
           case 1:
           case 2:
-            addToast("아이디 또는 비밀번호가 잘못되었습니다.", "warning")
+            addToast("아이디 또는 비밀번호가 잘못되었습니다.", "warning", 1000)
             break
           case 3:
           case 4:
-            addToast("인증 정보가 올바르지 않습니다.", "warning")
+            addToast("인증 정보가 올바르지 않습니다.", "warning", 1000)
             break
           case 5:
-            addToast("탈퇴한 회원입니다.", "warning")
+            addToast("탈퇴한 회원입니다.", "warning", 1000)
             break
           default:
-            addToast("오류가 발생했습니다.", "warning")
+            addToast("오류가 발생했습니다.", "warning", 1000)
         }
       } else {
-        addToast("오류가 발생했습니다.", "warning")
+        addToast("오류가 발생했습니다.", "warning", 1000)
       }
     },
   })
@@ -110,7 +110,7 @@ const LoginPage = () => {
     const email = checkEmail(emailId)
     const validPassword = checkPassword(password)
     if (!email || !validPassword) {
-      addToast("이메일과 비밀번호를 확인해 주세요.", "warning")
+      addToast("이메일과 비밀번호를 확인해 주세요.", "warning", 1000)
       return
     }
     const loginData = {

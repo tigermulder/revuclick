@@ -1,26 +1,25 @@
-// ShareButton.tsx
-import { useSetRecoilState } from 'recoil';
-import { isShareModalOpenState } from 'store/modal-recoil';
-import styled from 'styled-components';
-import IconShare from 'assets/ico-campaign-detail-share.svg?react'; // SVG를 React 컴포넌트로 임포트
+import { useSetRecoilState } from "recoil"
+import { isShareModalOpenState } from "store/modal-recoil"
+import styled from "styled-components"
+import IconShare from "assets/ico-campaign-detail-share.svg?react" // SVG를 React 컴포넌트로 임포트
 
 const ShareButton = () => {
   // Recoil을 사용하여 모달 열림/닫힘 상태를 변경
-  const setIsModalOpen = useSetRecoilState(isShareModalOpenState);
+  const setIsModalOpen = useSetRecoilState(isShareModalOpenState)
 
   // 버튼 클릭 시 모달을 열기
   const openModal = () => {
-    setIsModalOpen(true);
-  };
+    setIsModalOpen(true)
+  }
 
   return (
     <StyledShareButton onClick={openModal}>
       <IconShare /> {/* SVG 아이콘 사용 */}
     </StyledShareButton>
-  );
-};
+  )
+}
 
-export default ShareButton;
+export default ShareButton
 
 // 스타일 정의
 const StyledShareButton = styled.button`
@@ -42,4 +41,4 @@ const StyledShareButton = styled.button`
   &:hover {
     opacity: 1;
   }
-`;
+`

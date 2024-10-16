@@ -34,9 +34,11 @@ const AppBar = () => {
 
       {/* 로그인 여부에 따른 찜하기 아이콘 또는 회원가입 링크 */}
       {isLoggedIn ? (
-        <HeartIcon aria-label="캠페인 찜 장바구니">
-          <IcoAppBarHeart />
-        </HeartIcon>
+        <Link to={RoutePath.MyCart} aria-label="캠페인 찜 장바구니로 이동">
+          <HeartIcon aria-label="캠페인 찜 장바구니">
+            <IcoAppBarHeart />
+          </HeartIcon>
+        </Link>
       ) : (
         <SignUpLink>
           <Link to={RoutePath.Login} aria-label="로그인 페이지로 이동">
@@ -64,7 +66,7 @@ const Header = styled.header`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08); /* 그림자 적용 */
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
 `
 
 const Logo = styled.div`

@@ -35,7 +35,7 @@ const MainPage = (): JSX.Element => {
 
   // 찜장바구니 상태값 확인
   useEffect(() => {
-    console.log("현재 장바구니상태:", campaignLikes)
+    console.log("현재 찜목록상태:", campaignLikes)
   }, [campaignLikes])
 
   //** 리액트쿼리 */
@@ -92,7 +92,7 @@ const MainPage = (): JSX.Element => {
     }
   }, [fetchNextPage, hasNextPage])
 
-  // const filtered = filteredCampaigns.filter(item => item.status === "edit")
+  const filtered = filteredCampaigns.filter((item) => item.status === "edit")
 
   return (
     <>
@@ -102,7 +102,7 @@ const MainPage = (): JSX.Element => {
       {/* 필터칩 */}
       <FilterBar />
       <CampaignList>
-        {filteredCampaigns?.map((campaign) => {
+        {filtered?.map((campaign) => {
           // 남은 시간 계산
           const endTime = campaign.endAt
             ? new Date(campaign.endAt).getTime()
@@ -132,19 +132,17 @@ const MainPage = (): JSX.Element => {
               }
             >
               <CampaignImage>
-                <img
-                  src={thumbnailUrl}
-                  alt={campaign.title}
-                />
+                <img src={thumbnailUrl} alt={campaign.title} />
                 {/* 캠페인 종료 여부에 따라 RemainingDays 위치 변경 */}
                 <RemainingDays $isEnded={isEnded}>
                   {isEnded ? "캠페인 종료" : remainingTime}
                 </RemainingDays>
                 {isEnded && <EndedOverlay />}
                 {!isEnded && (
-                  <LikeButton
+                  <CustomLikeButton
                     categoryId={campaign.categoryId}
                     campaignId={campaign.campaignId}
+                    className="cart-like-button"
                   />
                 )}
               </CampaignImage>
@@ -226,7 +224,7 @@ const EndedOverlay = styled.div`
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.45);
   z-index: 1;
 `
 
@@ -260,4 +258,10 @@ const Participants = styled.p`
     color: var(--primary-color);
     font-weight: 500;
   }
+`
+
+const CustomLikeButton = styled(LikeButton)`
+  position: absolute;
+  bottom: 1rem;
+  right: 1rem;
 `

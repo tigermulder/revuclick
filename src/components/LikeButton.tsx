@@ -11,11 +11,19 @@ import styled from "styled-components"
 const LikeButton = ({
   categoryId,
   campaignId,
-}: LikeButtonProps): JSX.Element => {
-  const { isLiked, likeCampaign, unlikeCampaign } = useLikeCampaign(
-    campaignId,
-    categoryId
-  )
+  onLikeToggle,
+  isLiked: isLikedProp,
+  className,
+}: LikeButtonProps & {
+  onLikeToggle?: () => void
+  isLiked?: boolean
+  className?: string
+}): JSX.Element => {
+  const {
+    isLiked: defaultIsLiked,
+    likeCampaign,
+    unlikeCampaign,
+  } = useLikeCampaign(campaignId, categoryId)
   const { addToast } = useToast()
   const router = useRouter()
 
@@ -27,14 +35,20 @@ const LikeButton = ({
       router.push(RoutePath.Login)
       return
     }
-    if (isLiked()) {
-      unlikeCampaign()
-      addToast("찜한 목록에서 해제했어요.", "uncheck", 1000, "like")
+    if (onLikeToggle) {
+      onLikeToggle() // 외부에서 찜하기 로직을 전달받았을 때 실행
     } else {
-      likeCampaign()
-      addToast("💝찜한 목록에 추가했어요.", "check", 1000, "like")
+      if (defaultIsLiked()) {
+        unlikeCampaign()
+        addToast("찜한 목록에서 해제했어요.", "uncheck", 1000, "like")
+      } else {
+        likeCampaign()
+        addToast("💝찜한 목록에 추가했어요.", "check", 1000, "like")
+      }
     }
   }
+
+  const likedState = isLikedProp !== undefined ? isLikedProp : defaultIsLiked()
 
   const isCampaignPage = useMatch("/campaign/:campaignId")
 
@@ -42,10 +56,11 @@ const LikeButton = ({
     return (
       <CampaignHeart
         onClick={handleLike}
-        aria-label={isLiked() ? "좋아요 취소" : "좋아요"}
-        $isLiked={isLiked()} // 수정된 부분
+        aria-label={likedState ? "좋아요 취소" : "좋아요"}
+        $isLiked={likedState}
+        className={className} // className을 추가
       >
-        <StyledIcoCampaignHeart $isLiked={isLiked()} /> {/* 수정된 부분 */}
+        <StyledIcoCampaignHeart $isLiked={likedState} />
         <HeartText>찜하기</HeartText>
       </CampaignHeart>
     )
@@ -53,10 +68,11 @@ const LikeButton = ({
     return (
       <Button
         onClick={handleLike}
-        aria-label={isLiked() ? "좋아요 취소" : "좋아요"}
-        aria-pressed={isLiked()}
+        aria-label={likedState ? "좋아요 취소" : "좋아요"}
+        aria-pressed={likedState}
+        className={className} // className을 추가
       >
-        <StyledHeartIcon $isLiked={isLiked()} /> {/* 수정된 부분 */}
+        <StyledHeartIcon $isLiked={likedState} />
       </Button>
     )
   }
@@ -64,10 +80,8 @@ const LikeButton = ({
 
 export default LikeButton
 
+// 스타일 정의
 const Button = styled.button`
-  position: absolute;
-  bottom: 10px;
-  right: 10px;
   background: transparent;
   border: none;
   cursor: pointer;

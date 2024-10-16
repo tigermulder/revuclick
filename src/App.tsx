@@ -13,7 +13,12 @@ function App() {
   const location = useLocation() // 현재 경로확인
   const isCampaignDetail = useMatch("/campaign/:campaignId") // 동적 경로 매칭 확인
 
-  const hideBar =
+  const hideAppBar =
+    location.pathname === RoutePath.Login ||
+    location.pathname === RoutePath.MyCart ||
+    location.pathname === RoutePath.Join ||
+    isCampaignDetail
+  const hideTapBar =
     location.pathname === RoutePath.Login ||
     location.pathname === RoutePath.Join ||
     isCampaignDetail
@@ -23,7 +28,7 @@ function App() {
     <div className="App">
       <AuthProvider>
         {/* App Bar */}
-        {!hideBar && <AppBar />}
+        {!hideAppBar && <AppBar />}
         {/* 라우팅컴포넌트 */}
         <AppRoute />
         {/* 특정 경로에서만 푸터 렌더링 */}
@@ -31,7 +36,7 @@ function App() {
         {/* GlobalCategoryMenu는 항상 렌더링되어야 함 */}
         <GlobalCategoryMenu />
         {/* Bottom Tap Bar */}
-        {!hideBar && <BottomTapBar />}
+        {!hideTapBar && <BottomTapBar />}
         {/* ToastMassage */}
         <ToastMassage />
       </AuthProvider>

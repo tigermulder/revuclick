@@ -8,7 +8,8 @@ const Layout = () => {
   const location = useLocation() // 현재 경로 감지
   const isCampaignDetail = !!useMatch("/campaign/:campaignId") // 캠페인 상세 경로 감지
   const isLoginPage = location.pathname === RoutePath.Login // 로그인 페이지 감지
-  const isSpecialPage = isLoginPage || isCampaignDetail // 로그인 페이지와 캠페인 상세 페이지 감지
+  const isMyCartPage = location.pathname === RoutePath.MyCart // 장바구니 페이지 감지
+  const isSpecialPage = isLoginPage || isCampaignDetail || isMyCartPage // 로그인 페이지와 캠페인 상세 페이지 감지
 
   return (
     <>

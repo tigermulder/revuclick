@@ -1,6 +1,5 @@
 // src/pages/JoinPage.tsx
 import { useState, useEffect, useRef } from "react"
-import styled from "styled-components"
 import { useNavigate } from "react-router-dom"
 import { RoutePath } from "@/types/route-path"
 import { useMutation } from "@tanstack/react-query"
@@ -31,6 +30,7 @@ import {
   validatePassword,
   validatePhone,
 } from "@/utils/util"
+import styled from "styled-components"
 
 const JoinPage = () => {
   const navigate = useNavigate()

@@ -5,7 +5,7 @@ import LoginPage from "./views/LoginPage" // 로그인 페이지
 import JoinPage from "./views/JoinPage"
 import MainPage from "./views/MainPage"
 import CampaignDetailPage from "./views/CampaignDetailPage"
-import CameraTest from "./views/CameraTest"
+import CampaignCart from "./views/CampaingnCart"
 
 export const AppRoute = () => {
   return (
@@ -21,7 +21,7 @@ export const AppRoute = () => {
         {/* 회원가입 페이지 */}
         <Route path={RoutePath.Join} element={<JoinPage />} />
         {/* 장바구니 페이지 */}
-        <Route path={RoutePath.MyCart} element={<CameraTest />} />
+        <Route path={RoutePath.MyCart} element={<CampaignCart />} />
       </Route>
     </ReactRouterRoutes>
   )

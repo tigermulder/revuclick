@@ -36,7 +36,7 @@ const Container = styled.div`
   padding: 16px 0;
   gap: 8px;
   overflow-x: auto;
-  overflow-y: hidden; /* 세로 스크롤 숨기기 */
+  overflow-y: hidden;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
   &::-webkit-scrollbar {

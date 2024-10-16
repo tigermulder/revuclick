@@ -94,8 +94,20 @@ export const filteredAndSortedCampaignList = selector<Campaign[]>({
   },
 })
 
-// ** 찜한 캠페인 ID 리스트 */
-export const campaignLikeState = atom<CampaignLikeState>({
+// 찜한 캠페인 ID를 저장하는 아톰 (로컬 스토리지 연동)
+const getStoredState = (key: string, defaultValue: any) => {
+  const storedValue = localStorage.getItem(key)
+  return storedValue ? JSON.parse(storedValue) : defaultValue
+}
+export const campaignLikeState = atom({
   key: "campaignLikeState",
-  default: {}, // 카테고리별로 찜한 캠페인 ID 리스트를 관리하는 객체
+  default: getStoredState("campaignLikeState", {}), // 로컬 스토리지에서 값 불러옴
+  effects: [
+    ({ onSet }) => {
+      // 상태가 변경될 때 로컬 스토리지에 저장
+      onSet((newValue) => {
+        localStorage.setItem("campaignLikeState", JSON.stringify(newValue))
+      })
+    },
+  ],
 })
