@@ -1,5 +1,5 @@
-import { useRecoilValue, useSetRecoilState } from "recoil"
-import { campaignListState, campaignLikeState } from "@/store/mainpage-recoil"
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil"
+import { campaignLikeState } from "@/store/mainpage-recoil"
 import LikeButton from "components/LikeButton"
 import FilterDropDown from "@/components/FilterDropDown"
 import dummyImage from "assets/dummy-image.png"
@@ -10,13 +10,11 @@ import { filteredCampaignsSelector } from "@/store/dropdown-recoil"
 import styled from "styled-components"
 
 const CampaignCart = () => {
-  const likedCampaigns = useRecoilValue(campaignLikeState)
-  const campaigns = useRecoilValue(campaignListState) // 캠페인 리스트 상태
-  const setLikedCampaigns = useSetRecoilState(campaignLikeState)
+  const [likedCampaigns, setLikedCampaigns] = useRecoilState(campaignLikeState)
+  const filteredCampaigns = useRecoilValue(filteredCampaignsSelector)
   const navigate = useNavigate()
   const { addToast } = useToast()
-  const filteredCampaigns = useRecoilValue(filteredCampaignsSelector);
-
+  
   // 찜 해제 시 로컬 스토리지와 상태 업데이트
   const handleUnlike = (campaignId: number, categoryId: number) => {
     const updatedLikes = { ...likedCampaigns }
