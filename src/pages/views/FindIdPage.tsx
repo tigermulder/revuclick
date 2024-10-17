@@ -4,7 +4,7 @@ import ReuseHeader from "@/components/ReuseHeader"
 import TextField from "@/components/TextField"
 import Button from "@/components/Button"
 import useToast from "@/hooks/useToast"
-import { checkName, validatePassword } from "@/utils/util"
+import { checkName, validatePhone } from "@/utils/util" // validatePhone으로 수정
 import { RoutePath } from "@/types/route-path"
 import { findId } from "@/services/join"
 import styled from "styled-components"
@@ -18,8 +18,31 @@ const FindIdPage = () => {
 
   // 버튼 활성화 여부를 동적으로 설정
   useEffect(() => {
-    setIsButtonEnabled(checkName(nickname) && validatePassword(phone))
+    setIsButtonEnabled(checkName(nickname) && validatePhone(phone))
   }, [nickname, phone])
+
+  // 아이디 찾기 API 호출 함수
+  const handleFindId = async () => {
+    try {
+      const response = await findId({ nickname, phone: Number(phone) })
+
+      if (response.statusCode === 0) {
+        // 성공적으로 이메일을 찾았을 때 로컬스토리지에 저장
+        localStorage.setItem('find_email', response.email)
+        localStorage.setItem('nickname', nickname)
+        // 성공 메시지 출력 후 페이지 이동
+        addToast("아이디가 이메일로 발송되었습니다.", "warning", 1000, "UserId")
+        navigate(RoutePath.Login) // 로그인 페이지로 이동
+      } else if (response.statusCode === -1) {
+        // 서버에서 -1 에러코드를 받았을 때 처리
+        addToast("아이디 찾기에 실패했습니다.", "warning", 1000, "UserId")
+        console.error(response)
+      }
+    } catch (error) {
+      // 네트워크 또는 서버 에러 발생 시 처리
+      addToast("아이디 찾기 중 오류가 발생했습니다.", "warning", 1000, "UserId")
+    }
+  }
 
   return (
     <Container>
@@ -54,14 +77,19 @@ const FindIdPage = () => {
         placeholder="휴대폰번호"
         value={phone}
         onChange={(e) => setPhone(e.target.value)}
-        $isError={phone !== "" && !validatePassword(phone)}
+        $isError={phone !== "" && !validatePhone(phone)} // 전화번호 검증 함수 수정
         errorMessage={
-          phone !== "" && !validatePassword(phone)
-            ? "‘-’ 없이 8자리 11자리 숫자로 입력해주세요."
+          phone !== "" && !validatePhone(phone)
+            ? "‘-’ 없이 8자리에서 11자리 숫자로 입력해주세요."
             : undefined
         }
       />
-      <Button type="button" disabled={!isButtonEnabled} $variant="red">
+      <Button
+        type="button"
+        disabled={!isButtonEnabled}
+        $variant="red"
+        onClick={handleFindId} // 버튼 클릭 시 API 호출
+      >
         아이디 찾기
       </Button>
     </Container>
