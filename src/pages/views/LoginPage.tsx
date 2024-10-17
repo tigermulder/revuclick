@@ -181,7 +181,7 @@ const LoginPage = () => {
               to={RoutePath.Join}
               style={{ textDecoration: "none", color: "inherit" }}
             >
-              회원가입
+              계정인증 (가입)
             </Link>
           </Button>
         </Form>

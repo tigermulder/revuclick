@@ -20,6 +20,8 @@ export const AppRoute = () => {
         <Route path={RoutePath.Login} element={<LoginPage />} />
         {/* 회원가입 페이지 */}
         <Route path={RoutePath.Join} element={<JoinPage />} />
+        {/* 아이디찾기 페이지 */}
+        <Route path={RoutePath.FindId} element={<JoinPage />} />
         {/* 장바구니 페이지 */}
         <Route path={RoutePath.MyCart} element={<CampaignCart />} />
       </Route>

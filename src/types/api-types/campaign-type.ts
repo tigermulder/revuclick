@@ -62,8 +62,3 @@ export interface Review {
   // 리뷰 객체가 어떻게 구성되어 있는지 모르기 때문에 임시로 빈 객체로 정의
   [key: string]: any
 }
-
-//** 카테고리별로 좋아요된 캠페인 ID 배열 */
-export interface CampaignLikeState {
-  [categoryId: number]: number[]
-}
