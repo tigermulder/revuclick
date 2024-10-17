@@ -1,4 +1,3 @@
-// src/pages/JoinPage.tsx
 import { useState, useEffect, useRef } from "react"
 import { useNavigate } from "react-router-dom"
 import { RoutePath } from "@/types/route-path"
@@ -22,7 +21,7 @@ import {
 import TextField from "@/components/TextField"
 import Button from "@/components/Button"
 import Checkbox from "@/components/CheckBox"
-import BackIcon from "assets/ico_back.svg?react"
+import ReuseHeader from "@/components/ReuseHeader"
 import useToast from "@/hooks/useToast"
 import {
   validateEmail,
@@ -285,12 +284,7 @@ const JoinPage = () => {
 
   return (
     <Signup>
-      <Header>
-        <BackButton onClick={() => navigate(-1)}>
-          <BackIcon />
-        </BackButton>
-        <Title>회원가입</Title>
-      </Header>
+      <ReuseHeader title="회원가입" onBack={() => navigate(RoutePath.Login)} />
       {/* 아이디 입력 및 이메일 인증 */}
       <FormGroup>
         <Label>
@@ -574,28 +568,7 @@ const formatTime = (seconds: number) => {
 
 // 스타일 컴포넌트들
 const Signup = styled.div`
-  padding-bottom: 10rem;
-`
-
-const Header = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 1;
-  width: 100%;
-  height: 4rem;
-  background: var(--white);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`
-
-const BackButton = styled.button`
-  position: absolute;
-  left: 0.4rem;
-  background: none;
-  border: none;
-  cursor: pointer;
+  padding: 4.4rem 0 10rem;
 `
 
 const TitleInfo = styled.p`
@@ -612,14 +585,6 @@ const TitleInfo = styled.p`
   align-items: start;
 `
 
-const Title = styled.h1`
-  font-size: var(--font-h3-size);
-  font-weight: var(--font-h3-weight);
-  line-height: var(--font-h3-line-height);
-  letter-spacing: var(--font-h3-letter-spacing);
-`
-
-// Form Group
 const FormGroup = styled.div`
   margin-top: 2rem;
 `

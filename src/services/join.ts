@@ -8,6 +8,8 @@ import {
   VerifyEmailCodeResponse,
   JoinRequest,
   JoinResponse,
+  FindIdRequest,
+  FindIdResponse,
 } from "types/api-types/signup-type"
 
 //** 이메일 체크 API */
@@ -46,5 +48,14 @@ export const verifyEmailCode = async (
 //** 회원가입 처리 API */
 export const joinUser = async (data: JoinRequest): Promise<JoinResponse> => {
   const response = await axiosInstance.post<JoinResponse>("/join", data)
+  return response.data
+}
+
+//** 아이디 찾기 API */
+export const findId = async (data: FindIdRequest): Promise<FindIdResponse> => {
+  const response = await axiosInstance.post<FindIdResponse>(
+    "user/find_email",
+    data
+  )
   return response.data
 }

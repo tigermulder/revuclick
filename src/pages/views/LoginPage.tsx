@@ -174,7 +174,7 @@ const LoginPage = () => {
           <LinkContainer>
             <StyledLink to={RoutePath.FindId}>아이디 찾기</StyledLink>
             <Divider />
-            <StyledLink to={RoutePath.FindPassword}>비밀번호 찾기</StyledLink>
+            <StyledLink to={RoutePath.FindPassword}>비밀번호 재설정</StyledLink>
           </LinkContainer>
           <Button type="button" $variant="outlined">
             <Link

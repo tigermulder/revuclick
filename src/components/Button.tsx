@@ -41,7 +41,7 @@ const StyledButton = styled.button.attrs<StyledButtonProps>((props) => ({
   width: 100%;
   padding: 1.2rem;
   background-color: ${({ $variant, disabled }) =>
-    $variant === "red" ? (disabled ? "#ccc" : "#ff0000") : "transparent"};
+    $variant === "red" ? (disabled ? "#FCC0C2" : "#ff0000") : "transparent"};
   color: ${({ $variant }) =>
     $variant === "red" ? "white" : "var(--primary-color)"};
   border: ${({ $variant }) =>

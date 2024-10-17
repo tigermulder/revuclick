@@ -6,6 +6,8 @@ import JoinPage from "./views/JoinPage"
 import MainPage from "./views/MainPage"
 import CampaignDetailPage from "./views/CampaignDetailPage"
 import CampaignCart from "./views/CampaingnCart"
+import FindIdPage from "./views/FindIdPage"
+import FindPasswordPage from "./views/FindPasswordPage"
 
 export const AppRoute = () => {
   return (
@@ -21,7 +23,9 @@ export const AppRoute = () => {
         {/* 회원가입 페이지 */}
         <Route path={RoutePath.Join} element={<JoinPage />} />
         {/* 아이디찾기 페이지 */}
-        <Route path={RoutePath.FindId} element={<JoinPage />} />
+        <Route path={RoutePath.FindId} element={<FindIdPage />} />
+        {/* 비밀번호찾기 페이지 */}
+        <Route path={RoutePath.FindPassword} element={<FindPasswordPage />} />
         {/* 장바구니 페이지 */}
         <Route path={RoutePath.MyCart} element={<CampaignCart />} />
       </Route>

@@ -17,10 +17,14 @@ function App() {
     location.pathname === RoutePath.Login ||
     location.pathname === RoutePath.MyCart ||
     location.pathname === RoutePath.Join ||
+    location.pathname === RoutePath.FindId ||
+    location.pathname === RoutePath.FindPassword ||
     isCampaignDetail
   const hideTapBar =
     location.pathname === RoutePath.Login ||
     location.pathname === RoutePath.Join ||
+    location.pathname === RoutePath.FindId ||
+    location.pathname === RoutePath.FindPassword ||
     isCampaignDetail
   const showFooter = location.pathname === RoutePath.Home && !isCampaignDetail
 

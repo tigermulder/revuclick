@@ -8,8 +8,17 @@ const Layout = () => {
   const location = useLocation() // 현재 경로 감지
   const isCampaignDetail = !!useMatch("/campaign/:campaignId") // 캠페인 상세 경로 감지
   const isLoginPage = location.pathname === RoutePath.Login // 로그인 페이지 감지
+  const isJoinPage = location.pathname === RoutePath.Join // 회원가입 페이지 감지
+  const isFindIdPage = location.pathname === RoutePath.FindId // 아이디찾기 페이지 감지
+  const isFindPassWordPage = location.pathname === RoutePath.FindPassword // 아이디찾기 페이지 감지
   const isMyCartPage = location.pathname === RoutePath.MyCart // 장바구니 페이지 감지
-  const isSpecialPage = isLoginPage || isCampaignDetail || isMyCartPage // 로그인 페이지와 캠페인 상세 페이지 감지
+  const isSpecialPage =
+    isLoginPage ||
+    isCampaignDetail ||
+    isMyCartPage ||
+    isFindIdPage ||
+    isJoinPage ||
+    isFindPassWordPage
 
   return (
     <>

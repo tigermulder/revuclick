@@ -43,3 +43,14 @@ export interface JoinResponse {
   errorCode?: number
   error?: string
 }
+
+// ** User ID 찾기 type */
+export interface FindIdRequest {
+  nickname: string
+  phone: number
+}
+export interface FindIdResponse {
+  success: any
+  statusCode: number
+  email: string
+}

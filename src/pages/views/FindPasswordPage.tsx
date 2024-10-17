@@ -4,62 +4,42 @@ import ReuseHeader from "@/components/ReuseHeader"
 import TextField from "@/components/TextField"
 import Button from "@/components/Button"
 import useToast from "@/hooks/useToast"
-import { checkName, validatePassword } from "@/utils/util"
 import { RoutePath } from "@/types/route-path"
 import { findId } from "@/services/join"
 import styled from "styled-components"
 
-const FindIdPage = () => {
-  const [nickname, setName] = useState("")
-  const [phone, setPhone] = useState("")
+const FindPasswordPage = () => {
+  const [emailId, setEmailId] = useState("")
   const { addToast } = useToast()
   const navigate = useNavigate()
   const [isButtonEnabled, setIsButtonEnabled] = useState<boolean>(false)
 
   // 버튼 활성화 여부를 동적으로 설정
-  useEffect(() => {
-    setIsButtonEnabled(checkName(nickname) && validatePassword(phone))
-  }, [nickname, phone])
+  // useEffect(() => {}, [])
 
   return (
     <Container>
       <ReuseHeader
-        title="아이디 찾기"
+        title="비밀번호 재설정"
         onBack={() => navigate(RoutePath.Login)}
       />
       <TitleContainer>
         <Title>
-          가입할 때 사용한
+          가입 시 입력한
           <br />
-          계정 정보를 입력해주세요.
+          네이버 ID를 입력해 주시면
+          <br />
+          비밀번호 재설정 안내 메일을 보내드립니다.
         </Title>
       </TitleContainer>
 
       <TextField
         type="text"
-        name="name"
-        placeholder="이름"
-        value={nickname}
-        onChange={(e) => setName(e.target.value)}
-        $isError={nickname !== "" && !checkName(nickname)}
-        errorMessage={
-          nickname !== "" && !checkName(nickname)
-            ? "올바른 형식의 이름을 입력하세요."
-            : undefined
-        }
-      />
-      <TextField
-        type="text"
-        name="phone"
-        placeholder="휴대폰번호"
-        value={phone}
-        onChange={(e) => setPhone(e.target.value)}
-        $isError={phone !== "" && !validatePassword(phone)}
-        errorMessage={
-          phone !== "" && !validatePassword(phone)
-            ? "‘-’ 없이 8자리 11자리 숫자로 입력해주세요."
-            : undefined
-        }
+        name="email_id"
+        placeholder="네이버ID"
+        value={emailId}
+        onChange={(e) => setEmailId(e.target.value)}
+        suffix="@naver.com"
       />
       <Button type="button" disabled={!isButtonEnabled} $variant="red">
         아이디 찾기
@@ -68,7 +48,7 @@ const FindIdPage = () => {
   )
 }
 
-export default FindIdPage
+export default FindPasswordPage
 
 const Container = styled.div`
   padding: 4.4rem 0;

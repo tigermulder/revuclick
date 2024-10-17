@@ -3,12 +3,12 @@ import { campaignLikeState } from "@/store/mainpage-recoil"
 import LikeButton from "components/LikeButton"
 import FilterDropDown from "@/components/FilterDropDown"
 import dummyImage from "assets/dummy-image.png"
-import BackIcon from "assets/ico_back.svg?react"
 import { useNavigate } from "react-router-dom"
 import useToast from "@/hooks/useToast"
 import { filteredCampaignsSelector } from "@/store/dropdown-recoil"
-import styled from "styled-components"
+import ReuseHeader from "@/components/ReuseHeader"
 import { campaignListState } from "@/store/mainpage-recoil"
+import styled from "styled-components"
 
 const CampaignCart = () => {
   const campaignList = useRecoilValue(campaignListState)
@@ -34,14 +34,7 @@ const CampaignCart = () => {
 
   return (
     <Container>
-      {/* 공통 헤더 */}
-      <Header>
-        <HeaderLink onClick={() => navigate(-1)}>
-          <BackIcon aria-label="뒤로가기" />
-        </HeaderLink>
-        <HeaderTitle>찜한 목록</HeaderTitle>
-      </Header>
-
+      <ReuseHeader title="아이디 찾기" onBack={() => navigate(-1)} />
       {/* 캠페인 리스트 */}
       <CampaignList>
         <FilterContainer>
@@ -121,19 +114,6 @@ const Container = styled.div`
   padding: 0 0 2rem;
 `
 
-const Header = styled.div`
-  position: fixed;
-  left: 0;
-  right: 0;
-  height: 4rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--white, #fff);
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
-  z-index: 20;
-`
-
 const FilterContainer = styled.div`
   position: fixed;
   top: 3.8rem;
@@ -145,27 +125,6 @@ const FilterContainer = styled.div`
   background: #f5f6f8;
   padding: 0.8rem 1.5rem;
   z-index: 20;
-`
-
-const HeaderLink = styled.a`
-  position: absolute;
-  width: 1.9rem;
-  left: 0.4rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  svg {
-    width: 100%;
-    height: auto;
-  }
-`
-
-const HeaderTitle = styled.h1`
-  font-size: var(--font-h3-size);
-  font-weight: var(--font-h3-weight);
-  line-height: var(--font-h3-line-height);
-  letter-spacing: var(--font-h3-letter-spacing);
 `
 
 const CampaignList = styled.ul`
