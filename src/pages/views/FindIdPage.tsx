@@ -7,6 +7,7 @@ import useToast from "@/hooks/useToast"
 import { checkName, validatePhone } from "@/utils/util" // validatePhone으로 수정
 import { RoutePath } from "@/types/route-path"
 import { findId } from "@/services/join"
+import { FindIdRequest } from "@/types/api-types/signup-type"
 import styled from "styled-components"
 
 const FindIdPage = () => {
@@ -15,6 +16,7 @@ const FindIdPage = () => {
   const { addToast } = useToast()
   const navigate = useNavigate()
   const [isButtonEnabled, setIsButtonEnabled] = useState<boolean>(false)
+  const [error, setError] = useState<Error | null>(null) // 에러 상태
 
   // 버튼 활성화 여부를 동적으로 설정
   useEffect(() => {
@@ -24,12 +26,12 @@ const FindIdPage = () => {
   // 아이디 찾기 API 호출 함수
   const handleFindId = async () => {
     try {
-      const response = await findId({ nickname, phone: Number(phone) })
+      const response = await findId({ nickname, phone })
 
       if (response.statusCode === 0) {
         // 성공적으로 이메일을 찾았을 때 로컬스토리지에 저장
-        localStorage.setItem('find_email', response.email)
-        localStorage.setItem('nickname', nickname)
+        localStorage.setItem("find_email", response.email)
+        localStorage.setItem("nickname", nickname)
         // 성공 메시지 출력 후 페이지 이동
         addToast("아이디가 이메일로 발송되었습니다.", "warning", 1000, "UserId")
         navigate(RoutePath.Login) // 로그인 페이지로 이동
@@ -38,10 +40,15 @@ const FindIdPage = () => {
         addToast("아이디 찾기에 실패했습니다.", "warning", 1000, "UserId")
         console.error(response)
       }
-    } catch (error) {
-      // 네트워크 또는 서버 에러 발생 시 처리
+    } catch (err) {
+      setError(err as Error)
       addToast("아이디 찾기 중 오류가 발생했습니다.", "warning", 1000, "UserId")
     }
+  }
+
+  // 에러 상태가 설정되면 ErrorBoundary가 포착하도록 에러 던지기
+  if (error) {
+    throw error
   }
 
   return (

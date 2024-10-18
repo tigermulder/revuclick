@@ -121,7 +121,10 @@ const LoginPage = () => {
   }
 
   if (mutation.isError) {
-    console.error("Throwing mutation error to ErrorBoundary:", mutation.error)
+    console.error(
+      "ErrorBoundary에 로그인페이지 status를 던져준다:",
+      mutation.error
+    )
     throw mutation.error
   }
 

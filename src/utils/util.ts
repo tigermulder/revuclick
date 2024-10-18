@@ -66,3 +66,9 @@ export const validatePhone = (phone: string) => {
 export const checkName = (name: string): boolean => {
   return name.trim().length > 0
 }
+
+//** 적립률 계산 */
+export const disCountRate = (reward: number, price: number) => {
+  const result = (reward / price) * 100
+  return result.toFixed(0)
+}

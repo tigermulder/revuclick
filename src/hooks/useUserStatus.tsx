@@ -30,7 +30,7 @@ export const useUserStatus = () => {
     gcTime: 30 * 60 * 1000, // 30분 동안 캐시 유지
     retry: 0, // 재요청 횟수
     refetchOnWindowFocus: false, // 창에 포커스를 맞출 때 재패칭하지 않음
-    placeholderData: undefined,
+    placeholderData: keepPreviousData,
   })
 
   // useEffect를 사용해 data 변경 시 로그인 상태 처리

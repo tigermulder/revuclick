@@ -1,19 +1,19 @@
-import styled from "styled-components"
+import IconArrowGo from "assets/ico_arr_go.svg?url"
+import styled, { css } from "styled-components"
 
-// Button Component
 const Button = ({
   children,
   disabled,
-  $variant, // 'red' or 'outlined'
+  $variant, // 'red' | 'outlined' | 'arrow'
   type = "button",
   $marginTop,
   onClick,
 }: {
   children: React.ReactNode
   disabled?: boolean
-  $variant: "red" | "outlined"
+  $variant: "red" | "outlined" | "arrow"
   type?: "button" | "submit" | "reset"
-  $marginTop?: string // Made optional
+  $marginTop?: string // 옵션
   onClick?: React.MouseEventHandler<HTMLButtonElement>
 }) => (
   <StyledButton
@@ -21,7 +21,7 @@ const Button = ({
     $variant={$variant}
     type={type}
     onClick={onClick}
-    $marginTop={$marginTop} // Pass down to StyledButton
+    $marginTop={$marginTop}
   >
     {children}
   </StyledButton>
@@ -30,24 +30,60 @@ const Button = ({
 export default Button
 
 interface StyledButtonProps {
-  $variant: "red" | "outlined"
+  $variant: "red" | "outlined" | "arrow"
   $marginTop?: string
   disabled?: boolean
 }
+
 const StyledButton = styled.button.attrs<StyledButtonProps>((props) => ({
   "data-variant": props.$variant,
   disabled: props.disabled,
 }))<StyledButtonProps>`
   width: 100%;
   padding: 1.2rem;
-  background-color: ${({ $variant, disabled }) =>
-    $variant === "red" ? (disabled ? "#FCC0C2" : "#ff0000") : "transparent"};
-  color: ${({ $variant }) =>
-    $variant === "red" ? "white" : "var(--primary-color)"};
-  border: ${({ $variant }) =>
-    $variant === "outlined" ? "1px solid var(--n80-color)" : "none"};
   border-radius: 8px;
   cursor: ${({ disabled }) => (disabled ? "not-allowed" : "pointer")};
-  /* Conditionally apply margin-top */
   ${({ $marginTop }) => $marginTop && `margin-top: ${$marginTop};`}
+
+  ${({ $variant, disabled }) => {
+    switch ($variant) {
+      case "red":
+        return css`
+          background-color: ${disabled ? "#FCC0C2" : "#ff0000"};
+          color: white;
+          border: none;
+        `
+      case "outlined":
+        return css`
+          background-color: transparent;
+          color: var(--primary-color);
+          border: 1px solid var(--n80-color);
+        `
+      case "arrow":
+        return css`
+          background-color: var(--n20-color);
+          color: var(--primary-color);
+          border: 0.1rem solid var(--n60-color);
+          height: 3.8rem;
+          font-size: var(--font-title-size);
+          font-weight: var(--font-title-weight);
+          line-height: var(--font-title-line-height);
+          letter-spacing: var(--font-title-letter-spacing);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 0.6rem;
+          color: var(--n400-color);
+
+          &::after {
+            content: "";
+            background: url(${IconArrowGo}) no-repeat center / 100%;
+            width: 0.9rem;
+            height: 0.9rem;
+          }
+        `
+      default:
+        return ""
+    }
+  }}
 `

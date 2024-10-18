@@ -47,7 +47,7 @@ export interface JoinResponse {
 // ** User ID 찾기 type */
 export interface FindIdRequest {
   nickname: string
-  phone: number
+  phone: string
 }
 export interface FindIdResponse {
   success: any

@@ -4,7 +4,7 @@ import { keepPreviousData, useQuery } from "@tanstack/react-query"
 import { useAuth } from "@/contexts/AuthContext"
 import { getCampaignItem } from "services/campaign"
 import { CampaignItemResponse } from "@/types/api-types/campaign-type"
-import { formatDate } from "@/utils/util"
+import { formatDate, disCountRate } from "@/utils/util"
 import IconNoticeArrow from "assets/ico-notice-arrow.svg?react"
 import IconStar from "assets/ico-star.svg?url"
 import CampaignDetailBackButton from "@/components/CampaignDetailBackButton"
@@ -25,51 +25,70 @@ const CAMPAIGN_ITEM_QUERY_KEY = (campaignId: string | number) => [
 ]
 
 const CampaignDetailPage = () => {
-  const [isOpen, setIsOpen] = useState(true)
   const [selectedTab, setSelectedTab] = useState("info") // 기본선택
   const [isGuideOpen, setIsGuideOpen] = useState(false) // 가이드 표시 여부 상태 추가
+  const [popUpOffsetY, setPopUpOffsetY] = useState(-62) // PopUp 위치 상태 추가
+  const [scale, setScale] = useState(1) // 배경 이미지 확대 상태
+  const [headerOpacity, setHeaderOpacity] = useState(1) // 헤더 투명도 상태
   const { campaignId } = useParams()
   const { isLoggedIn } = useAuth()
   const { addToast } = useToast()
   const navigate = useNavigate()
 
-  // 토글 핸들러
-  const toggleNotice = () => {
-    setIsOpen(!isOpen)
-  }
-
   // 가이드 토글 핸들러
   const toggleGuide = () => {
-    setIsGuideOpen((prev) => !prev)
+    setIsGuideOpen(true)
   }
 
-  // 탭이 하나만 들어가는 경우
+  // 탭 설정
   const singleTab = [{ label: "캠페인 정보", value: "info" }]
   const handleTabSelect = (tabValue: string) => {
     setSelectedTab(tabValue)
   }
 
-  // 패럴랙스 효과를 위한 상태
-  const [offsetY, setOffsetY] = useState(0)
-  const handleScroll = () => {
-    setOffsetY(window.pageYOffset)
-  }
-
   useEffect(() => {
-    const handleScrollThrottled = () => {
-      requestAnimationFrame(handleScroll)
-    }
-    window.addEventListener("scroll", handleScrollThrottled)
-    return () => window.removeEventListener("scroll", handleScrollThrottled)
-  }, [])
+    const handleScroll = () => {
+      const scrollPosition = window.scrollY
+      const maxScroll =
+        document.documentElement.scrollHeight - window.innerHeight
 
+      // 오버 스크롤 시 확대 효과 적용 (최상단에서)
+      if (scrollPosition < 0) {
+        const scaleFactor = 1 - scrollPosition / 400
+        setScale(scaleFactor)
+      } else {
+        setScale(1)
+      }
+
+      // 하단에서 오버 스크롤 시 헤더 숨기기
+      if (scrollPosition >= maxScroll) {
+        setHeaderOpacity(0) // 맨 아래에서 더 스크롤하면 헤더 숨김
+      } else {
+        setHeaderOpacity(1) // 정상 스크롤 시 헤더 보임
+      }
+
+      // PopUp 위치 업데이트
+      let newOffsetY = -62 // 초기값은 -62px
+
+      if (scrollPosition <= 100) {
+        // 스크롤 위치가 0에서 100px 사이일 때
+        newOffsetY = -62 + (scrollPosition / 100) * 62
+      } else {
+        newOffsetY = 0 // 스크롤이 100px 이상이면 0px으로 고정
+      }
+
+      setPopUpOffsetY(newOffsetY)
+    }
+
+    window.addEventListener("scroll", handleScroll)
+    return () => window.removeEventListener("scroll", handleScroll)
+  }, [])
   if (!campaignId) {
     return <div>유효하지 않은 캠페인 ID입니다.</div>
   }
 
-  // React Query로 캠페인 상세 데이터 불러오기
+  // 캠페인 상세 데이터 가져오기
   const token = sessionStorage.getItem("authToken") || ""
-
   const {
     data: campaignData,
     isLoading,
@@ -83,34 +102,23 @@ const CampaignDetailPage = () => {
         token: token,
       }),
     enabled: !!campaignId,
-    staleTime: 10 * 60 * 1000, // 10분 동안 데이터가 신선함
-    gcTime: 30 * 60 * 1000, // 30분 동안 캐시 유지
-    refetchOnWindowFocus: false, // 창에 포커스를 맞출 때 재패칭하지 않음
-    placeholderData: keepPreviousData, // 이전 데이터를 유지
+    staleTime: 10 * 60 * 1000,
+    gcTime: 30 * 60 * 1000,
+    refetchOnWindowFocus: false,
+    placeholderData: keepPreviousData,
   })
 
-  // 로딩 중일 때
-  if (isLoading) {
-    return <div>로딩 중입니다...</div>
-  }
-
-  // 에러 발생 시
+  // 에러 처리
   if (isError) {
     return <div>{error?.message || "캠페인 정보를 불러오지 못했습니다."}</div>
   }
 
-  // 캠페인 데이터가 없는 경우
+  // 데이터 없을 때
   if (!campaignData) {
     return <div>캠페인 정보를 불러올 수 없습니다.</div>
   }
 
   const campaignDetail = campaignData.campaign
-
-  // 적립률 계산
-  const discountRate = (
-    (campaignDetail.reward / campaignDetail.price) *
-    100
-  ).toFixed(0)
 
   // D-Day 계산
   const today = new Date()
@@ -135,16 +143,20 @@ const CampaignDetailPage = () => {
     <>
       <CampaignDetailBackButton />
       <CampaignDetailShareButton />
-      <ShareModal /> {/* 공유 모달 추가 */}
+      <ShareModal />
       <DetailHeader>
-        <Background $imageUrl={thumbnailUrl}>
-          <PopUp $offsetY={offsetY}>
-            🎉 신청을 서두르세요! 신청인원 {campaignDetail.joins}/
-            {campaignDetail.quota}
-          </PopUp>
-        </Background>
+        <Background
+          $imageUrl={thumbnailUrl}
+          $scale={scale}
+          $opacity={headerOpacity}
+        />
       </DetailHeader>
       <DetailBody>
+        {/* PopUp을 DetailBody 내부에 조건부로 렌더링 */}
+        <PopUp $offsetY={popUpOffsetY}>
+          🎉 신청을 서두르세요! 신청인원 {campaignDetail.joins}/
+          {campaignDetail.quota}
+        </PopUp>
         <Dday>{`D-${dDay}`}</Dday>
         <Title>{campaignDetail.title}</Title>
         <Divider />
@@ -164,7 +176,8 @@ const CampaignDetailPage = () => {
             <li>
               <span>판매가(적립률)</span>
               <DetailInfo>
-                {campaignDetail.price.toLocaleString()}원({discountRate}%)
+                {campaignDetail.price.toLocaleString()}원(
+                {disCountRate(campaignDetail.reward, campaignDetail.price)}%)
               </DetailInfo>
             </li>
             <li>
@@ -173,7 +186,7 @@ const CampaignDetailPage = () => {
             </li>
           </CampaignDetails>
         </CampaignContainer>
-        <Button $variant="outlined">상품구경하기</Button>
+        <Button $variant="arrow">상품구경하기</Button>
         <Line />
         <ContentTab
           tabs={singleTab}
@@ -225,22 +238,22 @@ const CampaignDetailPage = () => {
               </GuideCont>
             )}
           </div>
-          {/* 이용가이드 상세보기 버튼 */}
-          <ButtonContainer $isGuideOpen={isGuideOpen}>
-            <Button $variant="outlined" onClick={toggleGuide}>
-              {isGuideOpen ? "이용가이드 닫기" : "이용가이드 상세보기"}
-            </Button>
-          </ButtonContainer>
+          {!isGuideOpen && (
+            <ButtonContainer>
+              <Button $variant="outlined" onClick={toggleGuide}>
+                이용가이드 상세보기
+              </Button>
+            </ButtonContainer>
+          )}
         </Main>
-        <Notice onClick={toggleNotice}>
-          <NoticeTitle>※ 유의사항 안내</NoticeTitle>
-          <IconPlaceholder>
-            <IconNoticeArrow
-              style={{ transform: isOpen ? "rotate(180deg)" : "rotate(0deg)" }}
-            />
-          </IconPlaceholder>
-        </Notice>
-        {isOpen && (
+        {/* 유의사항 섹션 */}
+        <Details open>
+          <Summary>
+            <NoticeTitle>※ 유의사항 안내</NoticeTitle>
+            <IconPlaceholder>
+              <StyledIconNoticeArrow />
+            </IconPlaceholder>
+          </Summary>
           <NoticeBox>
             <li>
               캠페인 상세 페이지 내 URL을 통하여 구매한 건에 대해서만
@@ -251,8 +264,8 @@ const CampaignDetailPage = () => {
               적립됩니다.
             </li>
             <li>
-              영수증 인증 완료 후 7일 이내 남은 미션을 완료해주시기
-              바랍니다.(캠페인 미션 기간 준수)
+              영수증 인증 완료 후 7일 이내 남은 미션을 완료해주시기 바랍니다.
+              (캠페인 미션 기간 준수)
             </li>
             <li>
               정당한 사유 없이 캠페인 미션 기간 내 리뷰를 등록하지 않거나, 부정
@@ -276,7 +289,7 @@ const CampaignDetailPage = () => {
               공정거래위원회 지침에 따른 대가성 문구를 포함해주시기 바랍니다.
             </li>
           </NoticeBox>
-        )}
+        </Details>
         <FooterButtons>
           {/* 찜하기 버튼 */}
           <LikeButton
@@ -295,11 +308,21 @@ const CampaignDetailPage = () => {
 
 export default CampaignDetailPage
 
+// 스타일 컴포넌트 정의
 const Line = styled.div`
-  background-color: var(--n20-color);
-  height: 4px;
-  width: 100%;
+  position: relative;
   margin-top: 1.6rem;
+  height: 0;
+
+  &:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -1.5rem; /* 부모의 좌측 패딩 값 */
+    width: calc(100% + 3rem); /* 좌우 패딩의 합 */
+    height: 0.4rem;
+    background-color: var(--n20-color);
+  }
 `
 
 const DetailHeader = styled.div`
@@ -307,7 +330,11 @@ const DetailHeader = styled.div`
   height: 420px;
 `
 
-const Background = styled.div<{ $imageUrl: string }>`
+const Background = styled.div<{
+  $imageUrl: string
+  $scale: number
+  $opacity: number
+}>`
   position: fixed;
   top: 0;
   left: 0;
@@ -318,37 +345,42 @@ const Background = styled.div<{ $imageUrl: string }>`
   width: 100%;
   height: 420px;
   z-index: -10;
+  transform: scale(${(props) => props.$scale});
+  opacity: ${(props) => props.$opacity};
+  transition:
+    transform 0.2s ease-out,
+    opacity 0.2s ease-out;
 `
 
 const PopUp = styled.div.attrs<{ $offsetY: number }>(({ $offsetY }) => ({
   style: {
-    transform: `translate(-50%, ${$offsetY * 0.5}px)`,
+    transform: `translate(-50%, ${$offsetY}px)`,
   },
 }))<{ $offsetY: number }>`
   width: calc(100% - 30px);
   position: absolute;
-  bottom: 107px;
   left: 50%;
-  height: 32px;
+  height: 3.2rem;
   display: flex;
   align-items: center;
   justify-content: start;
   background: rgba(255, 255, 255, 0.8);
-  border-radius: 20px;
-  padding: 0 20px;
-  color: #570be5;
+  border-radius: 2rem;
+  padding: 0 2rem;
+  color: var(--purple);
   font-size: var(--font-bodyL-size);
-  font-weight: var(--font-bodyL-weight);
+  font-weight: var(--font-weight-bold);
   line-height: var(--font-bodyL-line-height);
   letter-spacing: var(--font-bodyL-letter-spacing);
   will-change: transform;
-  transition: transform 0.1s ease-out;
+  transition: transform 0.2s ease-out;
+  z-index: -1;
 `
 
 const DetailBody = styled.div`
   position: relative;
-  top: -96px;
-  padding: 1.9rem 1.5rem 9.6rem;
+  top: -9.9rem;
+  padding: 1.9rem 1.5rem 6.6rem;
   border-radius: 3rem 3rem 0 0;
   background: #fff;
 `
@@ -391,61 +423,77 @@ const CampaignContainer = styled.div`
 const CampaignDetails = styled.ul`
   position: relative;
   list-style: none;
-  height: 100%;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+
   &:before {
     content: "";
     position: absolute;
     top: 50%;
-    left: -17px;
+    left: -1.2rem;
     transform: translateY(-50%);
-    height: 90%;
     width: 1px;
-    margin-top: 5px;
+    height: 90%;
     border-left: 0.2rem dashed var(--n40-color);
   }
+
   li {
     position: relative;
     display: flex;
     justify-content: space-between;
+    margin-top: 0.4rem;
     font-size: var(--font-bodyL-size);
     font-weight: var(--font-bodyL-weight);
     line-height: var(--font-bodyL-line-height);
     letter-spacing: var(--font-bodyL-letter-spacing);
-    margin-top: 0.4rem;
-    span {
-      color: var(--n300-color);
-    }
+
     &::before {
       content: "";
       position: absolute;
       top: 50%;
-      left: -19px;
+      left: -1.35rem;
       transform: translateY(-50%);
-      width: 5px;
-      height: 5px;
+      width: 0.5rem;
+      height: 0.5rem;
       background: var(--n80-color);
       border-radius: 50%;
     }
-    &:nth-child(1)::before {
-      background: url(${IconStar}) no-repeat center / 100%;
-      width: 13px;
-      height: 16px;
-    }
-    &:nth-child(1) {
-      color: var(--primary-color);
+    &:first-child {
       margin-top: 0;
+      color: var(--primary-color);
+      &::before {
+        background: url(${IconStar}) no-repeat center / contain;
+        width: 1.3rem;
+        height: 1.6rem;
+        left: -1.6rem;
+      }
+      span:first-child,
+      span:last-child {
+        color: inherit;
+      }
     }
-    span:nth-child(1) {
-      display: block;
-      width: 100px;
-      flex-shrink: 0;
+    &:not(:first-child) {
+      span:first-child {
+        color: var(--n300-color);
+      }
+      span:last-child {
+        color: var(--n300-color);
+      }
     }
-    &:last-child span:nth-child(1),
-    &:last-child span:nth-child(2) {
-      font-weight: var(--font-weight-bold);
+    &:last-child {
+      span:first-child,
+      span:last-child {
+        font-weight: var(--font-weight-bold);
+      }
+    }
+
+    span {
+      &:first-child {
+        display: block;
+        width: 100px;
+        flex-shrink: 0;
+      }
     }
   }
 `
@@ -455,11 +503,11 @@ const DetailInfo = styled.span`
 `
 
 const Main = styled.div`
-  padding-top: 23px;
+  padding: 1.4rem 0;
 `
 
 const ImagePlaceholder = styled.div`
-  height: 200px;
+  height: 355px;
   background-color: #eee;
 `
 
@@ -511,23 +559,24 @@ const GuideCont = styled.div`
   }
 `
 
-const ButtonContainer = styled.div<{ $isGuideOpen: boolean }>`
+const ButtonContainer = styled.div`
   padding-top: 5rem;
-  position: relative;
-  top: -30px;
-  z-index: 10;
-  background: ${(props) =>
-    !props.$isGuideOpen
-      ? "linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, #fff 32.19%)"
-      : "none"};
+  margin-top: -3rem;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, #fff 32.19%);
 `
 
-const Notice = styled.div`
+const Details = styled.details`
+  margin: 2rem 0;
+  cursor: pointer;
+`
+
+const Summary = styled.summary`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 22px 0 15px 0;
-  cursor: pointer;
+  &::-webkit-details-marker {
+    display: none;
+  }
 `
 
 const NoticeTitle = styled.p`
@@ -539,17 +588,45 @@ const IconPlaceholder = styled.div`
   width: 24px;
   height: 24px;
   transition: transform 0.1s ease;
+  transform: rotate(180deg);
+
+  details[open] & {
+    transform: rotate(0deg);
+  }
+`
+
+const StyledIconNoticeArrow = styled(IconNoticeArrow)`
+  width: 100%;
+  height: 100%;
 `
 
 const NoticeBox = styled.ul`
-  padding: 16px 32px;
-  background: #f5f6f8;
-  color: #415058;
+  padding: 1.6rem 1.6rem 1.6rem 3.2rem;
+  margin-top: 1.5rem;
+  border-radius: 1rem;
+  background: var(--whitewood);
+  color: var(--gray-01);
   font-size: 1.4rem;
   line-height: 1.4;
-  list-style-type: disc;
+
   li {
-    margin-bottom: 10px;
+    position: relative;
+  }
+  li:not(:last-child) {
+    margin-bottom: 0.2rem;
+  }
+  li:before {
+    content: "";
+    display: block;
+    position: absolute;
+    top: 20%;
+    right: 100%;
+    transform: translateY(-50%);
+    margin-right: 1rem;
+    width: 0.3rem;
+    height: 0.3rem;
+    border-radius: 50%;
+    background: var(--gray-01);
   }
 `
 

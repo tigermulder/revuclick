@@ -5,11 +5,12 @@ export type RoutePathHook = string
 export type SearchParams = Record<string, string | string[]>
 
 // ** ErrorBoundary type */
-export interface Props {
+export interface ErrorBoundaryProps {
   children: ReactNode
 }
-export interface State {
+export interface ErrorBoundaryState {
   hasError: boolean
+  error: Error | null
 }
 
 // ** 인증타입 */

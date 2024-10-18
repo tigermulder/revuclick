@@ -167,11 +167,15 @@ a {
   -moz-tab-size: 4;
   tab-size: 4;
 
+  --parent-padding: 1.5rem;
+
   /* 색상관련 */
   --primary-color: #202020;
   --revu-color: #e50b14;
   --white: #fff;
   --silver: #bcc5c7;
+  --quicksilver: #a7a7a7;
+  --lightsilver: #d9d9d9;
   --black: #000;
   --whitesmoke: #eeeeee;
   --whitewood: #f5f6f8;
@@ -182,6 +186,8 @@ a {
   --puregray: #e2e2e2;
   --darkred: #a1080e;
   --gray: #606060;
+  --gray-01: #555555;
+  --purple: #570be5;
 
   --n20-color: #f4f5f5;
   --n40-color: #e9ebec;
