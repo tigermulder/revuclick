@@ -29,6 +29,7 @@ const CampaignDetailPage = () => {
   const [isGuideOpen, setIsGuideOpen] = useState(false) // 가이드 표시 여부 상태 추가
   const [popUpOffsetY, setPopUpOffsetY] = useState(-62) // PopUp 위치 상태 추가
   const [scale, setScale] = useState(1) // 배경 이미지 확대 상태
+  const [headerOpacity, setHeaderOpacity] = useState(1) // 헤더 투명도 상태
   const { campaignId } = useParams()
   const { isLoggedIn } = useAuth()
   const { addToast } = useToast()
@@ -78,6 +79,13 @@ const CampaignDetailPage = () => {
         setScale(scaleFactor)
       } else {
         setScale(1)
+      }
+
+      // 하단에서 오버 스크롤 시 헤더 숨기기
+      if (scrollPosition >= maxScroll) {
+        setHeaderOpacity(0)
+      } else {
+        setHeaderOpacity(1)
       }
     }
 
@@ -147,7 +155,11 @@ const CampaignDetailPage = () => {
       <CampaignDetailShareButton />
       <ShareModal />
       <DetailHeader>
-        <Background $imageUrl={thumbnailUrl} $scale={scale} />
+        <Background
+          $imageUrl={thumbnailUrl}
+          $scale={scale}
+          $opacity={headerOpacity}
+        />
       </DetailHeader>
       <DetailBody>
         {/* PopUp을 DetailBody 내부에 조건부로 렌더링 */}
@@ -331,6 +343,7 @@ const DetailHeader = styled.div`
 const Background = styled.div<{
   $imageUrl: string
   $scale: number
+  $opacity: number
 }>`
   position: fixed;
   top: 0;
@@ -343,6 +356,7 @@ const Background = styled.div<{
   height: 420px;
   z-index: -10;
   transform: scale(${(props) => props.$scale});
+  opacity: ${(props) => props.$opacity};
   transition:
     transform 0.2s ease-out,
     opacity 0.2s ease-out;
