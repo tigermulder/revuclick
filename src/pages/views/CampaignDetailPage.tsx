@@ -48,11 +48,28 @@ const CampaignDetailPage = () => {
 
   useEffect(() => {
     const handleScroll = () => {
-      const scrollPosition = window.scrollY
+      let scrollPosition = window.scrollY
       const maxScroll =
         document.documentElement.scrollHeight - window.innerHeight
 
-      // 오버 스크롤 시 확대 효과 적용 (최상단에서)
+      // 스크롤 위치를 0과 maxScroll 사이로 제한
+      const clampedScrollPosition = Math.max(
+        0,
+        Math.min(scrollPosition, maxScroll)
+      )
+
+      // PopUp 위치 업데이트
+      let newOffsetY = -62
+
+      if (clampedScrollPosition <= 100) {
+        newOffsetY = -62 + (clampedScrollPosition / 100) * 62
+      } else {
+        newOffsetY = 0
+      }
+
+      setPopUpOffsetY(newOffsetY)
+
+      // 배경 이미지 확대 효과 적용 (최상단에서)
       if (scrollPosition < 0) {
         const scaleFactor = 1 - scrollPosition / 400
         setScale(scaleFactor)
@@ -62,27 +79,16 @@ const CampaignDetailPage = () => {
 
       // 하단에서 오버 스크롤 시 헤더 숨기기
       if (scrollPosition >= maxScroll) {
-        setHeaderOpacity(0) // 맨 아래에서 더 스크롤하면 헤더 숨김
+        setHeaderOpacity(0)
       } else {
-        setHeaderOpacity(1) // 정상 스크롤 시 헤더 보임
+        setHeaderOpacity(1)
       }
-
-      // PopUp 위치 업데이트
-      let newOffsetY = -62 // 초기값은 -62px
-
-      if (scrollPosition <= 100) {
-        // 스크롤 위치가 0에서 100px 사이일 때
-        newOffsetY = -62 + (scrollPosition / 100) * 62
-      } else {
-        newOffsetY = 0 // 스크롤이 100px 이상이면 0px으로 고정
-      }
-
-      setPopUpOffsetY(newOffsetY)
     }
 
     window.addEventListener("scroll", handleScroll)
     return () => window.removeEventListener("scroll", handleScroll)
   }, [])
+
   if (!campaignId) {
     return <div>유효하지 않은 캠페인 ID입니다.</div>
   }
