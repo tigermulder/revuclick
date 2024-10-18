@@ -106,6 +106,7 @@ html {
 body {
   line-height: 1;
   height: 100%;
+  overscroll-behavior: contain;
 }
 ol,
 ul {
