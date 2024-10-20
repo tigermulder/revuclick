@@ -1,50 +1,58 @@
-// src/hooks/useLikeCampaign.ts
-import { useRecoilState } from "recoil"
-import { campaignLikeState } from "store/mainpage-recoil"
+import { useCallback } from "react";
+import { useRecoilState } from "recoil";
+import { campaignLikeState } from "store/mainpage-recoil";
+
+type CampaignLikes = {
+  [categoryId: number]: number[];
+};
 
 const useLikeCampaign = (campaignId: number, categoryId: number) => {
-  const [campaignLikes, setCampaignLikes] = useRecoilState(campaignLikeState)
+  const [campaignLikes, setCampaignLikes] =
+    useRecoilState<CampaignLikes>(campaignLikeState);
+
   /**
    * 캠페인이 좋아요 상태인지 확인합니다.
    */
-  const isLiked = (): boolean => {
-    const liked = campaignLikes[categoryId]?.includes(campaignId) || false
-    return liked
-  }
+  const isLiked = useCallback((): boolean => {
+    return campaignLikes[categoryId]?.includes(campaignId) || false;
+  }, [campaignLikes, categoryId, campaignId]);
 
   /**
    * 캠페인을 좋아요 목록에 추가합니다.
    */
-  const likeCampaign = (): void => {
+  const likeCampaign = useCallback((): void => {
     setCampaignLikes((prev) => {
-      const currentLikes = prev[categoryId] || []
-      // 이미 좋아요 된 캠페인인지 확인
-      if (currentLikes.includes(campaignId)) {
-        return prev // 이미 좋아요 된 경우 변경 없음
+      const currentLikes = prev[categoryId] || [];
+      // 이미 좋아요된 캠페인인지 확인
+      if (!currentLikes.includes(campaignId)) {
+        return {
+          ...prev,
+          [categoryId]: [...currentLikes, campaignId],
+        };
       }
-      const newLikes = [...currentLikes, campaignId]
-      return {
-        ...prev,
-        [categoryId]: newLikes,
-      }
-    })
-  }
+      return prev; // 이미 좋아요된 경우 변경 없음
+    });
+  }, [setCampaignLikes, categoryId, campaignId]);
 
   /**
    * 캠페인을 좋아요 목록에서 제거합니다.
    */
-  const unlikeCampaign = (): void => {
+  const unlikeCampaign = useCallback((): void => {
     setCampaignLikes((prev) => {
-      const currentLikes = prev[categoryId] || []
-      const updatedLikes = currentLikes.filter((id) => id !== campaignId)
-      return {
-        ...prev,
-        [categoryId]: updatedLikes,
+      const currentLikes = prev[categoryId] || [];
+      // 좋아요된 캠페인인지 확인
+      if (currentLikes.includes(campaignId)) {
+        const updatedLikes = currentLikes.filter((id) => id !== campaignId);
+        return {
+          ...prev,
+          [categoryId]: updatedLikes,
+        };
       }
-    })
-  }
+      return prev; // 좋아요되지 않은 경우 변경 없음
+    });
+  }, [setCampaignLikes, categoryId, campaignId]);
 
-  return { isLiked, likeCampaign, unlikeCampaign }
-}
+  return { isLiked, likeCampaign, unlikeCampaign };
+};
 
-export default useLikeCampaign
+export default useLikeCampaign;

@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useRef } from "react"
 import { useNavigate } from "react-router-dom"
 import { RoutePath } from "@/types/route-path"
@@ -56,6 +57,11 @@ const JoinPage = () => {
   const emailTimerRef = useRef<NodeJS.Timeout | null>(null)
   const { addToast } = useToast()
 
+  // New state variables for success messages
+  const [emailCheckMessage, setEmailCheckMessage] = useState<string>("")
+  const [emailSendMessage, setEmailSendMessage] = useState<string>("")
+  const [emailVerifyMessage, setEmailVerifyMessage] = useState<string>("")
+
   // 이메일 체크 mutation
   const emailCheckMutation = useMutation<
     EmailCheckResponse,
@@ -66,17 +72,19 @@ const JoinPage = () => {
     onSuccess: (data) => {
       if (data.statusCode === 0) {
         // 이메일 사용 가능
-        addToast("가입이 가능한 네이버 아이디입니다.", "check", 1000, "email")
+        setEmailCheckMessage("가입이 가능한 네이버 아이디입니다.")
         // 이메일 인증 코드 전송
         const email = `${id}@naver.com`
         const sendCodeData: SendEmailCodeRequest = { email }
         sendEmailCodeMutation.mutate(sendCodeData)
       } else {
         // 이미 가입한 계정
+        setEmailCheckMessage("")
         addToast("이미 가입한 계정입니다.", "warning", 1000, "email")
       }
     },
     onError: () => {
+      setEmailCheckMessage("")
       addToast("이메일 체크 중 오류가 발생했습니다.", "warning", 1000, "email")
     },
   })
@@ -92,12 +100,14 @@ const JoinPage = () => {
       if (data.statusCode === 0) {
         setEmailSent(true)
         startEmailTimer()
-        addToast("인증 코드를 이메일로 전송했습니다.", "check", 1000, "email")
+        setEmailSendMessage("인증 코드를 이메일로 전송했습니다.")
       } else {
+        setEmailSendMessage("")
         addToast("인증 코드 전송에 실패했습니다.", "warning", 1000, "email")
       }
     },
     onError: () => {
+      setEmailSendMessage("")
       addToast(
         "인증 코드 요청 중 오류가 발생했습니다.",
         "warning",
@@ -118,12 +128,15 @@ const JoinPage = () => {
       if (data.statusCode === 0) {
         setEmailConfirmed(true)
         resetEmailTimer()
+        setEmailVerifyMessage("")
         addToast("이메일 인증이 완료되었습니다.", "check", 1000, "email")
       } else {
+        setEmailVerifyMessage("")
         addToast("인증 코드가 올바르지 않습니다.", "warning", 1000, "email")
       }
     },
     onError: () => {
+      setEmailVerifyMessage("")
       addToast(
         "인증 코드 확인 중 오류가 발생했습니다.",
         "warning",
@@ -158,6 +171,7 @@ const JoinPage = () => {
         if (prev <= 1) {
           if (emailTimerRef.current) clearInterval(emailTimerRef.current)
           setEmailSent(false) // 타이머 종료 시 인증 코드 입력 필드 및 재발송 버튼 사라지도록
+          setEmailSendMessage("") // 타이머 종료 시 메시지 초기화
           return 0
         }
         return prev - 1
@@ -170,6 +184,7 @@ const JoinPage = () => {
     if (emailTimerRef.current) clearInterval(emailTimerRef.current)
     setEmailTimer(0)
     setEmailSent(false) // 인증 완료 시 인증 코드 입력 필드 및 재발송 버튼 사라지도록
+    setEmailSendMessage("") // 인증 완료 시 메시지 초기화
   }
 
   // 컴포넌트 언마운트 시 타이머 정리
@@ -234,7 +249,7 @@ const JoinPage = () => {
     sendEmailCodeMutation.mutate(sendCodeData)
     // 타이머 재시작
     startEmailTimer()
-    addToast("인증 코드를 재전송했습니다.", "check", 1000, "email")
+    setEmailSendMessage("인증 코드를 재전송했습니다.")
   }
 
   // 회원가입 요청 함수
@@ -310,6 +325,7 @@ const JoinPage = () => {
                   ? "올바른 형식의 계정이 아닙니다."
                   : undefined
               }
+              successMessage={emailCheckMessage} // 성공 메시지 추가
             />
           </TextFieldWrapper>
           <ButtonWrapper>
@@ -317,10 +333,10 @@ const JoinPage = () => {
               type="button"
               $variant="red"
               onClick={handleEmailAuth}
-              disabled={!validateEmail(id) || (emailSent && !emailConfirmed)}
+              disabled={!validateEmail(id) || emailConfirmed}
               $marginTop="0" // 인증 버튼에 margin-top이 필요 없다면 '0'으로 설정
             >
-              인증
+              {emailConfirmed ? "완료" : "인증"} {/* 버튼 텍스트 변경 */}
             </Button>
           </ButtonWrapper>
         </Row>
@@ -342,6 +358,9 @@ const JoinPage = () => {
                       ? "인증 코드를 입력해 주세요."
                       : undefined
                   }
+                  successMessage={
+                    emailVerifyMessage ? "" : emailSendMessage
+                  } // 인증 완료 시 메시지 숨기기
                 />
                 <TimerText>{formatTime(emailTimer)}</TimerText>
               </div>
@@ -691,4 +710,12 @@ const ButtonWrap = styled.div`
   padding: 1.2rem 1.5rem;
   background: var(--white);
   border-top: 0.1rem solid var(--n40-color);
+`
+
+// Success message component (optional if using TextField's SuccessDescription)
+const SuccessMessage = styled.p`
+  color: green;
+  font-size: 12px;
+  margin-top: 0.5rem;
+  text-align: left;
 `

@@ -12,6 +12,7 @@ const TextField = ({
   $marginBottom,
   $marginTop,
   errorMessage,
+  successMessage,
 }: TextFieldProps) => (
   <TextFieldContainer $marginBottom={$marginBottom} $marginTop={$marginTop}>
     <InputWrapper $isError={$isError}>
@@ -29,7 +30,8 @@ const TextField = ({
         </SuffixContainer>
       )}
     </InputWrapper>
-    {errorMessage && <Description>{errorMessage}</Description>}
+    {errorMessage && <ErrorDescription>{errorMessage}</ErrorDescription>}
+    {!errorMessage && successMessage && <SuccessDescription>{successMessage}</SuccessDescription>}
   </TextFieldContainer>
 )
 
@@ -76,9 +78,16 @@ const Suffix = styled.div`
   word-wrap: break-word;
 `
 
-const Description = styled.p`
+const ErrorDescription = styled.p`
   text-align: left;
-  color: red;
-  font-size: 12px;
+  color: var(--revu-color);
+  font-size: 1.2rem;
+  margin-top: 0.5rem;
+`
+
+const SuccessDescription = styled.p`
+  text-align: left;
+  color: var(--success-color);
+  font-size: 1.2rem;
   margin-top: 0.5rem;
 `

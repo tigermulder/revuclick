@@ -8,5 +8,6 @@ export interface TextFieldProps {
   $isError?: boolean
   $marginBottom?: string
   $marginTop?: string
-  errorMessage?: string // Add this prop
+  errorMessage?: string 
+  successMessage?: string;
 }

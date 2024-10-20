@@ -37,7 +37,7 @@ const FindIdPage = () => {
         navigate(RoutePath.Login) // 로그인 페이지로 이동
       } else if (response.statusCode === -1) {
         // 서버에서 -1 에러코드를 받았을 때 처리
-        addToast("아이디 찾기에 실패했습니다.", "warning", 1000, "UserId")
+        addToast("입력한 정보로 가입된 계정이 없습니다.", "warning", 1000, "UserId")
         console.error(response)
       }
     } catch (err) {

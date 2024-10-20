@@ -80,13 +80,6 @@ const CampaignDetailPage = () => {
       } else {
         setScale(1)
       }
-
-      // 하단에서 오버 스크롤 시 헤더 숨기기
-      if (scrollPosition >= maxScroll) {
-        setHeaderOpacity(0)
-      } else {
-        setHeaderOpacity(1)
-      }
     }
 
     window.addEventListener("scroll", handleScroll)

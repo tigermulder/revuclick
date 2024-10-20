@@ -1,6 +1,6 @@
+import { useMemo, useEffect } from "react"
 import { keepPreviousData, useQuery } from "@tanstack/react-query"
 import { useRecoilState } from "recoil"
-import { useEffect } from "react"
 import { authState } from "store/appbar-recoil"
 import { keepSessionAlive } from "services/login"
 import { HangResponse } from "types/api-types/hang-type"
@@ -14,23 +14,32 @@ export const useUserStatus = () => {
   const { addToast } = useToast()
 
   // React Query를 사용해 세션 유지 API를 호출
-  const token = sessionStorage.getItem("authToken")
-  const { data, error, isLoading, isError } = useQuery<HangResponse>({
-    queryKey: ["userStatus", token],
-    queryFn: () => {
-      const token = sessionStorage.getItem("authToken")
+  const token = useMemo(() => sessionStorage.getItem("authToken"), [])
+
+  // React Query를 사용해 세션 유지 API를 호출
+  const queryKey = useMemo(() => ["userStatus"], []);
+  const queryFn = useMemo(
+    () => () => {
+      const token = sessionStorage.getItem("authToken");
       if (!token) {
-        throw new Error("토큰을 찾을 수 없습니다.")
+        // 토큰이 없으면 에러를 발생시킵니다.
+        return Promise.reject(new Error("토큰이 없습니다."));
       }
-      // 세션 유지 API 호출 시 토큰을 전달
-      return keepSessionAlive({ token })
+      // 토큰이 있으면 keepSessionAlive를 호출합니다.
+      return keepSessionAlive({ token });
     },
-    refetchInterval: 10 * 60 * 1000, // 10분마다(600,000ms) 세션 유지 API 자동 호출
+    []
+  );
+
+  const { data, error, isLoading, isError } = useQuery<HangResponse>({
+    queryKey,
+    queryFn,
+    refetchInterval: 10 * 60 * 1000, // 10분마다 세션 유지 API 자동 호출
     staleTime: 10 * 60 * 1000, // 10분 동안 데이터가 신선함
-    gcTime: 30 * 60 * 1000, // 30분 동안 캐시 유지
-    retry: 0, // 재요청 횟수
+    gcTime: 11 * 60 * 1000, // 11분 동안 캐시 유지
+    placeholderData: keepPreviousData, // 올바른 옵션 설정
     refetchOnWindowFocus: false, // 창에 포커스를 맞출 때 재패칭하지 않음
-    placeholderData: keepPreviousData,
+    enabled: !!token, // 토큰이 있을 때만 쿼리 실행
   })
 
   // useEffect를 사용해 data 변경 시 로그인 상태 처리
@@ -70,8 +79,18 @@ export const useUserStatus = () => {
     if (isError) {
       console.error("로그인이 필요합니다", error?.message)
       setIsLoggedIn(false)
+      addToast("로그인이 필요합니다. 다시 로그인해주세요.", "warning", 1000, "link")
+      navigate(RoutePath.Login) // 로그인 페이지로 리디렉션
     }
-  }, [isError, error, setIsLoggedIn, navigate])
+  }, [isError, error, setIsLoggedIn, navigate, addToast])
 
-  return { isLoggedIn, isLoading, isError, error }
+  // authState를 메모이제이션하여 불필요한 리렌더링 방지
+  const authStateMemo = useMemo(() => ({
+    isLoggedIn,
+    isLoading,
+    isError,
+    error,
+  }), [isLoggedIn, isLoading, isError, error])
+
+  return authStateMemo
 }

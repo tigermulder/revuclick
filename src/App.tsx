@@ -6,7 +6,7 @@ import Footer from "components/Footer"
 import ToastMassage from "components/ToastMassage"
 import GlobalCategoryMenu from "components/GlobalCategoryMenu"
 import { RoutePath } from "./types/route-path"
-import { AuthProvider } from "./contexts/AuthContext"
+
 import "./global.css"
 
 function App() {
@@ -30,20 +30,18 @@ function App() {
 
   return (
     <div className="App">
-      <AuthProvider>
-        {/* App Bar */}
-        {!hideAppBar && <AppBar />}
-        {/* 라우팅컴포넌트 */}
-        <AppRoute />
-        {/* 특정 경로에서만 푸터 렌더링 */}
-        {showFooter && <Footer />}
-        {/* GlobalCategoryMenu는 항상 렌더링되어야 함 */}
-        <GlobalCategoryMenu />
-        {/* Bottom Tap Bar */}
-        {!hideTapBar && <BottomTapBar />}
-        {/* ToastMassage */}
-        <ToastMassage />
-      </AuthProvider>
+      {/* App Bar */}
+      {!hideAppBar && <AppBar />}
+      {/* 라우팅컴포넌트 */}
+      <AppRoute />
+      {/* 특정 경로에서만 푸터 렌더링 */}
+      {showFooter && <Footer />}
+      {/* GlobalCategoryMenu는 항상 렌더링되어야 함 */}
+      <GlobalCategoryMenu />
+      {/* Bottom Tap Bar */}
+      {!hideTapBar && <BottomTapBar />}
+      {/* ToastMassage */}
+      <ToastMassage />
     </div>
   )
 }
