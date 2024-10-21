@@ -14,9 +14,7 @@ export interface ErrorBoundaryState {
 }
 
 // ** 인증타입 */
-export interface AuthContextType {
+export interface AuthType {
   isLoggedIn: boolean
-  isLoading: boolean
-  isError: boolean
-  error: any
+  token: string | null
 }

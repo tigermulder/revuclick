@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react"
 import { useParams, useNavigate } from "react-router-dom"
 import { keepPreviousData, useQuery } from "@tanstack/react-query"
-import { useAuth } from "@/contexts/AuthContext"
+import { authState } from "@/store/auth-recoil"
+import { useRecoilValue } from "recoil"
 import { getCampaignItem } from "services/campaign"
 import { CampaignItemResponse } from "@/types/api-types/campaign-type"
 import { formatDate, disCountRate } from "@/utils/util"
@@ -36,7 +37,7 @@ const CampaignDetailPage = () => {
   const [isModalOpen, setIsModalOpen] = useRecoilState(isModalOpenState) // Recoil 모달 상태 사용
   const [isApplySuccess, setIsApplySuccess] = useState(false) // 신청 성공 여부 상태 추가
   const { campaignId } = useParams()
-  const { isLoggedIn } = useAuth()
+  const { isLoggedIn } = useRecoilValue(authState)
   const { addToast } = useToast()
   const navigate = useNavigate()
 

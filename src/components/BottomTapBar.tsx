@@ -3,8 +3,9 @@ import { Link, useLocation, useNavigate } from "react-router-dom"
 import { useSetRecoilState } from "recoil"
 import { isGlobalCategoryMenuOpenState } from "store/mainpage-recoil"
 import { RoutePath } from "@/types/route-path"
-import { useAuth } from "@/contexts/AuthContext"
 import useToast from "@/hooks/useToast"
+import { authState } from "@/store/auth-recoil"
+import { useRecoilValue } from "recoil"
 import IconCategory from "assets/ico_tab_01.svg?react"
 import IconCampaign from "assets/ico_tab_02.svg?react"
 import IconHome from "assets/ico_tab_03.svg?react"
@@ -16,13 +17,13 @@ const BottomTabBar = () => {
   const location = useLocation()
   const currentPath = location.pathname
   const setIsMenuOpen = useSetRecoilState(isGlobalCategoryMenuOpenState)
-  const { isLoggedIn } = useAuth()
+  const { isLoggedIn } = useRecoilValue(authState)
   const { addToast } = useToast()
   const navigate = useNavigate()
   const [activeTab, setActiveTab] = useState("")
 
   useEffect(() => {
-    if (currentPath.startsWith(RoutePath.MyCart)) {
+    if (currentPath.startsWith(RoutePath.MyCampaign)) {
       setActiveTab("campaign")
     } else if (currentPath === RoutePath.Home) {
       setActiveTab("home")
@@ -48,7 +49,7 @@ const BottomTabBar = () => {
       addToast("로그인이 필요합니다.", "warning", 1000, "login")
       navigate(RoutePath.Login, { replace: true })
     } else {
-      navigate(path)
+      navigate(path, { replace: true })
     }
   }
 
@@ -60,9 +61,9 @@ const BottomTabBar = () => {
       </NavItem>
       <NavItem
         $active={activeTab === "campaign"}
-        onClick={() => handleTabClick("campaign", true, RoutePath.MyCart)}
+        onClick={() => handleTabClick("campaign", true, RoutePath.MyCampaign)}
       >
-        <Link to={RoutePath.MyCart}>
+        <Link to={RoutePath.MyCampaign}>
           <StyledIcon as={IconCampaign} $active={activeTab === "campaign"} />
           <NavText $active={activeTab === "campaign"}>나의 캠페인</NavText>
         </Link>

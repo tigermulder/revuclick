@@ -4,13 +4,14 @@ import { login } from "services/login"
 import { Link, useNavigate } from "react-router-dom"
 import { RoutePath } from "@/types/route-path"
 import { useMutation } from "@tanstack/react-query"
-import { useSetRecoilState } from "recoil"
+import { useRecoilState, useSetRecoilState } from "recoil"
 import { toastListState } from "@/store/toast-recoil"
 import RevuLogoIcon from "assets/revu_icon.svg?react"
 import RevuTextIcon from "assets/revu_logo.svg?react"
 import TextField from "@/components/TextField"
 import Button from "@/components/Button"
 import styled from "styled-components"
+import { authState } from "@/store/auth-recoil"
 
 const LoginPage = () => {
   const navigate = useNavigate()
@@ -20,15 +21,17 @@ const LoginPage = () => {
   const [emailError, setEmailError] = useState<string>("") // 수정된 부분
   const [passwordError, setPasswordError] = useState<string>("") // 수정된 부분
   const setToasts = useSetRecoilState(toastListState)
+  const [auth, setAuth] = useRecoilState(authState)
 
   // 로그인된 사용자가 /login 페이지로 접근하면 메인 페이지로 리다이렉트
+  const LoggedIn = auth.isLoggedIn
   useEffect(() => {
-    const token = sessionStorage.getItem("authToken")
-    if (token) {
+    const token = localStorage.getItem("authToken")
+    if (token && LoggedIn) {
       navigate(RoutePath.Home)
-      addToast("로그인된 상태입니다.", "info")
+      addToast("로그인된 상태입니다.", "info", 1000)
     }
-  }, [navigate])
+  }, [navigate, LoggedIn])
 
   // 토스트 메시지를 추가하는 함수
   const addToast = (
@@ -72,7 +75,7 @@ const LoginPage = () => {
     onSuccess: (data) => {
       const token = data.token
       if (token) {
-        sessionStorage.setItem("authToken", token)
+        setAuth({ isLoggedIn: true, token }); // Recoil 상태 업데이트
         addToast("로그인이 완료되었습니다.", "check", 1000)
         navigate(RoutePath.Home)
       } else {

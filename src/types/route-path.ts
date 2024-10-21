@@ -5,6 +5,7 @@ export const RoutePath = {
   FindId: "/find_id",
   FindPassword: "/find_password",
   MyCart: "/my_cart",
+  MyCampaign: "/my_campaign",
   CampaignDetail: (campaignId: string) => `/campaign/${campaignId}`,
   UserProfile: (id: string) => `/user/${id}`,
 } as const

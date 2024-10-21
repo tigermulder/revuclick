@@ -1,13 +1,14 @@
 import { Link } from "react-router-dom"
 import { RoutePath } from "@/types/route-path"
-import { useAuth } from "@/contexts/AuthContext"
 import RevuClickLogo from "assets/revu_logo.svg?react"
 import IcoSearch from "assets/ico-search.svg?react"
 import IcoAppBarHeart from "assets/ico-appbar-heart.svg?react"
 import styled from "styled-components"
+import { authState } from "@/store/auth-recoil"
+import { useRecoilValue } from "recoil"
 
 const AppBar = () => {
-  const { isLoggedIn } = useAuth()
+  const { isLoggedIn } = useRecoilValue(authState)
 
   return (
     <Header className="app-bar">

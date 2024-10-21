@@ -15,32 +15,25 @@ const axiosInstance: AxiosInstance = axios.create({
   },
 })
 
-//** 인터셉터로 요청마다 토큰을 추가 */
+// 요청 인터셉터: 요청 시 파라미터에 토큰 포함
 axiosInstance.interceptors.request.use(
   (config) => {
-    const token = sessionStorage.getItem("authToken") // 토큰을 sessionStorage에서 가져옴
+    const token = localStorage.getItem('authToken');
     if (token) {
-      config.headers.Authorization = `Bearer ${token}` // 토큰이 있으면 Authorization 헤더에 추가
+      // GET 요청일 경우 쿼리 파라미터에 추가
+      if (config.method === 'get' && config.params) {
+        config.params.token = token;
+      }
+      // POST, PUT 등의 요청일 경우 요청 본문에 추가
+      else if (config.method === 'post' || config.method === 'put') {
+        config.data = {
+          ...config.data,
+          token,
+        };
+      }
     }
-
-    return config
+    return config;
   },
-  (error) => {
-    return Promise.reject(error)
-  }
-)
-
-//** 응답 인터셉터 */
-axiosInstance.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    if (error.response && error.response.status === 401) {
-      // 예: 로그아웃 처리 및 로그인 페이지로 리디렉션
-      sessionStorage.removeItem("authToken")
-      window.location.href = RoutePath.Login
-    }
-    return Promise.reject(error)
-  }
-)
-
+  (error) => Promise.reject(error)
+);
 export default axiosInstance
