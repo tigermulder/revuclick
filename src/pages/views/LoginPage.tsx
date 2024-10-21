@@ -67,7 +67,6 @@ const LoginPage = () => {
     }
   }, [emailId, password])
 
-  // React Query mutation for login
   const mutation = useMutation({
     mutationFn: login,
     onSuccess: (data) => {

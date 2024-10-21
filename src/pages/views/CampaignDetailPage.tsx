@@ -10,6 +10,7 @@ import IconStar from "assets/ico-star.svg?url"
 import CampaignDetailBackButton from "@/components/CampaignDetailBackButton"
 import CampaignDetailShareButton from "@/components/CampaignDetailShareButton"
 import Button from "@/components/Button"
+import Modal from "@/components/Modal"
 import LikeButton from "@/components/LikeButton"
 import ShareModal from "@/components/ShareModal"
 import useToast from "@/hooks/useToast"
@@ -17,6 +18,9 @@ import styled from "styled-components"
 import { RoutePath } from "@/types/route-path"
 import ContentTab from "@/components/Tab"
 import dummyImage from "assets/dummy-image.png"
+import { joinReview, cancelReview } from "@/services/review"
+import { isModalOpenState } from "@/store/modal-recoil"
+import { useRecoilState } from "recoil"
 
 // React Query 키
 const CAMPAIGN_ITEM_QUERY_KEY = (campaignId: string | number) => [
@@ -29,7 +33,8 @@ const CampaignDetailPage = () => {
   const [isGuideOpen, setIsGuideOpen] = useState(false) // 가이드 표시 여부 상태 추가
   const [popUpOffsetY, setPopUpOffsetY] = useState(-62) // PopUp 위치 상태 추가
   const [scale, setScale] = useState(1) // 배경 이미지 확대 상태
-  const [headerOpacity, setHeaderOpacity] = useState(1) // 헤더 투명도 상태
+  const [isModalOpen, setIsModalOpen] = useRecoilState(isModalOpenState) // Recoil 모달 상태 사용
+  const [isApplySuccess, setIsApplySuccess] = useState(false) // 신청 성공 여부 상태 추가
   const { campaignId } = useParams()
   const { isLoggedIn } = useAuth()
   const { addToast } = useToast()
@@ -37,7 +42,14 @@ const CampaignDetailPage = () => {
 
   useEffect(() => {
     window.scrollTo(0, 0)
-  }, [])
+    // 페이지 로드 시 로컬스토리지에서 신청 상태 확인
+    const storedStatus = localStorage.getItem(`campaign_${campaignId}_applied`)
+    if (storedStatus === "true") {
+      setIsApplySuccess(true)
+    } else {
+      setIsApplySuccess(false)
+    }
+  }, [campaignId])
 
   // 가이드 토글 핸들러
   const toggleGuide = () => {
@@ -55,24 +67,19 @@ const CampaignDetailPage = () => {
       let scrollPosition = window.scrollY
       const maxScroll =
         document.documentElement.scrollHeight - window.innerHeight
-
       // 스크롤 위치를 0과 maxScroll 사이로 제한
       const clampedScrollPosition = Math.max(
         0,
         Math.min(scrollPosition, maxScroll)
       )
-
       // PopUp 위치 업데이트
       let newOffsetY = -62
-
       if (clampedScrollPosition <= 100) {
         newOffsetY = -62 + (clampedScrollPosition / 100) * 62
       } else {
         newOffsetY = 0
       }
-
       setPopUpOffsetY(newOffsetY)
-
       // 배경 이미지 확대 효과 적용 (최상단에서)
       if (scrollPosition < 0) {
         const scaleFactor = 1 - scrollPosition / 400
@@ -120,7 +127,6 @@ const CampaignDetailPage = () => {
   if (!campaignData) {
     return <div>캠페인 정보를 불러올 수 없습니다.</div>
   }
-
   const campaignDetail = campaignData.campaign
 
   // D-Day 계산
@@ -136,23 +142,92 @@ const CampaignDetailPage = () => {
       addToast("로그인이 필요합니다.", "warning", 1000, "login")
       navigate(RoutePath.Login, { replace: true })
     } else {
-      // 로그인된 상태에서 캠페인 신청 로직 수행
-      navigate(`/campaign/${campaignId}/apply`)
+      // 모달을 띄우기 위한 상태 변경
+      setIsModalOpen(true)
+    }
+  }
+
+  // 모달닫기 로직
+  const handleCloseModal = () => {
+    setIsModalOpen(false)
+    if (isApplySuccess) {
+      navigate(`/campaign/${campaignId}`, { replace: true })
+    }
+  }
+
+  // 모달로직
+  const handleConfirm = async () => {
+    try {
+      const data = {
+        token: sessionStorage.getItem("authToken") || "",
+        campaignId: campaignDetail.campaignId,
+      }
+
+      const response = await joinReview(data)
+
+      // 성공적으로 신청되었을 때의 로직
+      console.log("캠페인신청 성공:", response)
+      setIsApplySuccess(true) // 신청 성공 상태로 변경
+      localStorage.setItem(`campaign_${campaignId}_applied`, "true")
+    } catch (error) {
+      console.error("신청 실패:", error)
+      addToast(
+        "캠페인 신청에 실패했습니다. 다시 시도해주세요.",
+        "warning",
+        2000
+      )
+    }
+  }
+
+  // 캠페인 신청 취소 핸들러
+  const handleCancel = async () => {
+    try {
+      const data = {
+        token: sessionStorage.getItem("authToken") || "",
+        reviewId: campaignDetail.campaignId, // Review ID를 사용
+      }
+
+      const response = await cancelReview(data)
+
+      // 성공적으로 취소되었을 때의 로직
+      console.log("캠페인 신청 취소 성공:", response)
+      addToast("캠페인 신청이 취소되었습니다.", "check", 2000)
+      setIsApplySuccess(false) // 신청 상태 취소로 변경
+      localStorage.removeItem(`campaign_${campaignId}_applied`)
+    } catch (error) {
+      console.error("신청 취소 실패:", error)
+      addToast(
+        "캠페인 신청 취소에 실패했습니다. 다시 시도해주세요.",
+        "warning",
+        2000
+      )
     }
   }
 
   const thumbnailUrl = campaignDetail.thumbnailUrl || dummyImage
+  const renderButton = () => {
+    if (isApplySuccess) {
+      // 신청 완료된 상태의 버튼
+      return (
+        <Button onClick={handleCancel} $variant="grey">
+          캠페인 신청 취소하기
+        </Button>
+      )
+    }
+    // 신청 전 상태의 버튼
+    return (
+      <Button onClick={handleApply} $variant="red">
+        캠페인 신청하기
+      </Button>
+    )
+  }
   return (
     <>
       <CampaignDetailBackButton />
       <CampaignDetailShareButton />
       <ShareModal />
       <DetailHeader>
-        <Background
-          $imageUrl={thumbnailUrl}
-          $scale={scale}
-          $opacity={headerOpacity}
-        />
+        <Background $imageUrl={thumbnailUrl} $scale={scale} />
       </DetailHeader>
       <DetailBody>
         {/* PopUp을 DetailBody 내부에 조건부로 렌더링 */}
@@ -300,11 +375,50 @@ const CampaignDetailPage = () => {
             campaignId={campaignDetail.campaignId}
           />
           {/* 캠페인 신청하기 버튼 */}
-          <Button onClick={handleApply} $variant="red">
-            캠페인 신청하기
-          </Button>
+          {renderButton()}
         </FooterButtons>
       </DetailBody>
+
+      {/* 모달 */}
+      <Modal
+        isOpen={isModalOpen}
+        onConfirm={handleConfirm}
+        onCancel={handleCloseModal}
+        title={
+          isApplySuccess ? (
+            "캠페인 신청 완료!"
+          ) : (
+            <>
+              {campaignDetail.title} <br /> 캠페인을 신청하시겠어요?
+            </>
+          )
+        }
+        content={
+          isApplySuccess ? (
+            <ol>
+              <li>
+                캠페인은 <em>선착순으로</em> 진행돼요.
+              </li>
+              <li>
+                신청 후 <em>3시간 이내에</em> 구매 및 영수증 인증을
+                완료해주셔야해요.
+              </li>
+              <li>
+                캠페인은 <span>1일 3회 신청</span> 가능해요.
+              </li>
+            </ol>
+          ) : (
+            <>
+              <p>
+                <em>3시간</em> 안에 상품구매와
+              </p>
+              <p>구매 영수증 인증을 진행해주세요.</p>
+            </>
+          )
+        }
+        confirmText={isApplySuccess ? "나의 캠페인 내역" : "신청하기"}
+        cancelText={isApplySuccess ? "더 둘러보기" : "아니요"}
+      />
     </>
   )
 }
@@ -336,7 +450,6 @@ const DetailHeader = styled.div`
 const Background = styled.div<{
   $imageUrl: string
   $scale: number
-  $opacity: number
 }>`
   position: fixed;
   top: 0;
@@ -349,10 +462,7 @@ const Background = styled.div<{
   height: 420px;
   z-index: -10;
   transform: scale(${(props) => props.$scale});
-  opacity: ${(props) => props.$opacity};
-  transition:
-    transform 0.2s ease-out,
-    opacity 0.2s ease-out;
+  transition: transform 0.2s ease-out;
 `
 
 const PopUp = styled.div.attrs<{ $offsetY: number }>(({ $offsetY }) => ({

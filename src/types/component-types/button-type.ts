@@ -1,7 +1,14 @@
 export interface ButtonProps {
-  size?: 'XXXL' | 'XXL' | 'XL' | 'L' | 'M' | 'S' | 'XS' | 'XXS' | 'XXXS';
-  color?: 'red' | 'black';
-  state?: 'enabled' | 'disabled' | 'pressed';
-  label: string;
-  disableable?: boolean; // 비활성화 가능 여부 (optional, 기본값 false)
+  children: React.ReactNode
+  disabled?: boolean
+  $variant: "red" | "outlined" | "arrow" | "grey" | "pink"
+  type?: "button" | "submit" | "reset"
+  $marginTop?: string
+  onClick?: React.MouseEventHandler<HTMLButtonElement>
+}
+
+export interface StyledButtonProps {
+  $variant: "red" | "outlined" | "arrow" | "grey" | "pink"
+  $marginTop?: string
+  disabled?: boolean
 }

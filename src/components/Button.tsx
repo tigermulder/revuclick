@@ -1,21 +1,18 @@
 import IconArrowGo from "assets/ico_arr_go.svg?url"
+import {
+  ButtonProps,
+  StyledButtonProps,
+} from "@/types/component-types/button-type"
 import styled, { css } from "styled-components"
 
 const Button = ({
   children,
   disabled,
-  $variant, // 'red' | 'outlined' | 'arrow'
+  $variant,
   type = "button",
   $marginTop,
   onClick,
-}: {
-  children: React.ReactNode
-  disabled?: boolean
-  $variant: "red" | "outlined" | "arrow"
-  type?: "button" | "submit" | "reset"
-  $marginTop?: string // 옵션
-  onClick?: React.MouseEventHandler<HTMLButtonElement>
-}) => (
+}: ButtonProps) => (
   <StyledButton
     disabled={disabled}
     $variant={$variant}
@@ -28,12 +25,6 @@ const Button = ({
 )
 
 export default Button
-
-interface StyledButtonProps {
-  $variant: "red" | "outlined" | "arrow"
-  $marginTop?: string
-  disabled?: boolean
-}
 
 const StyledButton = styled.button.attrs<StyledButtonProps>((props) => ({
   "data-variant": props.$variant,
@@ -81,6 +72,18 @@ const StyledButton = styled.button.attrs<StyledButtonProps>((props) => ({
             width: 0.9rem;
             height: 0.9rem;
           }
+        `
+      case "grey":
+        return css`
+          background-color: var(--n40-color);
+          color: var(--n400-color);
+          border: none;
+        `
+      case "pink":
+        return css`
+          background-color: var(--prim-L20);
+          color: var(--prim-L400);
+          border: none;
         `
       default:
         return ""
