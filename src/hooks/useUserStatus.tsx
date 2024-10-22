@@ -8,7 +8,7 @@ export const useUserStatus = () => {
     if (!token) {
       return Promise.reject(new Error("토큰이 없습니다."))
     }
-    return keepSessionAlive({ token })
+    return keepSessionAlive()
   }
 
   const { isLoading, isError, error } = useQuery<HangResponse>({

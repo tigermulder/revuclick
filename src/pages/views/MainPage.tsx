@@ -56,10 +56,12 @@ const MainPage = (): JSX.Element => {
       return undefined
     },
     initialPageParam: 1,
-    refetchInterval: 10 * 60 * 1000,
+    refetchInterval: 10 * 60 * 1000, // 10분 마다 리패치
     staleTime: 10 * 60 * 1000, // 10분 동안 데이터가 신선함
-    gcTime: 20 * 60 * 1000, // 20분 동안 캐시 유지
-    refetchOnWindowFocus: false, // 창에 포커스를 맞출 때 재패칭하지 않음
+    gcTime: 11 * 60 * 1000, // 20분 동안 캐시 유지
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    refetchOnReconnect: true,
     placeholderData: keepPreviousData, // 이전 데이터를 유지
   })
 

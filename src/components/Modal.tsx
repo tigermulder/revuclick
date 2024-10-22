@@ -101,15 +101,15 @@ const ModalBody = styled.div`
   letter-spacing: var(--font-bodyL-letter-spacing);
   color: var(--n400-color);
 
+  em,
+  span {
+    font-weight: var(--font-weight-bold);
+  }
   ol {
     padding-left: 1.6rem;
     list-style: decimal;
     li:not(:last-child) {
       margin-bottom: 0.2rem;
-    }
-    em,
-    span {
-      font-weight: var(--font-weight-bold);
     }
     span {
       color: var(--revu-color);

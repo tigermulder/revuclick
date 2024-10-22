@@ -98,8 +98,7 @@ const CampaignDetailPage = () => {
     return <div>유효하지 않은 캠페인 ID입니다.</div>
   }
 
-  // 캠페인 상세 데이터 가져오기
-  const token = sessionStorage.getItem("authToken") || ""
+  // 캠페인 상세 데이터
   const {
     data: campaignData,
     isLoading,
@@ -110,12 +109,13 @@ const CampaignDetailPage = () => {
     queryFn: () =>
       getCampaignItem({
         campaignId: Number(campaignId),
-        token: token,
       }),
     enabled: !!campaignId,
     staleTime: 10 * 60 * 1000,
     gcTime: 30 * 60 * 1000,
     refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    refetchOnReconnect: true,
     placeholderData: keepPreviousData,
   })
 
@@ -160,10 +160,8 @@ const CampaignDetailPage = () => {
   const handleConfirm = async () => {
     try {
       const data = {
-        token: sessionStorage.getItem("authToken") || "",
         campaignId: campaignDetail.campaignId,
       }
-
       const response = await joinReview(data)
 
       // 성공적으로 신청되었을 때의 로직
@@ -184,10 +182,8 @@ const CampaignDetailPage = () => {
   const handleCancel = async () => {
     try {
       const data = {
-        token: sessionStorage.getItem("authToken") || "",
-        reviewId: campaignDetail.campaignId, // Review ID를 사용
+        reviewId: campaignDetail.campaignId,
       }
-
       const response = await cancelReview(data)
 
       // 성공적으로 취소되었을 때의 로직
@@ -401,11 +397,13 @@ const CampaignDetailPage = () => {
                 캠페인은 <em>선착순으로</em> 진행돼요.
               </li>
               <li>
-                신청 후 <em>3시간 이내에</em> 구매 및 영수증 인증을
-                완료해주셔야해요.
+                반드시 ‘신청하기’ 클릭 후 <em>3시간 이내에</em> 리뷰클릭에서
+                제공하는 캠페인 URL을 통해 구매 및 인증 한 건에 대해서만
+                캠페인이 인정됩니다.
               </li>
               <li>
-                캠페인은 <span>1일 3회 신청</span> 가능해요.
+                캠페인은 <span>1일 1회 신청</span> 가능해요.
+                <br />* 동일 캠페인 재신청 불가
               </li>
             </ol>
           ) : (

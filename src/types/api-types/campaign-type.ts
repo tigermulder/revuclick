@@ -2,7 +2,6 @@ import { ReactNode } from "react"
 
 //** 캠페인리스트 요청 type */
 export interface CampaignListRequest {
-  token?: string
   pageSize?: number // optional
   pageIndex?: number // optional
   order?: string // optional, e.g., recent, joinDesc
@@ -46,7 +45,6 @@ export interface Campaign {
 
 //** 캠페인 상세 정보 요청 */
 export interface CampaignItemRequest {
-  token: string
   campaignId: number
 }
 export interface CampaignItemResponse {

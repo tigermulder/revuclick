@@ -5,7 +5,7 @@ import {
   LoginResponse,
 } from "types/api-types/login-type"
 import { LogoutRequest, LogoutResponse } from "types/api-types/logout-type"
-import { HangRequest, HangResponse } from "types/api-types/hang-type"
+import { HangResponse } from "types/api-types/hang-type"
 
 //** 로그인 여부체크 API */
 export const checkLoginStatus = async (): Promise<LoginCheckResponse> => {
@@ -26,11 +26,7 @@ export const logout = async (data: LogoutRequest): Promise<LogoutResponse> => {
 }
 
 // ** 세션 유지용 API */
-export const keepSessionAlive = async (
-  data: HangRequest
-): Promise<HangResponse> => {
-  const response = await axiosInstance.post<HangResponse>("/hang", {
-    token: data.token, // data 객체에서 전달된 토큰을 그대로 사용
-  })
+export const keepSessionAlive = async (): Promise<HangResponse> => {
+  const response = await axiosInstance.post<HangResponse>("/hang")
   return response.data
 }

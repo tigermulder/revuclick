@@ -52,7 +52,6 @@ export interface ReviewItemResponse {
 
 //** 리뷰참여 요청 type */
 export interface ReviewJoinRequest {
-  token: string
   campaignId: number
 }
 export interface ReviewJoinResponse {
@@ -65,7 +64,6 @@ export interface ReviewJoinResponse {
 
 //** 리뷰 참여 취소 요청 type */
 export interface ReviewCancelRequest {
-  token: string
   reviewId: number
 }
 export interface ReviewCancelResponse {
