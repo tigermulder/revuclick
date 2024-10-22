@@ -86,10 +86,10 @@ const Logo = styled.div`
 `
 
 const SearchForm = styled.form<{ $isLoggedIn: boolean }>`
-  flex-basis: 50%;
+  flex-basis: 51%;
   height: 100%;
   margin-left: ${({ $isLoggedIn }) =>
-    $isLoggedIn ? "2.6rem" : "2rem"}; /* 조건에 따라 margin-left 조정 */
+    $isLoggedIn ? "3.4rem" : "2.4rem"}; /* 조건에 따라 margin-left 조정 */
   overflow: hidden;
 `
 

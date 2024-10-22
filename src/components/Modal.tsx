@@ -21,8 +21,6 @@ const Modal = ({
       // 모달이 닫히면 body 스크롤을 다시 활성화
       document.body.style.overflow = "auto"
     }
-
-    // 컴포넌트가 언마운트되거나 모달이 닫힐 때 스크롤을 복구
     return () => {
       document.body.style.overflow = "auto"
     }

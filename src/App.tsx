@@ -6,10 +6,11 @@ import Footer from "components/Footer"
 import ToastMassage from "components/ToastMassage"
 import GlobalCategoryMenu from "components/GlobalCategoryMenu"
 import { RoutePath } from "./types/route-path"
-
+import { useUserStatus } from "./hooks/useUserStatus"
 import "./global.css"
 
 function App() {
+  useUserStatus() // 세션유지
   const location = useLocation() // 현재 경로확인
   const isCampaignDetail = useMatch("/campaign/:campaignId") // 동적 경로 매칭 확인
 
