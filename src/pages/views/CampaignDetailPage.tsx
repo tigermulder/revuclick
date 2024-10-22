@@ -575,7 +575,10 @@ const CampaignDetails = styled.ul`
       margin-top: 0;
       color: var(--primary-color);
       &::before {
-        background: url(${IconStar}) no-repeat center / contain;
+        background-image: url(${IconStar});
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: contain;
         width: 1.3rem;
         height: 1.6rem;
         left: -1.6rem;

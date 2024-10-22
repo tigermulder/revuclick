@@ -16,17 +16,6 @@ import {
   ReviewConfirmResponse,
 } from "types/api-types/review-type"
 
-//** 리뷰 참여 API */
-export const joinReview = async (
-  data: ReviewJoinRequest
-): Promise<ReviewJoinResponse> => {
-  const response = await axiosInstance.post<ReviewJoinResponse>(
-    "/review/join",
-    data
-  )
-  return response.data
-}
-
 //** 리뷰 참여 리스트 요청 API */
 export const getReviewList = async (
   data: ReviewListRequest
@@ -44,6 +33,17 @@ export const getReviewItem = async (
 ): Promise<ReviewItemResponse> => {
   const response = await axiosInstance.post<ReviewItemResponse>(
     "/review/item",
+    data
+  )
+  return response.data
+}
+
+//** 리뷰 참여 API */
+export const joinReview = async (
+  data: ReviewJoinRequest
+): Promise<ReviewJoinResponse> => {
+  const response = await axiosInstance.post<ReviewJoinResponse>(
+    "/review/join",
     data
   )
   return response.data
