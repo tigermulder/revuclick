@@ -26,7 +26,7 @@ const LoginPage = () => {
   // 로그인된 사용자가 /login 페이지로 접근하면 메인 페이지로 리다이렉트
   const LoggedIn = auth.isLoggedIn
   useEffect(() => {
-    const token = localStorage.getItem("authToken")
+    const token = sessionStorage.getItem("authToken")
     if (token && LoggedIn) {
       navigate(RoutePath.Home)
       addToast("로그인된 상태입니다.", "info", 1000)
@@ -75,7 +75,7 @@ const LoginPage = () => {
     onSuccess: (data) => {
       const token = data.token
       if (token) {
-        setAuth({ isLoggedIn: true, token }); // Recoil 상태 업데이트
+        setAuth({ isLoggedIn: true, token }) // Recoil 상태 업데이트
         addToast("로그인이 완료되었습니다.", "check", 1000)
         navigate(RoutePath.Home)
       } else {

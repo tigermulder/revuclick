@@ -4,7 +4,7 @@ import { HangResponse } from "types/api-types/hang-type"
 
 export const useUserStatus = () => {
   const queryFn = () => {
-    const token = localStorage.getItem("authToken")
+    const token = sessionStorage.getItem("authToken")
     if (!token) {
       return Promise.reject(new Error("토큰이 없습니다."))
     }

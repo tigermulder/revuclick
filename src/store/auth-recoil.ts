@@ -1,28 +1,28 @@
-import { atom } from 'recoil';
-import { AuthType } from '@/types/type';
+import { atom } from "recoil"
+import { AuthType } from "@/types/type"
 
 export const authState = atom<AuthType>({
-  key: 'authState',
+  key: "authState",
   default: {
     isLoggedIn: false,
     token: null,
   },
   effects_UNSTABLE: [
     ({ setSelf, onSet }) => {
-      const token = localStorage.getItem('authToken');
+      const token = sessionStorage.getItem("authToken")
       if (token) {
         setSelf({
           isLoggedIn: true,
           token,
-        });
+        })
       }
       onSet((newValue, _, isReset) => {
         if (isReset) {
-          localStorage.removeItem('authToken');
+          sessionStorage.removeItem("authToken")
         } else {
-          localStorage.setItem('authToken', newValue.token || '');
+          sessionStorage.setItem("authToken", newValue.token || "")
         }
-      });
+      })
     },
   ],
-});
+})

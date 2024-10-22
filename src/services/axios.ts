@@ -18,7 +18,7 @@ const axiosInstance: AxiosInstance = axios.create({
 // 요청 인터셉터: 요청 시 파라미터에 토큰 포함
 axiosInstance.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem("authToken")
+    const token = sessionStorage.getItem("authToken")
     if (token) {
       // GET 요청일 경우 쿼리 파라미터에 추가
       if (config.method === "get" && config.params) {
