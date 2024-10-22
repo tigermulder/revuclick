@@ -68,7 +68,7 @@ const StyledButton = styled.button.attrs<StyledButtonProps>((props) => ({
 
           &::after {
             content: "";
-            background: url(${IconArrowGo}) no-repeat center / 100%;
+            background: url("${IconArrowGo}") no-repeat center / 100%;
             width: 0.9rem;
             height: 0.9rem;
           }
