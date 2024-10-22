@@ -8,6 +8,7 @@ import CampaignDetailPage from "./views/CampaignDetailPage"
 import CampaignCart from "./views/CampaingnCart"
 import FindIdPage from "./views/FindIdPage"
 import FindPasswordPage from "./views/FindPasswordPage"
+import MyCampaignPage from "./views/MyCampaignPage"
 
 export const AppRoute = () => {
   return (
@@ -28,6 +29,8 @@ export const AppRoute = () => {
         <Route path={RoutePath.FindPassword} element={<FindPasswordPage />} />
         {/* 장바구니 페이지 */}
         <Route path={RoutePath.MyCart} element={<CampaignCart />} />
+        {/* 나의 캠페인 페이지 */}
+        <Route path={RoutePath.MyCampaign} element={<MyCampaignPage />} />
       </Route>
     </ReactRouterRoutes>
   )

@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { dropDownOptions, FilterOption } from "@/types/component-types/filter-dropdown-type"
+import { dropDownOptions } from "@/types/component-types/filter-dropdown-type"
 import { selectedFilterState } from "@/store/dropdown-recoil"
 import IconDropDown from "assets/ico-dropdown-arrow.svg?react"
 import { useRecoilState } from "recoil"
@@ -7,15 +7,16 @@ import styled from "styled-components"
 
 const FilterDropDown = () => {
   const [isOpen, setIsOpen] = useState(false)
-  const [selectedFilter, setSelectedFilter] = useRecoilState(selectedFilterState);
+  const [selectedFilter, setSelectedFilter] =
+    useRecoilState(selectedFilterState)
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen)
   }
 
   const handleOptionClick = (option: (typeof dropDownOptions)[0]) => {
-    setSelectedFilter(option); // 선택된 필터 업데이트
-    setIsOpen(false); // 드롭다운 닫기
+    setSelectedFilter(option) // 선택된 필터 업데이트
+    setIsOpen(false) // 드롭다운 닫기
   }
 
   return (

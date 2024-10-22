@@ -12,6 +12,7 @@ const Layout = () => {
   const isFindIdPage = location.pathname === RoutePath.FindId // 아이디찾기 페이지 감지
   const isFindPassWordPage = location.pathname === RoutePath.FindPassword // 아이디찾기 페이지 감지
   const isMyCartPage = location.pathname === RoutePath.MyCart // 장바구니 페이지 감지
+  const isMyCampaignPage = location.pathname === RoutePath.MyCampaign // 나의 캠페인 페이지 감지
   const isSpecialPage =
     isLoginPage ||
     isCampaignDetail ||
@@ -27,6 +28,7 @@ const Layout = () => {
         <Content
           $isSpecialPage={isSpecialPage}
           $isCampaignDetail={isCampaignDetail}
+          $isMyCampaignPage={isMyCampaignPage}
         >
           {/* 각 페이지별로 다른 콘텐츠를 보여주는 Outlet */}
           <Outlet />
@@ -40,10 +42,33 @@ export default Layout
 
 const Content = styled.main<ContentProps>`
   width: 100%;
-  ${({ $isSpecialPage, $isCampaignDetail }) =>
-    $isSpecialPage
-      ? $isCampaignDetail
-        ? "height: 100vh; margin: 0;" // 캠페인 상세 페이지일 경우
-        : "height: 100vh; margin: 0; padding: 0 15px;" // 로그인 페이지일 경우
-      : "margin: 60px auto 0; padding: 0 15px;"};
+
+  ${({ $isMyCampaignPage, $isSpecialPage, $isCampaignDetail }) => {
+    if ($isMyCampaignPage) {
+      return `
+        height: 100vh;
+        margin: 120px auto 0;
+        padding: 2rem 1.5rem 8rem;
+        background: var(--whitewood);
+      `
+    } else if ($isSpecialPage) {
+      if ($isCampaignDetail) {
+        return `
+          height: 100vh;
+          margin: 0;
+        `
+      } else {
+        return `
+          height: 100vh;
+          margin: 0;
+          padding: 0 1.5rem;
+        `
+      }
+    } else {
+      return `
+        margin: 60px auto 0;
+        padding: 0 1.5rem;
+      `
+    }
+  }}
 `

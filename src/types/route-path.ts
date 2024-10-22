@@ -15,4 +15,5 @@ export type RoutePath = (typeof RoutePath)[keyof typeof RoutePath]
 export interface ContentProps {
   $isSpecialPage: boolean
   $isCampaignDetail: boolean
+  $isMyCampaignPage: boolean
 }

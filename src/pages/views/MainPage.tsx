@@ -95,8 +95,6 @@ const MainPage = (): JSX.Element => {
     }
   }, [fetchNextPage, hasNextPage])
 
-  const filtered = filteredCampaigns.filter((item) => item.status === "edit")
-
   return (
     <>
       {/* 카테고리메뉴 */}
@@ -105,7 +103,7 @@ const MainPage = (): JSX.Element => {
       {/* 필터칩 */}
       <FilterBar />
       <CampaignList>
-        {filtered?.map((campaign) => {
+        {filteredCampaigns?.map((campaign) => {
           // 남은 시간 계산
           const endTime = campaign.endAt
             ? new Date(campaign.endAt).getTime()

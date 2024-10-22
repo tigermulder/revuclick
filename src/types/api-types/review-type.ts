@@ -1,24 +1,39 @@
 //** 리뷰참여리스트 요청 type */
 export interface ReviewListRequest {
-  token: string
-  pageSize?: number // optional
-  pageIndex?: number // optional
-  order?: string // optional, e.g., recent
+  pageSize?: number
+  pageIndex?: number
+  order?: string
   status?: string // optional, e.g., "join/purchase/confirm/upload/reward/giveup/timeout"
-  startAt?: string // optional
-  endAt?: string // optional
+  startAt?: string
+  endAt?: string
 }
 export interface ReviewListResponse {
   statusCode: number
-  errorCode?: number
-  error?: string
-  list: Array<{
-    review_obj: any // 리뷰 객체 정의 필요
-  }>
+  list: ReviewItem[]
   totalItems: number
   totalPages: number
   pageSize: number
   pageIndex: number
+}
+
+export interface ReviewItem {
+  reviewId: number
+  campaignId: number
+  uid: number
+  partnerId: number
+  partnerUid: number
+  spaceId: number
+  status:
+    | "join"
+    | "purchase"
+    | "confirm"
+    | "upload"
+    | "reward"
+    | "giveup"
+    | "timeout"
+  uploadComplete: number
+  createdAt: string
+  updatedAt: string
 }
 
 //** 리뷰 참여 내역 요청 type */
