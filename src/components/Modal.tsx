@@ -1,3 +1,4 @@
+// Modal.tsx
 import { ModalProps } from "@/types/component-types/modal-type"
 import styled from "styled-components"
 import Button from "@/components/Button" // 재사용할 수 있는 Button 컴포넌트
@@ -11,7 +12,7 @@ const Modal = ({
   title,
   content,
   confirmText = "확인",
-  cancelText = "취소",
+  cancelText,
 }: ModalProps) => {
   useEffect(() => {
     if (isOpen) {
@@ -35,15 +36,23 @@ const Modal = ({
           <ModalHeader>{title}</ModalHeader>
           <ModalBody>{content}</ModalBody>
         </TextContainer>
-
         {/* 액션 버튼들 */}
         <ModalFooter>
-          <Button onClick={onCancel} $variant="grey">
-            {cancelText || "취소"}
-          </Button>
-          <Button onClick={onConfirm} $variant="red">
-            {confirmText || "확인"}
-          </Button>
+          {cancelText === "확인" ? (
+            // cancelText가 있을 때는 취소 버튼만 렌더링
+            <Button onClick={onCancel} $variant="pink">
+              {cancelText}
+            </Button>
+          ) : (
+            <>
+              <Button onClick={onCancel} $variant="grey">
+                {cancelText || "취소"}
+              </Button>
+              <Button onClick={onConfirm} $variant="red">
+                {confirmText}
+              </Button>
+            </>
+          )}
         </ModalFooter>
       </ModalContainer>
     </Overlay>
@@ -100,7 +109,6 @@ const ModalBody = styled.div`
   line-height: var(--font-bodyL-line-height);
   letter-spacing: var(--font-bodyL-letter-spacing);
   color: var(--n400-color);
-
   em,
   span {
     font-weight: var(--font-weight-bold);
@@ -119,7 +127,7 @@ const ModalBody = styled.div`
 
 const ModalFooter = styled.div`
   display: flex;
-  justify-content: space-between;
+  justify-content: center; /* 버튼이 하나일 때 중앙 정렬 */
   align-items: center;
   gap: 8px;
 `

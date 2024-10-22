@@ -34,8 +34,10 @@ const CampaignDetailPage = () => {
   const [isGuideOpen, setIsGuideOpen] = useState(false) // 가이드 표시 여부 상태 추가
   const [popUpOffsetY, setPopUpOffsetY] = useState(-62) // PopUp 위치 상태 추가
   const [scale, setScale] = useState(1) // 배경 이미지 확대 상태
-  const [isModalOpen, setIsModalOpen] = useRecoilState(isModalOpenState) // Recoil 모달 상태 사용
+  const [isModalOpen, setIsModalOpen] = useRecoilState(isModalOpenState) // Recoil 모달
+  const [isCancelModalOpen, setIsCancelModalOpen] = useState(false) // 신청 취소 모달 상태
   const [isApplySuccess, setIsApplySuccess] = useState(false) // 신청 성공 여부 상태 추가
+  const [errorCode, setErrorCode] = useState<number | null>(null) // 에러 코드 상태 추가
   const { campaignId } = useParams()
   const { isLoggedIn } = useRecoilValue(authState)
   const { addToast } = useToast()
@@ -118,12 +120,10 @@ const CampaignDetailPage = () => {
     refetchOnReconnect: true,
     placeholderData: keepPreviousData,
   })
-
   // 에러 처리
   if (isError) {
     return <div>{error?.message || "캠페인 정보를 불러오지 못했습니다."}</div>
   }
-
   // 데이터 없을 때
   if (!campaignData) {
     return <div>캠페인 정보를 불러올 수 없습니다.</div>
@@ -142,6 +142,7 @@ const CampaignDetailPage = () => {
       // 토스트 메시지 추가
       addToast("로그인이 필요합니다.", "warning", 1000, "login")
       navigate(RoutePath.Login, { replace: true })
+      setErrorCode(null) // 에러 코드 초기화
     } else {
       // 모달을 띄우기 위한 상태 변경
       setIsModalOpen(true)
@@ -151,11 +152,12 @@ const CampaignDetailPage = () => {
   // 모달닫기 로직
   const handleCloseModal = () => {
     setIsModalOpen(false)
+    setIsCancelModalOpen(false)
     if (isApplySuccess) {
       navigate(`/campaign/${campaignId}`, { replace: true })
+      setErrorCode(null) // 에러 코드 초기화
     }
   }
-
   // 모달로직
   const handleConfirm = async () => {
     try {
@@ -164,40 +166,57 @@ const CampaignDetailPage = () => {
       }
       const response = await joinReview(data)
 
-      // 성공적으로 신청되었을 때의 로직
-      console.log("캠페인신청 성공:", response)
-      setIsApplySuccess(true) // 신청 성공 상태로 변경
-      localStorage.setItem(`campaign_${campaignId}_applied`, "true")
-    } catch (error) {
-      console.error("신청 실패:", error)
-      addToast(
-        "캠페인 신청에 실패했습니다. 다시 시도해주세요.",
-        "warning",
-        2000
-      )
+      setIsApplySuccess(true)
+      setErrorCode(null)
+    } catch (error: any) {
+      if (error.response && error.response.status === 403) {
+        const { statusCode, errorCode } = error.response.data || {}
+
+        // daily limit 에러 처리
+        if (statusCode === -1 && errorCode === 7) {
+          setIsApplySuccess(false)
+          setErrorCode(7)
+          return
+        }
+      }
+      addToast("이미신청했습니다.", "warning", 2000, "campain")
+      setErrorCode(null) // 다른 에러 코드 초기화
     }
   }
 
+  const handleCancel = () => {
+    setIsCancelModalOpen(true) // 신청 취소 모달 열기
+  }
   // 캠페인 신청 취소 핸들러
-  const handleCancel = async () => {
+  const handleConfirmCancel = async () => {
     try {
       const data = {
         reviewId: campaignDetail.campaignId,
       }
       const response = await cancelReview(data)
 
-      // 성공적으로 취소되었을 때의 로직
-      console.log("캠페인 신청 취소 성공:", response)
-      addToast("캠페인 신청이 취소되었습니다.", "check", 2000)
-      setIsApplySuccess(false) // 신청 상태 취소로 변경
-      localStorage.removeItem(`campaign_${campaignId}_applied`)
+      // 신청 취소 성공 시 처리
+      addToast("캠페인 신청이 취소되었습니다.", "check", 2000, "campaign")
+      setIsApplySuccess(false) // 신청 성공 상태를 초기화
+      setIsCancelModalOpen(false) // 모달 닫기
     } catch (error) {
-      console.error("신청 취소 실패:", error)
+      // 취소 실패 시 처리
       addToast(
         "캠페인 신청 취소에 실패했습니다. 다시 시도해주세요.",
         "warning",
-        2000
+        2000,
+        "campaign"
       )
+    }
+  }
+  const handleModalConfirm = () => {
+    if (isApplySuccess) {
+      // 신청 성공 후 '나의 캠페인 내역'으로 라우팅
+      navigate(RoutePath.MyCampaign)
+      setIsModalOpen(false) // 모달 닫기
+    } else {
+      // 아직 신청을 완료하지 않았을 때는 신청 처리
+      handleConfirm()
     }
   }
 
@@ -376,14 +395,16 @@ const CampaignDetailPage = () => {
         </FooterButtons>
       </DetailBody>
 
-      {/* 모달 */}
+      {/* 신청, 신청완료, 신청횟수 모달 */}
       <Modal
         isOpen={isModalOpen}
-        onConfirm={handleConfirm}
+        onConfirm={handleModalConfirm}
         onCancel={handleCloseModal}
         title={
           isApplySuccess ? (
             "캠페인 신청 완료!"
+          ) : errorCode === 7 ? (
+            <>하루 신청 한도초과! (1/1)</>
           ) : (
             <>
               {campaignDetail.title} <br /> 캠페인을 신청하시겠어요?
@@ -406,6 +427,13 @@ const CampaignDetailPage = () => {
                 <br />* 동일 캠페인 재신청 불가
               </li>
             </ol>
+          ) : errorCode === 7 ? (
+            <>
+              <p>
+                오늘 신청 가능한 횟수를 초과했어요. <br /> 내일 다시
+                신청해주세요.
+              </p>
+            </>
           ) : (
             <>
               <p>
@@ -416,7 +444,25 @@ const CampaignDetailPage = () => {
           )
         }
         confirmText={isApplySuccess ? "나의 캠페인 내역" : "신청하기"}
-        cancelText={isApplySuccess ? "더 둘러보기" : "아니요"}
+        cancelText={
+          isApplySuccess ? "더 둘러보기" : errorCode === 7 ? "확인" : "취소"
+        }
+      />
+      {/* 신청취소 모달 */}
+      <Modal
+        isOpen={isCancelModalOpen}
+        onConfirm={handleConfirmCancel}
+        onCancel={handleCloseModal}
+        title="정말 신청 취소하시겠어요?"
+        content={
+          <>
+            <p>
+              신청을 취소할 경우 동일한 캠페인은 <br /> 더이상 신청할 수 없어요!
+            </p>
+          </>
+        }
+        confirmText="신청 취소하기"
+        cancelText="닫기"
       />
     </>
   )

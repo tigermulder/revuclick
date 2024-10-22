@@ -23,7 +23,6 @@ export interface ReviewListResponse {
 
 //** 리뷰 참여 내역 요청 type */
 export interface ReviewItemRequest {
-  token: string
   reviewId: number
 }
 export interface ReviewItemResponse {
