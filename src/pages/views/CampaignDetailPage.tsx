@@ -576,7 +576,7 @@ const CampaignDetails = styled.ul`
       color: var(--primary-color);
       &::before {
         background: none;
-        background-image: url(${IconStar});
+        background-image: url("${IconStar}");
         background-repeat: no-repeat;
         background-position: center;
         background-size: contain;
