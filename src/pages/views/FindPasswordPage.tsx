@@ -14,9 +14,6 @@ const FindPasswordPage = () => {
   const navigate = useNavigate()
   const [isButtonEnabled, setIsButtonEnabled] = useState<boolean>(false)
 
-  // 버튼 활성화 여부를 동적으로 설정
-  // useEffect(() => {}, [])
-
   return (
     <Container>
       <ReuseHeader

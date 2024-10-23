@@ -15,8 +15,6 @@ export const useUserStatus = () => {
     queryKey: ["userStatus"], // 쿼리 키 설정
     queryFn,
     refetchInterval: 10 * 60 * 1000, // 10분마다 자동 호출
-    staleTime: 10 * 60 * 1000, // 10분 동안 데이터 신선함 유지
-    gcTime: 20 * 60 * 1000, // 20분 동안 캐시 유지
     refetchOnWindowFocus: false, // 창 포커스 시 리패칭 하지 않음
     enabled: !!localStorage.getItem("authToken"), // 토큰이 있을 때만 활성화
   })

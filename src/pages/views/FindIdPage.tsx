@@ -7,7 +7,6 @@ import useToast from "@/hooks/useToast"
 import { checkName, validatePhone } from "@/utils/util" // validatePhone으로 수정
 import { RoutePath } from "@/types/route-path"
 import { findId } from "@/services/join"
-import { FindIdRequest } from "@/types/api-types/signup-type"
 import styled from "styled-components"
 
 const FindIdPage = () => {

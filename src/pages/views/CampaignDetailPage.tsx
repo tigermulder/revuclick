@@ -15,6 +15,7 @@ import Modal from "@/components/Modal"
 import LikeButton from "@/components/LikeButton"
 import ShareModal from "@/components/ShareModal"
 import useToast from "@/hooks/useToast"
+import useScrollToTop from "@/hooks/useScrollToTop"
 import styled from "styled-components"
 import { RoutePath } from "@/types/route-path"
 import ContentTab from "@/components/Tab"
@@ -43,16 +44,8 @@ const CampaignDetailPage = () => {
   const { addToast } = useToast()
   const navigate = useNavigate()
 
-  useEffect(() => {
-    window.scrollTo(0, 0)
-    // 페이지 로드 시 로컬스토리지에서 신청 상태 확인
-    const storedStatus = localStorage.getItem(`campaign_${campaignId}_applied`)
-    if (storedStatus === "true") {
-      setIsApplySuccess(true)
-    } else {
-      setIsApplySuccess(false)
-    }
-  }, [campaignId])
+  //** 스크롤 0부터시작 */
+  useScrollToTop()
 
   // 가이드 토글 핸들러
   const toggleGuide = () => {

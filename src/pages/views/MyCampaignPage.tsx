@@ -11,11 +11,14 @@ import { buttonConfig } from "@/types/component-types/my-campaign-type"
 import { formatDate } from "@/utils/util"
 import dummyImage from "assets/dummy-image.png"
 import styled from "styled-components"
+import useScrollToTop from "@/hooks/useScrollToTop"
 
 const MyCampaignPage = () => {
   const [selectedChip, setSelectedChip] = useState("전체")
   const setReivewList = useSetRecoilState(reviewListState)
   const navigate = useNavigate()
+  //** 스크롤 0부터시작 */
+  useScrollToTop()
   const chips = [
     "전체",
     "상품구매",
