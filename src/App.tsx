@@ -11,8 +11,9 @@ import "./global.css"
 
 function App() {
   useUserStatus() // 세션유지
-  const location = useLocation() // 현재 경로확인
-  const isCampaignDetail = useMatch("/campaign/:campaignId") // 동적 경로 매칭 확인
+  const location = useLocation()
+  const isCampaignDetail = useMatch("/campaign/:campaignId")
+  const isReviewDetail = useMatch("/my_campaign/:reviewId")
 
   const hideAppBar =
     location.pathname === RoutePath.Login ||
@@ -20,13 +21,13 @@ function App() {
     location.pathname === RoutePath.Join ||
     location.pathname === RoutePath.FindId ||
     location.pathname === RoutePath.FindPassword ||
-    isCampaignDetail
+    isCampaignDetail || isReviewDetail
   const hideTapBar =
     location.pathname === RoutePath.Login ||
     location.pathname === RoutePath.Join ||
     location.pathname === RoutePath.FindId ||
     location.pathname === RoutePath.FindPassword ||
-    isCampaignDetail
+    isCampaignDetail || isReviewDetail
   const showFooter = location.pathname === RoutePath.Home && !isCampaignDetail
 
   return (

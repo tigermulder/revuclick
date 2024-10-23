@@ -4,18 +4,31 @@ import { stringify } from "qs"
 import { RoutePathHook, SearchParams } from "types/type"
 
 export function useRouter() {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+
   return useMemo(() => {
     return {
       back(steps = 1) {
-        navigate(-steps)
+        navigate(-steps);
       },
       push(path: RoutePathHook, search?: SearchParams) {
         navigate({
           pathname: path,
           search: search ? stringify(search, { indices: false }) : "",
-        })
+        });
       },
-    }
-  }, [navigate])
+      replace(path: RoutePathHook, search?: SearchParams) {
+        navigate(
+          {
+            pathname: path,
+            search: search ? stringify(search, { indices: false }) : "",
+          },
+          { replace: true }
+        );
+      },
+      goForward(steps = 1) {
+        navigate(steps);
+      },
+    };
+  }, [navigate]);
 }

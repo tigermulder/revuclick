@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { useNavigate } from "react-router-dom"
+import { useRouter } from "@/hooks/useRouting"
 import { useQuery } from "@tanstack/react-query"
 import { getReviewList } from "@/services/review"
 import { useSetRecoilState } from "recoil"
@@ -12,11 +12,12 @@ import { formatDate } from "@/utils/util"
 import dummyImage from "assets/dummy-image.png"
 import styled from "styled-components"
 import useScrollToTop from "@/hooks/useScrollToTop"
+import { RoutePath } from "@/types/route-path"
 
 const MyCampaignPage = () => {
   const [selectedChip, setSelectedChip] = useState("전체")
   const setReivewList = useSetRecoilState(reviewListState)
-  const navigate = useNavigate()
+  const router = useRouter()
   //** 스크롤 0부터시작 */
   useScrollToTop()
   const chips = [
@@ -108,8 +109,10 @@ const MyCampaignPage = () => {
             text: "상품구매",
           }
           console.log(button)
+          
           const handleButtonClick = () => {
-            navigate(`/campaign-detail/${reviewItem.reviewId}`)
+            const detail = RoutePath.MyReivewDetail(`${reviewItem.reviewId}`)
+            router.push(detail)
           }
           return (
             <li key={reviewItem.reviewId}>
