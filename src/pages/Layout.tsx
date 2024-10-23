@@ -48,7 +48,7 @@ const Content = styled.main<ContentProps>`
       return `
         height: 100vh;
         margin: 120px auto 0;
-        padding: 2rem 1.5rem 8rem;
+        padding: 2.4rem 1.5rem 8rem;
         background: var(--whitewood);
       `
     } else if ($isSpecialPage) {

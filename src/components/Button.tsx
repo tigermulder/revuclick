@@ -1,4 +1,7 @@
 import IconArrowGo from "assets/ico_arr_go.svg?url"
+import IconSuccess from "assets/ico_step_success.svg?url"
+import IconFailed from "assets/ico_step_failed.svg?url"
+
 import {
   ButtonProps,
   StyledButtonProps,
@@ -84,6 +87,85 @@ const StyledButton = styled.button.attrs<StyledButtonProps>((props) => ({
           background-color: var(--prim-L20);
           color: var(--prim-L400);
           border: none;
+        `
+      case "default":
+        return css`
+          padding: 0;
+          height: 3.7rem;
+          font-size: var(--font-bodyM-size);
+          font-weight: var(--font-bodyM-weight);
+          line-height: var(--font-bodyM-line-height);
+          letter-spacing: var(--font-bodyM-letter-spacing);
+          background: var(--n20-color);
+          color: var(--revu-color);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          span {
+            margin-left: 0.4rem;
+            font-size: var(--font-callout-small-size);
+            font-weight: var(--font-callout-small-weight);
+            line-height: var(--font-callout-small-line-height);
+            letter-spacing: var(--font-callout-small-letter-spacing);
+          }
+        `
+      case "success":
+        return css`
+          padding: 0;
+          height: 3.7rem;
+          font-size: var(--font-bodyM-size);
+          font-weight: var(--font-bodyM-weight);
+          line-height: var(--font-bodyM-line-height);
+          letter-spacing: var(--font-bodyM-letter-spacing);
+          background: var(--n20-color);
+          color: var(--success-color);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          span {
+            margin-left: 0.4rem;
+            font-size: var(--font-callout-small-size);
+            font-weight: var(--font-callout-small-weight);
+            line-height: var(--font-callout-small-line-height);
+            letter-spacing: var(--font-callout-small-letter-spacing);
+          }
+          &::before {
+            content: "";
+            display: block;
+            background: url("${IconSuccess}") no-repeat center / 100%;
+            width: 1.7rem;
+            height: 1.7rem;
+            margin-right: 0.4rem;
+          }
+        `
+      case "failed":
+        return css`
+          padding: 0;
+          height: 3.7rem;
+          font-size: var(--font-bodyM-size);
+          font-weight: var(--font-bodyM-weight);
+          line-height: var(--font-bodyM-line-height);
+          letter-spacing: var(--font-bodyM-letter-spacing);
+          background: var(--n20-color);
+          color: var(--primary-color);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          span {
+            margin-left: 0.4rem;
+            font-size: var(--font-callout-small-size);
+            font-weight: var(--font-callout-small-weight);
+            line-height: var(--font-callout-small-line-height);
+            letter-spacing: var(--font-callout-small-letter-spacing);
+          }
+          &::before {
+            content: "";
+            display: block;
+            background: url("${IconFailed}") no-repeat center / 100%;
+            width: 1.7rem;
+            height: 1.7rem;
+            margin-right: 0.4rem;
+          }
         `
       default:
         return ""

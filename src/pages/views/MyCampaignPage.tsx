@@ -1,16 +1,21 @@
 import { useEffect, useState } from "react"
-import FilterCalendar from "@/components/FilterCalander"
+import { useNavigate } from "react-router-dom"
 import { useQuery } from "@tanstack/react-query"
 import { getReviewList } from "@/services/review"
-import styled from "styled-components"
 import { useSetRecoilState } from "recoil"
 import { reviewListState } from "@/store/mycampaign-recoil"
+import ProgressStep from "@/components/ProgressStep"
+import FilterCalendar from "@/components/FilterCalander"
 import Button from "@/components/Button"
+import { buttonConfig } from "@/types/component-types/my-campaign-type"
+import { formatDate } from "@/utils/util"
 import dummyImage from "assets/dummy-image.png"
+import styled from "styled-components"
 
 const MyCampaignPage = () => {
   const [selectedChip, setSelectedChip] = useState("전체")
   const setReivewList = useSetRecoilState(reviewListState)
+  const navigate = useNavigate()
   const chips = [
     "전체",
     "상품구매",
@@ -32,7 +37,7 @@ const MyCampaignPage = () => {
     const [_key] = queryKey
     const requestData = {
       pageSize: 20,
-      pageIndex: 1, // 고정값이 아니라 동적으로 설정하려면 추가 로직 필요
+      pageIndex: 1,
     }
     const response = await getReviewList(requestData)
     return response
@@ -42,9 +47,9 @@ const MyCampaignPage = () => {
     queryFn: fetchCampaignList,
     refetchInterval: 10 * 60 * 1000, // 10분 마다 리패치
     staleTime: 10 * 60 * 1000, // 10분 동안 데이터가 신선함
-    gcTime: 11 * 60 * 1000, // 20분 동안 캐시 유지
-    refetchOnWindowFocus: false,
-    refetchOnMount: false,
+    gcTime: 11 * 60 * 1000, // 11분 동안 캐시 유지
+    refetchOnMount: true,
+    refetchOnWindowFocus: true,
     refetchOnReconnect: true,
   })
   // ** 현재 신청한캠페인 갯수 */
@@ -58,6 +63,7 @@ const MyCampaignPage = () => {
     }
   }, [data, setReivewList])
 
+  console.log(reviewList)
   return (
     <>
       <FilterCalendar
@@ -76,24 +82,52 @@ const MyCampaignPage = () => {
       </CartCardDesc>
       <MyReviewContainer>
         {reviewList?.map((reviewItem) => {
+          // 남은 시간 계산
+          const endTime = reviewItem.endAt
+            ? new Date(reviewItem.endAt).getTime()
+            : 0
+          const now = Date.now()
+          const diffInMs = endTime - now
+          const diffInDays = diffInMs / (1000 * 60 * 60 * 24)
+          let remainingTime
+          if (diffInDays > 1) {
+            remainingTime = `D-${Math.ceil(diffInDays)}일`
+          } else if (diffInDays > 0) {
+            const diffInHours = diffInMs / (1000 * 60 * 60)
+            remainingTime = `T-${Math.ceil(diffInHours)}시간`
+          } else {
+            remainingTime = "종료"
+          }
+          const isEnded = remainingTime === "종료"
+          const thumbnailUrl = reviewItem.thumbnailUrl || dummyImage
+          const button = buttonConfig[reviewItem.status] || {
+            variant: "default",
+            text: "상품구매",
+          }
+          console.log(button)
+          const handleButtonClick = () => {
+            navigate(`/campaign-detail/${reviewItem.reviewId}`)
+          }
           return (
             <li key={reviewItem.reviewId}>
               <ReviewCardHeader>
                 <ReviewCardThumb>
-                  <img src={dummyImage} alt="리뷰리스트" />
-                  <ReviewCardThumbText>
-                    <span>-2</span>일
-                  </ReviewCardThumbText>
+                  <img src={thumbnailUrl} alt="리뷰리스트 썸네일" />
+                  <RemainingDays $isEnded={isEnded}>
+                    {isEnded ? "종료" : remainingTime}
+                  </RemainingDays>
+                  {isEnded && <EndedOverlay />}
                 </ReviewCardThumb>
                 <ReviewCardInfo>
-                  <CardDate>2024.08.05</CardDate>
-                  <CardTitle>
-                    [리뷰] 리뷰가 한줄이상이상이상이상이상일경우우우
-                  </CardTitle>
-                  <CardPoint>25,000P</CardPoint>
+                  <CardDate>{formatDate(reviewItem.createdAt)}</CardDate>
+                  <CardTitle>[리뷰] {reviewItem.title}</CardTitle>
+                  <CardPoint>{reviewItem.reward}P</CardPoint>
                 </ReviewCardInfo>
               </ReviewCardHeader>
-              <Button $variant="grey">상품구매</Button>
+              <Button $variant={button.variant} onClick={handleButtonClick}>
+                {button.text}
+              </Button>
+              <ProgressStep status={reviewItem.status} />
             </li>
           )
         })}
@@ -131,7 +165,7 @@ const MyReviewContainer = styled.ul`
   border-radius: 1.2rem;
   li {
     position: relative;
-    padding: 2.7rem 1.6rem;
+    padding: 2rem 1.5rem;
   }
   li:not(:last-child):after {
     content: "";
@@ -161,20 +195,43 @@ const ReviewCardThumb = styled.div`
   overflow: hidden;
   border-radius: 1rem;
   flex-shrink: 0;
+
+  img {
+    width: 100%;
+  }
 `
 
-const ReviewCardThumbText = styled.span`
+interface RemainingDaysProps {
+  $isEnded: boolean
+}
+const RemainingDays = styled.span.attrs<RemainingDaysProps>((props) => ({
+  "aria-label": props.$isEnded ? "캠페인이 종료되었습니다" : "캠페인 남은 일수",
+  "data-is-ended": props.$isEnded,
+}))<RemainingDaysProps>`
   position: absolute;
-  bottom: 0.7rem;
-  left: 0;
+  bottom: ${({ $isEnded }) => ($isEnded ? "50%" : "0.7rem")};
+  left: ${({ $isEnded }) => ($isEnded ? "50%" : "0")};
+  transform: ${({ $isEnded }) => ($isEnded ? "translate(-50%, 50%)" : "none")};
+  background-color: black;
+  color: white;
   padding: 0.2rem 0.6rem;
   border-radius: 0.2rem;
   font-size: var(--font-caption-size);
   font-weight: var(--font-caption-weight);
   line-height: var(--font-caption-line-height);
   letter-spacing: var(--font-caption-letter-spacing);
-  background: var(--primary-color);
-  color: var(--white);
+  z-index: 2;
+`
+
+const EndedOverlay = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.45);
+  z-index: 1;
+  pointer-events: none;
 `
 
 const ReviewCardInfo = styled.div`
@@ -206,6 +263,7 @@ const CardTitle = styled.span`
 `
 
 const CardPoint = styled.p`
+  margin-top: 0.2rem;
   font-size: var(--font-h4-size);
   font-weight: var(--font-h4-weight);
   letter-spacing: var(--font-h4-letter-spacing);

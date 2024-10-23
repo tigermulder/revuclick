@@ -18,8 +18,11 @@ export interface ReviewListResponse {
 
 export interface ReviewItem {
   reviewId: number
+  reward: number
   campaignId: number
+  thumbnailUrl: string
   uid: number
+  title: string
   partnerId: number
   partnerUid: number
   spaceId: number
@@ -34,6 +37,7 @@ export interface ReviewItem {
   uploadComplete: number
   createdAt: string
   updatedAt: string
+  endAt: string
 }
 
 //** 리뷰 참여 내역 요청 type */
@@ -46,21 +50,49 @@ export interface ReviewItemResponse {
   error?: string
   review: {
     reviewId: number
-    status: string // 리뷰 상태 (예: join, purchase, confirm, etc.)
+    status: string
     reviewText: string // 리뷰 내용
     createdAt: string // ISO 형식 날짜
     updatedAt: string // ISO 형식 날짜 (리뷰가 업데이트된 시간)
-    // 추가적인 리뷰 관련 정보는 여기에 정의할 수 있습니다.
+  }
+  review_detail: {
+    reviewId: number
+    campaignId: number
+    reviewText: string | null
+    signature: string | null
+    positiveIndex: number | null
+    joinAt: string // ISO 형식 날짜
+    reviewRating: number | null
+    purchaseAt: string | null
+    confirmAt: string | null
+    uploadAt: string | null
+    rewardAt: string | null
+    giveupAt: string | null
+    timeoutAt: string | null
   }
   campaign: {
     campaignId: number
+    advertiserId: number
     title: string
-    category: string
-    price: number // 캠페인 관련 정보
+    categoryId: number
+    NSproductNo: string
+    price: number
     reward: number
-    startAt: string // ISO 형식 날짜 (캠페인 시작일)
-    endAt: string // ISO 형식 날짜 (캠페인 종료일)
-    // 캠페인 관련 추가 정보가 있으면 여기 정의
+    cost: number
+    snsUrl: string
+    costPartner: number
+    reviewKeyword: string | null
+    thumbnailUrl: string
+    startAt: string // ISO 형식 날짜
+    endAt: string // ISO 형식 날짜
+    status: "edit" | "active" | "completed" // 예시로 상태 추가
+    quota: number
+    joins: number
+    uploads: number
+    favorites: number
+    createdAt: string // ISO 형식 날짜
+    type: string // 예: 'NS'
+    purchaseUrl: string
   }
 }
 

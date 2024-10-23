@@ -214,7 +214,7 @@ const RemainingDays = styled.span.attrs<RemainingDaysProps>((props) => ({
   transform: ${({ $isEnded }) => ($isEnded ? "translate(-50%, -50%)" : "none")};
   background-color: black;
   color: white;
-  padding: 5px 6px;
+  padding: 0.5rem 0.6rem;
   border-radius: 0.2rem;
   font-size: 14px;
   font-weight: var(--font-weight-bold);
@@ -229,7 +229,7 @@ const EndedOverlay = styled.div`
   height: 100%;
   background: rgba(0, 0, 0, 0.45);
   z-index: 1;
-  pointer-events: none; /* 클릭을 방해하지 않도록 설정 */
+  pointer-events: none;
 `
 
 const CampaignCardInfo = styled.div`

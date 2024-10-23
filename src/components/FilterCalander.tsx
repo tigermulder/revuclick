@@ -50,6 +50,7 @@ const FilterChipWrap = styled.div`
   align-items: center;
   justify-content: space-between;
   border-bottom: 1px solid var(--n60-color);
+  z-index: 10;
 `
 
 const FilterChipBarStyled = styled.ul`
