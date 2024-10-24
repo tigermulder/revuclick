@@ -62,11 +62,16 @@ export const cancelReview = async (
 
 //** 리뷰 결제 인증 API */
 export const authReview = async (
-  data: ReviewAuthRequest
+  data: FormData
 ): Promise<ReviewAuthResponse> => {
   const response = await axiosInstance.post<ReviewAuthResponse>(
     "/review/purchase_auth",
-    data
+    data,
+    {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    }
   )
   return response.data
 }

@@ -7,6 +7,7 @@ import styled from "styled-components"
 const Layout = () => {
   const location = useLocation() // 현재 경로 감지
   const isCampaignDetail = !!useMatch("/campaign/:campaignId") // 캠페인 상세 경로 감지
+  const isReviewDetail = !!useMatch("/my_campaign/:reviewId") // MY캠페인 상세 경로 감지
   const isLoginPage = location.pathname === RoutePath.Login // 로그인 페이지 감지
   const isJoinPage = location.pathname === RoutePath.Join // 회원가입 페이지 감지
   const isFindIdPage = location.pathname === RoutePath.FindId // 아이디찾기 페이지 감지
@@ -16,6 +17,7 @@ const Layout = () => {
   const isSpecialPage =
     isLoginPage ||
     isCampaignDetail ||
+    isReviewDetail ||
     isMyCartPage ||
     isFindIdPage ||
     isJoinPage ||
@@ -46,7 +48,7 @@ const Content = styled.main<ContentProps>`
   ${({ $isMyCampaignPage, $isSpecialPage, $isCampaignDetail }) => {
     if ($isMyCampaignPage) {
       return `
-        height: 100vh;
+        min-height: 100vh; 
         margin: 120px auto 0;
         padding: 2.4rem 1.5rem 8rem;
         background: var(--whitewood);
@@ -54,12 +56,12 @@ const Content = styled.main<ContentProps>`
     } else if ($isSpecialPage) {
       if ($isCampaignDetail) {
         return `
-          height: 100vh;
+          min-height: 100vh; 
           margin: 0;
         `
       } else {
         return `
-          height: 100vh;
+          min-height: 100vh; 
           margin: 0;
           padding: 0 1.5rem;
         `

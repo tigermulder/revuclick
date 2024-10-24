@@ -1,3 +1,5 @@
+import { RemainingTime } from "@/types/type"
+
 export const categories = [
   { id: 1, name: "전체" }, // '전체'는 특별하게 처리
   { id: 2, name: "패션" },
@@ -71,4 +73,36 @@ export const checkName = (name: string): boolean => {
 export const disCountRate = (reward: number, price: number) => {
   const result = (reward / price) * 100
   return result.toFixed(0)
+}
+
+//** 남은일자 계산 */
+export const calculateRemainingTime = (
+  endAt: string | Date | undefined
+): RemainingTime => {
+  if (!endAt) {
+    return {
+      remainingTime: "종료",
+      isEnded: true,
+    }
+  }
+
+  const endTime = new Date(endAt).getTime()
+  const now = Date.now()
+  const diffInMs = endTime - now
+  const diffInDays = diffInMs / (1000 * 60 * 60 * 24)
+
+  let remainingTime: string
+
+  if (diffInDays > 1) {
+    remainingTime = `D-${Math.ceil(diffInDays)}일`
+  } else if (diffInDays > 0) {
+    const diffInHours = diffInMs / (1000 * 60 * 60)
+    remainingTime = `T-${Math.ceil(diffInHours)}시간`
+  } else {
+    remainingTime = "종료"
+  }
+
+  const isEnded = remainingTime === "종료"
+
+  return { remainingTime, isEnded }
 }

@@ -10,6 +10,7 @@ const toastIcons: Record<Toast["type"], string> = {
   uncheck: "☑️",
   info: "ℹ️",
   warning: "❗",
+  copy: "📔",
 }
 
 const ToastMassage = (): JSX.Element => {
@@ -96,8 +97,8 @@ const ToastItem = styled.div<ToastItemProps>`
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 12px 0;
-  border-radius: 13px;
+  padding: 1.2rem 0;
+  border-radius: 1.3rem;
   background-color: var(--primary-color);
   color: white;
   animation: ${fadeIn} 0.1s ease-out;

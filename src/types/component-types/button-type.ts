@@ -10,6 +10,7 @@ export interface ButtonProps {
     | "default"
     | "success"
     | "failed"
+    | "copy"
   type?: "button" | "submit" | "reset"
   $marginTop?: string
   onClick?: React.MouseEventHandler<HTMLButtonElement>
@@ -25,6 +26,7 @@ export interface StyledButtonProps {
     | "default"
     | "success"
     | "failed"
+    | "copy"
   $marginTop?: string
   disabled?: boolean
 }

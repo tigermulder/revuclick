@@ -312,6 +312,7 @@ body,
   color: var(--primary-color);
   font-size: var(--base-font-size);
   word-break: break-all;
+  overflow: hidden;
 }
 @font-face {
   font-family: "SUIT";

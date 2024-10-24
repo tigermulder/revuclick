@@ -205,8 +205,8 @@ const CampaignDetailPage = () => {
   const handleModalConfirm = () => {
     if (isApplySuccess) {
       // 신청 성공 후 '나의 캠페인 내역'으로 라우팅
-      navigate(RoutePath.MyCampaign)
       setIsModalOpen(false) // 모달 닫기
+      navigate(RoutePath.MyCampaign)
     } else {
       // 아직 신청을 완료하지 않았을 때는 신청 처리
       handleConfirm()

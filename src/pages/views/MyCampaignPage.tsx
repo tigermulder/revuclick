@@ -10,9 +10,10 @@ import Button from "@/components/Button"
 import { buttonConfig } from "@/types/component-types/my-campaign-type"
 import { formatDate } from "@/utils/util"
 import dummyImage from "assets/dummy-image.png"
-import styled from "styled-components"
 import useScrollToTop from "@/hooks/useScrollToTop"
+import { calculateRemainingTime } from "@/utils/util"
 import { RoutePath } from "@/types/route-path"
+import styled from "styled-components"
 
 const MyCampaignPage = () => {
   const [selectedChip, setSelectedChip] = useState("전체")
@@ -67,7 +68,6 @@ const MyCampaignPage = () => {
     }
   }, [data, setReivewList])
 
-  console.log(reviewList)
   return (
     <>
       <FilterCalendar
@@ -87,38 +87,30 @@ const MyCampaignPage = () => {
       <MyReviewContainer>
         {reviewList?.map((reviewItem) => {
           // 남은 시간 계산
-          const endTime = reviewItem.endAt
-            ? new Date(reviewItem.endAt).getTime()
-            : 0
-          const now = Date.now()
-          const diffInMs = endTime - now
-          const diffInDays = diffInMs / (1000 * 60 * 60 * 24)
-          let remainingTime
-          if (diffInDays > 1) {
-            remainingTime = `D-${Math.ceil(diffInDays)}일`
-          } else if (diffInDays > 0) {
-            const diffInHours = diffInMs / (1000 * 60 * 60)
-            remainingTime = `T-${Math.ceil(diffInHours)}시간`
-          } else {
-            remainingTime = "종료"
-          }
-          const isEnded = remainingTime === "종료"
+          const endAt = reviewItem.endAt
+          const { remainingTime, isEnded } = calculateRemainingTime(endAt)
           const thumbnailUrl = reviewItem.thumbnailUrl || dummyImage
           const button = buttonConfig[reviewItem.status] || {
             variant: "default",
             text: "상품구매",
           }
-          console.log(button)
-          
+
           const handleButtonClick = () => {
-            const detail = RoutePath.MyReivewDetail(`${reviewItem.reviewId}`)
-            router.push(detail)
+            if (button.text === "지급완료") {
+              router.push(RoutePath.MyPointLog)
+            } else if (button.text === "미션중단") {
+              router.push(RoutePath.Notification)
+            } else {
+              const detail = RoutePath.MyReivewDetail(`${reviewItem.reviewId}`)
+              router.push(detail)
+            }
           }
           return (
             <li key={reviewItem.reviewId}>
               <ReviewCardHeader>
                 <ReviewCardThumb>
-                  <img src={thumbnailUrl} alt="리뷰리스트 썸네일" />
+                  <img src={thumbnailUrl} alt="나의캠페인 썸네일" />
+                  {isEnded && <DimmedBackground />}
                   <RemainingDays $isEnded={isEnded}>
                     {isEnded ? "종료" : remainingTime}
                   </RemainingDays>
@@ -204,7 +196,18 @@ const ReviewCardThumb = styled.div`
 
   img {
     width: 100%;
+    height: 100%;
   }
+`
+
+const DimmedBackground = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1;
 `
 
 interface RemainingDaysProps {

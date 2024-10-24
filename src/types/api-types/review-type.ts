@@ -42,7 +42,7 @@ export interface ReviewItem {
 
 //** 리뷰 참여 내역 요청 type */
 export interface ReviewItemRequest {
-  reviewId: number
+  reviewId: string
 }
 export interface ReviewItemResponse {
   statusCode: number
@@ -120,19 +120,18 @@ export interface ReviewCancelResponse {
 
 //** 리뷰 결제 인증 요청 type */
 export interface ReviewAuthRequest {
-  token: string
   reviewId: number
-  ocr_data: string
+  ocr_data: File
 }
 export interface ReviewAuthResponse {
   statusCode: number
   errorCode?: number
   error?: string
+  reviewId: number
 }
 
 //** 리뷰 저장 요청 type */
 export interface ReviewSaveRequest {
-  token: string
   reviewId: number
   reviewText: string
 }

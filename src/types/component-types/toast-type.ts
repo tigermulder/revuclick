@@ -1,5 +1,5 @@
 // ** 토스트 메시지 type */
-export type ToastType = "check" | "uncheck" | "info" | "warning"
+export type ToastType = "check" | "uncheck" | "info" | "warning" | "copy"
 
 export interface Toast {
   id: string // 고유 식별자
