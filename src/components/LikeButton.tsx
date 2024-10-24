@@ -29,7 +29,7 @@ const LikeButton = ({
 
   const handleLike = (event: React.MouseEvent): void => {
     event.stopPropagation()
-    const token = localStorage.getItem("authToken")
+    const token = sessionStorage.getItem("authToken")
     if (!token) {
       addToast("로그인이 필요합니다.", "warning", 1000, "login")
       router.push(RoutePath.Login)

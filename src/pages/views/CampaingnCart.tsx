@@ -34,7 +34,7 @@ const CampaignCart = () => {
 
   return (
     <Container>
-      <ReuseHeader title="아이디 찾기" onBack={() => navigate(-1)} />
+      <ReuseHeader title="찜 목록" onBack={() => navigate(-1)} />
       {/* 캠페인 리스트 */}
       <CampaignList>
         <FilterContainer>

@@ -38,7 +38,7 @@ const StepTwo = ({
   const handleCopy = () => {
     if (reviewText.trim().length === 0 || reviewText.trim().length < minChars) {
       // 텍스트가 비어있을 경우 토스트 메시지 표시 (옵션)
-      addToast("")
+      addToast("100자이상 입력해주세요", "copy", 1000, "copy")
       return
     }
     navigator.clipboard
@@ -290,7 +290,7 @@ const GuideHeader = styled.button`
   }
 
   .ico_arr {
-    transition: transform 0.3s ease;
+    transition: transform 0.1s ease;
   }
 
   .ico_arr.active {
@@ -368,7 +368,6 @@ const ReviewTextBox = styled.div`
       color: var(--n200-color);
     }
   }
-    textarea
 `
 
 const BottomButtonContainer = styled.div`
@@ -387,6 +386,9 @@ const BottomButtonContainer = styled.div`
   border-top: 0.1rem solid var(--n40-color);
 
   p {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     padding-left: 1.5rem;
     margin-bottom: 1rem;
     font-size: var(--font-callout-small-size);
@@ -394,9 +396,6 @@ const BottomButtonContainer = styled.div`
     letter-spacing: var(--font-callout-small-letter-spacing);
     color: var(--n200-color);
     background: url("${IconNotice}") no-repeat left center / 1rem 1rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
   }
 `
 
